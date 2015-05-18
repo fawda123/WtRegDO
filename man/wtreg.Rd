@@ -17,6 +17,11 @@ wtreg(dat_in, DO_obs = "DO_obs", wins = list(4, 12, NULL),
 \item{progress}{logical if progress saved to a txt file names 'log.txt' in the working directory}
 
 \item{parallel}{logical if regression is run in parallel to reduce processing time, requires a parallel backend outside of the function}
+
+\item{...}{additional arguments passed to \code{\link{met_day_fun}}, particularly timezone, lat, and long information.}
+}
+\value{
+The original data frame with additional columns describing the metabolic day, decimal time, predicted DO from weighted regression (\code{DO_prd}) and detided (normalized) DO from weighted regression (\code{DO_nrm}).
 }
 \description{
 Use weighted regression to reduce effects of tidal advection on dissolved oxygen time series

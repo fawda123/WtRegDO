@@ -1,3 +1,4 @@
-Log entry time 2015-05-18 15:53:31 
-17568  of  17568 
-Time difference of 3.829425 mins
+Log entry time 2015-05-18 16:16:09 
+17562  of  17568 
+Time difference of 6.1933 mimi
+

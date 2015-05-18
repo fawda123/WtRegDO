@@ -3,24 +3,25 @@
 \docType{data}
 \name{SAPDC}
 \alias{SAPDC}
-\title{Sample dataset for weighted regression, Sapelo Island Dean Creek station, 2012 data}
-\format{\preformatted{'data.frame':	17568 obs. of  10 variables:
- $ DateTimeStamp: POSIXct, format: "2012-01-01 00:00:00" "2012-01-01 00:30:00" "2012-01-01 01:00:00" "2012-01-01 01:30:00" ...
- $ Temp         : num  14.9 14.9 14.9 14.8 14.7 14.7 14.6 14.6 14.4 14.2 ...
- $ Sal          : num  33.3 33.4 33.4 33.3 33.2 33.3 33.4 33.4 33.3 33.3 ...
- $ DO_obs       : num  5 5.5 5.9 6.4 6.6 6.1 5.7 5.2 4.6 4 ...
- $ Depth        : num  0.78 0.95 1.06 1.12 1.11 1.06 0.96 0.81 0.64 0.46 ...
- $ ATemp        : num  11.9 11.3 9.9 10 11.4 10.7 10.2 8.9 10.4 11 ...
- $ BP           : num  1022 1022 1021 1022 1022 ...
- $ WSpd         : num  0.5 0.6 0.6 2.4 1.3 0 0 0 0 0 ...
- $ TotPAR       : num  0 0.6 0.6 0.6 0.8 0.9 0.6 0.6 0.7 1.1 ...
- $ Tide         : num  0.891 1.001 1.073 1.111 1.125 ...
+\title{Sample dataset for weighted regression, Sapelo Island Dean Creek station, 2012 data.  Only DateTimeSTamp, DO_obs, and Tide are needed for weighted regression, whereas all remaining columns are needed for estimating ecosystem metabolism.  Metadata about the location should also be available including the timezone and lat/long coordinates.}
+\format{A data frame with 17568 rows and 10 variables:
+\describe{
+  \item{DateTimeStamp}{POSIXct} timestamp of water quality observation
+  \item{Temp}{numeric} water temperature, celsius
+  \item{Sal}{numeric} salinity, ppt
+  \item{DO_obs}{numeric} dissolved oxygen, mg L-1
+  \item{Depth}{numeric} water column depth, m
+  \item{ATemp}{numeric} air temperature, celsius
+  \item{BP}{numeric} barometric pressure, mb
+  \item{WSpd}{numeric}, wind speed, m s-1
+  \item{TotPAR}{numeric}, total photosynthetically active radiation mmol m-2
+  \item{Tide}{numeric}, tide height, m, estimated from depth variable using harmonic regression
 }}
 \usage{
 SAPDC
 }
 \description{
-Sample dataset for weighted regression, Sapelo Island Dean Creek station, 2012 data
+Sample dataset for weighted regression, Sapelo Island Dean Creek station, 2012 data.  Only DateTimeSTamp, DO_obs, and Tide are needed for weighted regression, whereas all remaining columns are needed for estimating ecosystem metabolism.  Metadata about the location should also be available including the timezone and lat/long coordinates.
 }
 \keyword{datasets}
 

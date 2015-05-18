@@ -5,3 +5,7 @@
 ^appveyor\.yml$
 ^\.travis\.yml$
 ^log\.txt$
+^README\.md$
+^README\.html$
+^README_files/.*
+^README_cache/.*

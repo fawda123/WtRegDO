@@ -7,12 +7,15 @@
 #' @param wins half-window widths to use
 #' @param progress logical if progress saved to a txt file names 'log.txt' in the working directory
 #' @param parallel logical if regression is run in parallel to reduce processing time, requires a parallel backend outside of the function
+#' @param ... additional arguments passed to \code{\link{met_day_fun}}, particularly timezone, lat, and long information.
 #'
 #' @export
 #'
 #' @import plyr
 #'
 #' @details See the supplied dataset for required input data
+#'
+#' @return The original data frame with additional columns describing the metabolic day, decimal time, predicted DO from weighted regression (\code{DO_prd}) and detided (normalized) DO from weighted regression (\code{DO_nrm}).
 #'
 #' @examples
 #' \dontrun{

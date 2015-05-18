@@ -9,7 +9,7 @@ dectime <- function(dat_in){
 
   # get decimal value by metabolic date for hour/min
   by_met <- dlply(dat_in,
-    .variable = 'met.date',
+    .variables = 'met.date',
     .fun = function(x){
 
       strt <- (48 - nrow(x))/48

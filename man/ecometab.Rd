@@ -4,7 +4,8 @@
 \alias{ecometab}
 \title{Ecosystem metabolism}
 \usage{
-ecometab(dat_in, DO_var = "DO_mgl", depth_val = NULL, bott_stat = FALSE)
+ecometab(dat_in, DO_var = "DO_mgl", depth_val = NULL, bott_stat = FALSE,
+  ...)
 }
 \arguments{
 \item{dat_in}{Input data frame which must include time series of dissolved oxygen (mg L-1)}
@@ -14,6 +15,11 @@ ecometab(dat_in, DO_var = "DO_mgl", depth_val = NULL, bott_stat = FALSE)
 \item{depth_val}{alternative value to use for station depth}
 
 \item{bott_stat}{logical if air-sea gas exchange is removed from the estimate}
+
+\item{...}{arguments passed to \code{\link{met_day_fun}}}
+}
+\value{
+A data frame with daily integrated metabolism estimates including gross produciton (Pg), total respiration (Rt), and net ecosystem metabolism (NEM).
 }
 \description{
 Estimate ecosystem metabolism using the Odum open-water method.  Estimates of daily integrated gross production, total respiration, and net ecosystem metabolism are returned.
@@ -41,6 +47,6 @@ Ro KS, Hunt PG. 2006. A new unified equation for wind-driven surficial oxygen tr
 Thebault J, Schraga TS, Cloern JE, Dunlavey EG. 2008. Primary production and carrying capacity of former salt ponds after reconnection to San Francisco Bay. Wetlands. 28(3):841-851.
 }
 \seealso{
-\code{\link{f_calcKL}} for estimating the oxygen mass transfer coefficient used with the air-sea gas exchange model
+\code{\link{f_calcKL}} for estimating the oxygen mass transfer coefficient used with the air-sea gas exchange model and \code{\link{met_day_fun}} for identifying the metabolic day for each observation in the time series
 }
 
