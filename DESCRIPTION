@@ -12,6 +12,7 @@ LazyData: TRUE
 BugReports: https://github.com/fawda123/WtRegDO/issues
 License: CC0
 Imports:
+    dplyr,
     oce,
     reshape2,
     wq

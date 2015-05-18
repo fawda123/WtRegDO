@@ -1,16 +1,31 @@
-######
-# get predicted, normalized values not using interp grid, tide as predictor
-# 'dat_in' is raw data used to create 'grd_in' and used to get predictions
-# 'DO_obs' is string indicating name of col for observed DO values from 'dat_in'
-# output is data frame same as 'dat_in' but includes predicted and norm columns
+#' Weighted regression for dissolved oxygen time series
+#'
+#' Use weighted regression to reduce effects of tidal advection on dissolved oxygen time series
+#'
+#' @param dat_in input data frame
+#' @param DO_obs name of dissolved oxygen column
+#' @param wins half-window widths to use
+#' @param parallel logical if regression is run in parallel to reduce processing time
+#'
+#' @export
+#'
+#' @import dplyr
+#'
+#' @details See the supplied dataset for required input data
+#'
+#' @examples
+#' \dontrun{
+#' ## import data
+#' data(SAPDC)
+#'
+#' res <- wtreg(SAPDC)
+#'
+#' }
 wtreg <- function(dat_in, DO_obs = 'DO_obs', wins = list(4, 12, NULL),
-  parallel = F, progress = F){
+  parallel = FALSE, progress = FALSE){
 
   # get mean tidal height from empirical data
   mean_tide <- mean(dat_in$Tide)
-
-  #for counter
-  strt <- Sys.time()
 
   out <- ddply(dat_in,
     .variable = 'DateTimeStamp',
@@ -22,19 +37,9 @@ wtreg <- function(dat_in, DO_obs = 'DO_obs', wins = list(4, 12, NULL),
       ref_in <- ref_in[rep(1, 2),]
       ref_in$Tide <- c(unique(ref_in$Tide), mean_tide)
 
-      # progress
-      if(progress){
-        prog <- which(row$DateTimeStamp == dat_in$DateTimeStamp)
-        sink('log.txt')
-        cat('Log entry time', as.character(Sys.time()), '\n')
-        cat(prog, ' of ', nrow(dat_in), '\n')
-        print(Sys.time() - strt)
-        sink()
-        }
-
       # get wts
-      ref_wts <- wt_fun(ref_in, dat_in, wins = wins, slice = T,
-        subs_only = T, wt_vars = c('dec_time', 'hour', 'Tide'))
+      ref_wts <- wt_fun(ref_in, dat_in, wins = wins, slice = TRUE,
+        subs_only = TRUE, wt_vars = c('dec_time', 'hour', 'Tide'))
 
       #OLS wtd model
       out <- lapply(1:length(ref_wts),
