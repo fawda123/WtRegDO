@@ -5,7 +5,7 @@
 \title{Weighted regression for dissolved oxygen time series}
 \usage{
 wtreg(dat_in, DO_obs = "DO_obs", wins = list(4, 12, NULL),
-  progress = FALSE, parallel = FALSE)
+  progress = FALSE, parallel = FALSE, ...)
 }
 \arguments{
 \item{dat_in}{input data frame}

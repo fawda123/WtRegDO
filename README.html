@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<title></title>
+
+<script src="README_files/jquery-1.11.0/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="README_files/bootstrap-3.3.1/css/bootstrap.min.css" rel="stylesheet" />
+<script src="README_files/bootstrap-3.3.1/js/bootstrap.min.js"></script>
+<script src="README_files/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
+<script src="README_files/bootstrap-3.3.1/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="README_files/highlight/default.css"
+      type="text/css" />
+<script src="README_files/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img { 
+  max-width:100%; 
+  height: auto; 
+}
+</style>
+<div class="container-fluid main-container">
+
+
+
+
+<div id="wtregdo" class="section level2">
+<h2>WtRegDO</h2>
+<div id="marcus-w.-beck-mbafs2012gmail.com" class="section level4">
+<h4><em>Marcus W. Beck, <a href="mailto:mbafs2012@gmail.com">mbafs2012@gmail.com</a></em></h4>
+<p>Linux: <a href="https://travis-ci.org/fawda123/WtRegDO"><img src="https://travis-ci.org/fawda123/WtRegDO.svg?branch=master" alt="Travis-CI Build Status" /></a></p>
+<p>Windows: <a href="https://ci.appveyor.com/project/fawda123/WtRegDO"><img src="https://ci.appveyor.com/api/projects/status/github/fawda123/WtRegDO?branch=master" alt="AppVeyor Build Status" /></a></p>
+<p>This is the public repository of supplementary material to accompany the manuscript “Improving estimates of ecosystem metabolism by reducing effects of tidal advection on dissolved oxygen time series”, submitted to Limnology and Oceanography Methods. The package includes a sample dataset and functions to implement weighted regression on dissolved oxygen time series to reduce the effects of tidal advection. Functions are also available to estimate net ecosystem metabolism using the open-water method.</p>
+<p>The development version of this package can be installed from Github:</p>
+<pre class="r"><code>install.packages(&#39;devtools&#39;)
+library(devtools)
+install_github(&#39;fawda123/WtRegDO&#39;)
+library(WtRegDO)</code></pre>
+</div>
+<div id="citation" class="section level3">
+<h3>Citation</h3>
+<p>Please cite this package using the submitted manuscript.</p>
+<p><em>Beck MW, Hagy III JD, Murrell MC. Conditionally accepted. Improving estimates of ecosystem metabolism by reducing effects of tidal advection on dissolved oxygen time series. Limnology and Oceanography Methods.</em></p>
+</div>
+<div id="functions" class="section level3">
+<h3>Functions</h3>
+<p>Load the sample dataset and run weighted regression. See the function help files for arguments.</p>
+<pre class="r"><code>data(SAPDC)
+
+# run weighted regression in parallel
+# requires parallel backend
+library(doParallel)
+registerDoParallel(cores = 4)
+
+res &lt;- wtreg(SAPDC, parallel = TRUE, progress = TRUE)
+
+# estimate ecosystem metabolism using observed DO time series
+metab_obs &lt;- ecometab(res, DO_var = &#39;DO_obs&#39;, tz = &#39;America/Jamaica&#39;, lat = 31.39, 
+  long = -81.28)
+
+# estimate ecosystem metabolism using detided DO time series
+metab_dtd &lt;- ecometab(res, DO_var = &#39;DO_nrm&#39;, tz = &#39;America/Jamaica&#39;, lat = 31.39, 
+  long = -81.28)</code></pre>
+</div>
+<div id="license" class="section level3">
+<h3>License</h3>
+<p>This package is released in the public domain under the creative commons license <a href="https://tldrlegal.com/license/creative-commons-cc0-1.0-universal">CC0</a>.</p>
+</div>
+</div>
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

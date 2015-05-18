@@ -7,7 +7,6 @@
 #' @param DO_var chr string indicating the name of the column with the dissolved oxygen variable for estimating metabolism
 #' @param depth_val alternative value to use for station depth
 #' @param bott_stat logical if air-sea gas exchange is removed from the estimate
-#' @param ... arguments passed to \code{\link{met_day_fun}}
 #'
 #' @import oce plyr wq
 #'
@@ -36,10 +35,10 @@
 #' Thebault J, Schraga TS, Cloern JE, Dunlavey EG. 2008. Primary production and carrying capacity of former salt ponds after reconnection to San Francisco Bay. Wetlands. 28(3):841-851.
 #'
 #' @seealso
-#' \code{\link{f_calcKL}} for estimating the oxygen mass transfer coefficient used with the air-sea gas exchange model and \code{\link{met_day_fun}} for identifying the metabolic day for each observation in the time series
+#' \code{\link{f_calcKL}} for estimating the oxygen mass transfer coefficient used with the air-sea gas exchange model
 #'
 ecometab<-function(dat_in, DO_var = 'DO_mgl', depth_val = NULL,
-  bott_stat = FALSE, ...){
+  bott_stat = FALSE){
 
   ##begin calculations
 
@@ -117,9 +116,6 @@ ecometab<-function(dat_in, DO_var = 'DO_mgl', depth_val = NULL,
   if(is.null(depth_val))
     H<-rep(0.5+mean(pmax(1,dat_in$Depth),na.rm=TRUE),nrow(dat_in))
   else H<-rep(depth_val,nrow(dat_in))
-
-  #use met_day_fun to add columns indicating light/day, date, and hours of sunlight
-  dat_in <- met_day_fun(dat_in, ...)
 
   #get air sea gas-exchange using wx data with climate means
   KL<-with(dat_in,f_calcKL(Temp,Sal,ATemp_mix,WSpd_mix,BP_mix))

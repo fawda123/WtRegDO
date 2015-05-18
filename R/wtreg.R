@@ -23,10 +23,18 @@
 #'
 #' }
 wtreg <- function(dat_in, DO_obs = 'DO_obs', wins = list(4, 12, NULL),
-  progress = FALSE, parallel = FALSE){
+  progress = FALSE, parallel = FALSE, ...){
 
   # get mean tidal height from empirical data
   mean_tide <- mean(dat_in$Tide)
+
+  # get decimal time based on metabolic days
+  dat_in <- met_day_fun(dat_in,  ...)
+  dat_in <- dectime(dat_in)
+
+  # add hour column
+  dat_in$hour <- as.numeric(format(dat_in$DateTimeStamp, '%H')) +
+    as.numeric(format(dat_in$DateTimeStamp, '%M'))/60
 
   #for counter
   strt <- Sys.time()
