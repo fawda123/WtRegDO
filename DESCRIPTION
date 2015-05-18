@@ -1,10 +1,22 @@
 Package: WtRegDO
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1
+Title: Implement Weighted Regression on Dissolved Oxygen Time Series
+Version: 0.1.9000
 Date: 2015-05-18
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
+Author: Marcus W. Beck [aut, cre]
+Maintainer: Marcus W. Beck <mbafs2012@gmail.com>
+Description: The package includes a sample dataset and functions to implement weighted
+  regression on dissolved oxygen time series to reduce the effects of tidal advection.
+  Functions are also available to estimate net ecosystem metabolism using the open-water method.
 LazyData: TRUE
+BugReports: https://github.com/fawda123/WtRegDO/issues
+License: CC0
+Imports:
+    oce,
+    reshape2,
+    wq
+Depends:
+    R (>= 3.1.1)
+Authors@R: person(given = "Marcus W.", family = "Beck",
+    role = c("aut","cre"),
+    email = "mbafs2012@gmail.com")
