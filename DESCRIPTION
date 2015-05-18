@@ -12,10 +12,14 @@ LazyData: TRUE
 BugReports: https://github.com/fawda123/WtRegDO/issues
 License: CC0
 Imports:
-    dplyr,
+    plyr,
     oce,
     reshape2,
+    StreamMetabolism,
     wq
+Suggests:
+    foreach,
+    doParallel
 Depends:
     R (>= 3.1.1)
 Authors@R: person(given = "Marcus W.", family = "Beck",

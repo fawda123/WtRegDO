@@ -35,7 +35,28 @@ Please cite this package using the submitted manuscript.
 
 ### Functions
 
-Start by loading the package and the sample dataset.
+Load the sample dataset and run weighted regression.  See the function help files for arguments.
+
+```{r, eval = FALSE}
+data(SAPDC)
+
+# run weighted regression in parallel
+# requires parallel backend
+library(doParallel)
+registerDoParallel(cores = 4)
+
+res <- wtreg(SAPDC, parallel = TRUE, progress = TRUE)
+
+# estimate ecosystem metabolism using observed DO time series
+metab_obs <- ecometab(res, DO_var = 'DO_obs', tz = 'America/Jamaica', lat = 31.39, 
+  long = -81.28)
+
+# estimate ecosystem metabolism using detided DO time series
+metab_dtd <- ecometab(res, DO_var = 'DO_nrm', tz = 'America/Jamaica', lat = 31.39, 
+  long = -81.28)
+
+```
+
 
 
 ### License

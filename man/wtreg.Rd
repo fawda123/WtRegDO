@@ -5,7 +5,7 @@
 \title{Weighted regression for dissolved oxygen time series}
 \usage{
 wtreg(dat_in, DO_obs = "DO_obs", wins = list(4, 12, NULL),
-  parallel = FALSE, progress = FALSE)
+  progress = FALSE, parallel = FALSE)
 }
 \arguments{
 \item{dat_in}{input data frame}
@@ -14,7 +14,9 @@ wtreg(dat_in, DO_obs = "DO_obs", wins = list(4, 12, NULL),
 
 \item{wins}{half-window widths to use}
 
-\item{parallel}{logical if regression is run in parallel to reduce processing time}
+\item{progress}{logical if progress saved to a txt file names 'log.txt' in the working directory}
+
+\item{parallel}{logical if regression is run in parallel to reduce processing time, requires a parallel backend outside of the function}
 }
 \description{
 Use weighted regression to reduce effects of tidal advection on dissolved oxygen time series

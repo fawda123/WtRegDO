@@ -5,11 +5,12 @@
 #' @param dat_in input data frame
 #' @param DO_obs name of dissolved oxygen column
 #' @param wins half-window widths to use
-#' @param parallel logical if regression is run in parallel to reduce processing time
+#' @param progress logical if progress saved to a txt file names 'log.txt' in the working directory
+#' @param parallel logical if regression is run in parallel to reduce processing time, requires a parallel backend outside of the function
 #'
 #' @export
 #'
-#' @import dplyr
+#' @import plyr
 #'
 #' @details See the supplied dataset for required input data
 #'
@@ -22,14 +23,18 @@
 #'
 #' }
 wtreg <- function(dat_in, DO_obs = 'DO_obs', wins = list(4, 12, NULL),
-  parallel = FALSE, progress = FALSE){
+  progress = FALSE, parallel = FALSE){
 
   # get mean tidal height from empirical data
   mean_tide <- mean(dat_in$Tide)
 
+  #for counter
+  strt <- Sys.time()
+
   out <- ddply(dat_in,
-    .variable = 'DateTimeStamp',
+    .variables = 'DateTimeStamp',
     .parallel = parallel,
+    .paropts = list(.export = 'wtfun', .packages = 'WtRegDO'),
     .fun = function(row){
 
       # row for prediction
@@ -37,8 +42,18 @@ wtreg <- function(dat_in, DO_obs = 'DO_obs', wins = list(4, 12, NULL),
       ref_in <- ref_in[rep(1, 2),]
       ref_in$Tide <- c(unique(ref_in$Tide), mean_tide)
 
+      # progress
+      if(progress){
+        prog <- which(row$DateTimeStamp == dat_in$DateTimeStamp)
+        sink('log.txt')
+        cat('Log entry time', as.character(Sys.time()), '\n')
+        cat(prog, ' of ', nrow(dat_in), '\n')
+        print(Sys.time() - strt)
+        sink()
+        }
+
       # get wts
-      ref_wts <- wt_fun(ref_in, dat_in, wins = wins, slice = TRUE,
+      ref_wts <- wtfun(ref_in, dat_in, wins = wins, slice = TRUE,
         subs_only = TRUE, wt_vars = c('dec_time', 'hour', 'Tide'))
 
       #OLS wtd model
