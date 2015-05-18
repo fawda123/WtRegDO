@@ -4,7 +4,7 @@
 #'
 #' @param dat_in input data frame
 #' @param DO_obs name of dissolved oxygen column
-#' @param wins half-window widths to use
+#' @param wins list of half-window widths to use in the order specified by \code{\link{wtfun}} (i.e., days, hours, tide height).
 #' @param progress logical if progress saved to a txt file names 'log.txt' in the working directory
 #' @param parallel logical if regression is run in parallel to reduce processing time, requires a parallel backend outside of the function
 #' @param ... additional arguments passed to \code{\link{met_day_fun}}, particularly timezone, lat, and long information.

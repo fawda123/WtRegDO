@@ -12,7 +12,7 @@ wtreg(dat_in, DO_obs = "DO_obs", wins = list(4, 12, NULL),
 
 \item{DO_obs}{name of dissolved oxygen column}
 
-\item{wins}{half-window widths to use}
+\item{wins}{list of half-window widths to use in the order specified by \code{\link{wtfun}} (i.e., days, hours, tide height).}
 
 \item{progress}{logical if progress saved to a txt file names 'log.txt' in the working directory}
 

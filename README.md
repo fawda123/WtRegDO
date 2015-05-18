@@ -16,7 +16,6 @@ The development version of this package can be installed from Github:
 install.packages('devtools')
 library(devtools)
 install_github('fawda123/WtRegDO')
-library(WtRegDO)
 ```
 
 ### Citation
@@ -27,26 +26,35 @@ Please cite this package using the submitted manuscript.
 
 ### Functions
 
-Load the sample dataset and run weighted regression.  See the function help files for arguments.
+Load the sample dataset and run weighted regression.  See the function help files for details.
 
 
 ```r
+# load library and sample data
+library(WtRegDO)
 data(SAPDC)
 
 # run weighted regression in parallel
 # requires parallel backend
 library(doParallel)
-registerDoParallel(cores = 4)
+registerDoParallel(cores = 7)
 
-res <- wtreg(SAPDC, parallel = TRUE, progress = TRUE)
+# metadata for the location
+tz <- 'America/Jamaica'
+lat <- 31.39
+long = -89.28
+
+# weighted regression
+res <- wtreg(SAPDC, parallel = TRUE, wins = list(6, 1, NULL), progress = TRUE, 
+  tz = tz, lat = lat, long = long)
 
 # estimate ecosystem metabolism using observed DO time series
-metab_obs <- ecometab(res, DO_var = 'DO_obs', tz = 'America/Jamaica', lat = 31.39, 
-  long = -81.28)
+metab_obs <- ecometab(res, DO_var = 'DO_obs', tz = tz, 
+  lat = lat, long = long)
 
 # estimate ecosystem metabolism using detided DO time series
-metab_dtd <- ecometab(res, DO_var = 'DO_nrm', tz = 'America/Jamaica', lat = 31.39, 
-  long = -81.28)
+metab_dtd <- ecometab(res, DO_var = 'DO_nrm', tz = tz, 
+  lat = lat, long = long)
 ```
 
 ### License

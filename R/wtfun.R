@@ -5,7 +5,7 @@
 #' @param ref_in one row of the data frame of \code{dat_in} that is teh center of the window
 #' @param dat_in data frame for estimating weights
 #' @param wt_vars chr string indicating names of weighting variables
-#' @param wins numeric vecotr for windows for the three wt variables, values represent halves
+#' @param wins numeric vecotr for windows for the three wt variables, values represent halves.  A \code{NULL} value for Tide specifies the half-window width is set automatically to one half the tidal range.
 #' @param all logical to return all weights, rather than the product of all three
 #' @param slice logical for subsetting \code{dat_in} for faster wt selection
 #' @param subs_only logical for returning only wt vectors that are non-zero

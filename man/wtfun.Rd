@@ -15,7 +15,7 @@ wtfun(ref_in, dat_in, wt_vars = c("dec_time", "hour", "Tide"),
 
 \item{wt_vars}{chr string indicating names of weighting variables}
 
-\item{wins}{numeric vecotr for windows for the three wt variables, values represent halves}
+\item{wins}{numeric vecotr for windows for the three wt variables, values represent halves.  A \code{NULL} value for Tide specifies the half-window width is set automatically to one half the tidal range.}
 
 \item{all}{logical to return all weights, rather than the product of all three}
 
