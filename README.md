@@ -22,7 +22,7 @@ install_github('fawda123/WtRegDO')
 
 Please cite this package using the submitted manuscript.
 
-*Beck MW, Hagy III JD, Murrell MC. Conditionally accepted. Improving estimates of ecosystem metabolism by reducing effects of tidal advection on dissolved oxygen time series. Limnology and Oceanography Methods.*
+*Beck MW, Hagy III JD, Murrell MC. 2015 (in press). Improving estimates of ecosystem metabolism by reducing effects of tidal advection on dissolved oxygen time series. Limnology and Oceanography Methods.*
 
 ### Functions
 
@@ -56,6 +56,27 @@ metab_obs <- ecometab(res, DO_var = 'DO_obs', tz = tz,
 metab_dtd <- ecometab(res, DO_var = 'DO_nrm', tz = tz, 
   lat = lat, long = long)
 ```
+
+The metabolism results can be plotted by aggregation periods of the daily estimates.
+
+
+```r
+data(SAPDC)
+
+# metadata for the location
+tz <- 'America/Jamaica'
+lat <- 31.39
+long <- -89.28
+
+# estimate ecosystem metabolism using observed DO time series
+met_ex <- ecometab(SAPDC, DO_var = 'DO_obs', tz = tz,
+ lat = lat, long = long)
+
+## plot
+plot(met_ex)
+```
+
+![](README_files/figure-html/unnamed-chunk-4-1.png) 
 
 ### License
 

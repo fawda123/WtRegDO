@@ -6,8 +6,9 @@
 #' @param dat_in Input data frame which must include time series of dissolved oxygen (mg L-1)
 #' @param DO_var chr string indicating the name of the column with the dissolved oxygen variable for estimating metabolism
 #' @param depth_val alternative value to use for station depth
+#' @param metab_units chr indicating desired units of output for oxygen, either as mmol or grams
 #' @param bott_stat logical if air-sea gas exchange is removed from the estimate
-#' @param ... arguments passed to \code{\link{met_day_fun}}
+#' @param ... arguments passed to or from other methods
 #'
 #' @import oce plyr wq
 #'
@@ -40,8 +41,26 @@
 #' @seealso
 #' \code{\link{f_calcKL}} for estimating the oxygen mass transfer coefficient used with the air-sea gas exchange model and \code{\link{met_day_fun}} for identifying the metabolic day for each observation in the time series
 #'
-ecometab<-function(dat_in, DO_var = 'DO_mgl', depth_val = NULL,
+#'
+#' @examples
+#' \dontrun{
+#' data(SAPDC)
+#'
+#' # metadata for the location
+#' tz <- 'America/Jamaica'
+#' lat <- 31.39
+#' long <- -89.28
+#'
+#' # estimate ecosystem metabolism using observed DO time series
+#' metab <- ecometab(SAPDC, DO_var = 'DO_obs', tz = tz,
+#'  lat = lat, long = long)
+#' }
+ecometab <- function(dat_in, DO_var = 'DO_mgl', depth_val = NULL, metab_units = 'mmol',
   bott_stat = FALSE, ...){
+
+  # stop if units not mmol or grams
+  if(any(!(grepl('mmol|grams', metab_units))))
+    stop('Units must be mmol or grams')
 
   ##begin calculations
 
@@ -183,6 +202,19 @@ ecometab<-function(dat_in, DO_var = 'DO_mgl', depth_val = NULL,
     )
 
   out<-do.call('rbind',out)
+
+  # change units to grams
+  if('grams' %in% metab_units){
+
+    # convert metab data to g m^-2 d^-1
+    # 1mmolO2 = 32 mg O2, 1000mg = 1g, multiply by 32/1000
+    as_grams <- apply(out[, -1], 2, function(x) x * 0.032)
+    out <- data.frame(Date = out[, 'Date'], as_grams)
+
+  }
+
+  # make metab class
+  class(out) <- c('metab', 'data.frame')
 
   return(out)
 

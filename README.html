@@ -78,7 +78,7 @@ install_github(&#39;fawda123/WtRegDO&#39;)</code></pre>
 <div id="citation" class="section level3">
 <h3>Citation</h3>
 <p>Please cite this package using the submitted manuscript.</p>
-<p><em>Beck MW, Hagy III JD, Murrell MC. Conditionally accepted. Improving estimates of ecosystem metabolism by reducing effects of tidal advection on dissolved oxygen time series. Limnology and Oceanography Methods.</em></p>
+<p><em>Beck MW, Hagy III JD, Murrell MC. 2015 (in press). Improving estimates of ecosystem metabolism by reducing effects of tidal advection on dissolved oxygen time series. Limnology and Oceanography Methods.</em></p>
 </div>
 <div id="functions" class="section level3">
 <h3>Functions</h3>
@@ -108,6 +108,21 @@ metab_obs &lt;- ecometab(res, DO_var = &#39;DO_obs&#39;, tz = tz,
 # estimate ecosystem metabolism using detided DO time series
 metab_dtd &lt;- ecometab(res, DO_var = &#39;DO_nrm&#39;, tz = tz, 
   lat = lat, long = long)</code></pre>
+<p>The metabolism results can be plotted by aggregation periods of the daily estimates.</p>
+<pre class="r"><code>data(SAPDC)
+
+# metadata for the location
+tz &lt;- &#39;America/Jamaica&#39;
+lat &lt;- 31.39
+long &lt;- -89.28
+
+# estimate ecosystem metabolism using observed DO time series
+met_ex &lt;- ecometab(SAPDC, DO_var = &#39;DO_obs&#39;, tz = tz,
+ lat = lat, long = long)
+
+## plot
+plot(met_ex)</code></pre>
+<p><img src="README_files/figure-html/unnamed-chunk-4-1.png" /></p>
 </div>
 <div id="license" class="section level3">
 <h3>License</h3>
