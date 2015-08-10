@@ -214,7 +214,7 @@ ecometab <- function(dat_in, DO_var = 'DO_mgl', depth_val = NULL, metab_units = 
   }
 
   # make metab class
-  class(out) <- c('metab', 'data.frame')
+  class(out) <- c('metab')
 
   return(out)
 
