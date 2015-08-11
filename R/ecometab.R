@@ -1,14 +1,13 @@
 ######
 #' Ecosystem metabolism
 #'
-#' Estimate ecosystem metabolism using the Odum open-water method.  Estimates of daily integrated gross production, total respiration, and net ecosystem metabolism are returned.
+#' Estimate ecosystem metabolism using the Odum open-water method.  Estimates of daily integrated gross production, total respiration, and net ecosystem metabolism are returned.  A plotting method is also provided.
 #'
 #' @param dat_in Input data frame which must include time series of dissolved oxygen (mg L-1)
 #' @param DO_var chr string indicating the name of the column with the dissolved oxygen variable for estimating metabolism
 #' @param depth_val alternative value to use for station depth
 #' @param metab_units chr indicating desired units of output for oxygen, either as mmol or grams
 #' @param bott_stat logical if air-sea gas exchange is removed from the estimate
-#' @param ... arguments passed to or from other methods
 #'
 #' @import oce plyr wq
 #'
@@ -27,7 +26,11 @@
 #'
 #' The specific approach for estimating metabolism with the open-water method is described in Caffrey et al. 2013 and references cited therein.
 #'
-#' @return A data frame with daily integrated metabolism estimates including gross produciton (Pg), total respiration (Rt), and net ecosystem metabolism (NEM).
+#' The plotting method plots daily metabolism estimates using different aggregation periods.  Accepted aggregation periods are \code{'years'}, \code{'quarters'}, \code{'months'}, \code{'weeks'}, and \code{'days'} (if no aggregation is preferred). The default function for aggregating is the \code{\link[base]{mean}} for the periods specified by the \code{by} argument.  Setting \code{pretty = FALSE} will return the plot with minimal modifications to the \code{\link[ggplot2]{ggplot}} object.
+#'
+#' @return A \code{metab} object with daily integrated metabolism estimates including gross produciton (Pg), total respiration (Rt), and net ecosystem metabolism (NEM).
+#'
+#' The plot method returns a \code{\link[ggplot2]{ggplot}} object which can be further modified.
 #'
 #' @references
 #' Caffrey JM, Murrell MC, Amacker KS, Harper J, Phipps S, Woodrey M. 2013. Seasonal and inter-annual patterns in primary production, respiration and net ecosystem metabolism in 3 estuaries in the northeast Gulf of Mexico. Estuaries and Coasts. 37(1):222-241.
@@ -41,7 +44,6 @@
 #' @seealso
 #' \code{\link{f_calcKL}} for estimating the oxygen mass transfer coefficient used with the air-sea gas exchange model and \code{\link{met_day_fun}} for identifying the metabolic day for each observation in the time series
 #'
-#'
 #' @examples
 #' \dontrun{
 #' data(SAPDC)
@@ -54,6 +56,15 @@
 #' # estimate ecosystem metabolism using observed DO time series
 #' metab <- ecometab(SAPDC, DO_var = 'DO_obs', tz = tz,
 #'  lat = lat, long = long)
+#'
+#' ## plot
+#' plot(metab)
+#'
+#' ## change alpha, aggregation period, widths
+#' plot(metab, by = 'quarters', alpha = 0.1, widths = 0)
+#'
+#' ## plot daily raw, no aesthetics
+#' plot(metab, by = 'days', pretty = FALSE)
 #' }
 ecometab <- function(dat_in, ...) UseMethod('ecometab')
 

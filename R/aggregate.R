@@ -1,38 +1,18 @@
+#' Aggregete metabolism data
+#'
+#' Aggregate metabolism data for a metab object
+#'
+#' @param x input data object as returned by \code{\link{ecometab}}
+#' @param by character string indicating aggregation period
+#' @param alpha level for estimating confidence intervals in aggregated data
 #' @param na.action function for treating missing data, default \code{na.pass}
+#' @param ... arguments passed to or from other methods
 #'
 #' @import data.table
 #'
-#' @export
-#'
 #' @importFrom stats na.omit na.pass qt sd
 #'
-#' @details The aggregate method summarizes metabolism data by averaging across set periods of observation. Confidence intervals are also returned based on the specified alpha level.  It is used within the \code{\link{plot}} function to view summarized metabolism results.  Data can be aggregated by \code{'years'}, \code{'quarters'}, \code{'months'}, or \code{'weeks'} for the supplied function, which defaults to the \code{\link[base]{mean}}.
-#'
-#' @return Returns an aggregated metabolism \code{\link[base]{data.frame}}.
-#'
-#' @seealso \code{\link[stats]{aggregate}}, \code{\link{ecometab}}
-#'
-#' @rdname ecometab
-#'
 #' @method aggregate metab
-#'
-#' @examples
-#' \dontrun{
-#' ## import sample data
-#' data(SAPDC)
-#'
-#' # metadata for the location
-#' tz <- 'America/Jamaica'
-#' lat <- 31.39
-#' long <- -89.28
-#'
-#' # estimate ecosystem metabolism using observed DO time series
-#' metab <- ecometab(SAPDC, DO_var = 'DO_obs', tz = tz,
-#'  lat = lat, long = long)
-#'
-#' ## change aggregation period and alpha
-#' aggregate(metab, by = 'months', alpha = 0.1)
-#' }
 aggregate.metab <- function(x, by = 'weeks', na.action = na.pass, alpha = 0.05, ...){
 
   # sanity checks

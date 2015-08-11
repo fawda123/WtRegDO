@@ -3,49 +3,15 @@
 #' @param alpha numeric indicating alpha level for confidence intervals in aggregated data. Use \code{NULL} to remove from the plot.
 #' @param width numeric indicating width of top and bottom segments on error bars
 #' @param pretty logical indicating use of predefined plot aesthetics
+#' @param ... arguments passed to or from other methods
 #'
 #' @import ggplot2
 #'
 #' @export
 #'
-#' @details
-#' The plotting method plots daily metabolism estimates using different aggregatin periods.  Accepted aggregation periods are \code{'years'}, \code{'quarters'}, \code{'months'}, \code{'weeks'}, and \code{'days'} (if no aggregation is preferred).
-#'
-#' By default, \code{pretty = TRUE} will return a \code{\link[ggplot2]{ggplot}} object with predefined aesthetics.  Setting \code{pretty = FALSE} will return the plot with minimal modifications to the \code{\link[ggplot2]{ggplot}} object.  Use the latter approach for easier customization of the plot.
-#'
-#' @return
-#' A \code{\link[ggplot2]{ggplot}} object which can be further modified.
-#'
-#' @seealso
-#' \code{\link{ecometab}}
-#'
 #' @rdname ecometab
 #'
 #' @method plot metab
-#'
-#' @examples
-#' \dontrun{
-#' ## import sample data
-#' data(SAPDC)
-#'
-#' # metadata for the location
-#' tz <- 'America/Jamaica'
-#' lat <- 31.39
-#' long <- -89.28
-#'
-#' # estimate ecosystem metabolism using observed DO time series
-#' metab <- ecometab(SAPDC, DO_var = 'DO_obs', tz = tz,
-#'  lat = lat, long = long)
-#'
-#' ## plot
-#' plot(metab)
-#'
-#' ## change alpha, aggregation period, widths
-#' plot(metab, by = 'quarters', alpha = 0.1, widths = 0)
-#'
-#' ## plot daily raw, no aesthetics
-#' plot(metab, by = 'days', pretty = FALSE)
-#' }
 plot.metab <- function(x, by = 'months', metab_units = 'mmol', alpha = 0.05, width = 10, pretty = TRUE, ...){
 
   # stop if units not mmol or grams
