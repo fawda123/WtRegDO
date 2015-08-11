@@ -10,6 +10,8 @@
 #'
 #' @import ggplot2
 #'
+#' @export
+#'
 #' @details
 #' Daily metabolism estimates are aggregated into weekly averages by default.  Accepted aggregation periods are \code{'years'}, \code{'quarters'}, \code{'months'}, \code{'weeks'}, and \code{'days'} (if no aggregation is preferred).
 #'
