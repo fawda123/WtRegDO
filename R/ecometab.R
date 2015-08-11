@@ -55,7 +55,14 @@
 #' metab <- ecometab(SAPDC, DO_var = 'DO_obs', tz = tz,
 #'  lat = lat, long = long)
 #' }
-ecometab <- function(dat_in, DO_var = 'DO_mgl', depth_val = NULL, metab_units = 'mmol',
+ecometab <- function(dat_in, ...) UseMethod('ecometab')
+
+#' @rdname ecometab
+#'
+#' @export
+#'
+#' @method ecometab default
+ecometab.default <- function(dat_in, DO_var = 'DO_mgl', depth_val = NULL, metab_units = 'mmol',
   bott_stat = FALSE, ...){
 
   # stop if units not mmol or grams

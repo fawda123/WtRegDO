@@ -1,7 +1,3 @@
-#' Plot ecosystem metabolism results
-#'
-#' Plot gross production, total respiration, and net ecosystem metabolism for different time period aggregations.
-#'
 #' @param x input object to plot
 #' @param by chr string describing aggregation period, passed to \code{\link{aggregate}}. See details for accepted values.
 #' @param alpha numeric indicating alpha level for confidence intervals in aggregated data. Use \code{NULL} to remove from the plot.
@@ -13,7 +9,7 @@
 #' @export
 #'
 #' @details
-#' Daily metabolism estimates are aggregated into weekly averages by default.  Accepted aggregation periods are \code{'years'}, \code{'quarters'}, \code{'months'}, \code{'weeks'}, and \code{'days'} (if no aggregation is preferred).
+#' The plotting method plots daily metabolism estimates using different aggregatin periods.  Accepted aggregation periods are \code{'years'}, \code{'quarters'}, \code{'months'}, \code{'weeks'}, and \code{'days'} (if no aggregation is preferred).
 #'
 #' By default, \code{pretty = TRUE} will return a \code{\link[ggplot2]{ggplot}} object with predefined aesthetics.  Setting \code{pretty = FALSE} will return the plot with minimal modifications to the \code{\link[ggplot2]{ggplot}} object.  Use the latter approach for easier customization of the plot.
 #'
@@ -57,7 +53,11 @@ plot.metab <- function(x, by = 'months', metab_units = 'mmol', alpha = 0.05, wid
     stop('Units must be mmol or grams')
 
   # aggregate metab results by time period
-  to_plo <- aggregate(x, by = by, alpha = alpha)
+  if(!is.null(alpha)){
+    to_plo <- aggregate(x, by = by, alpha = alpha)
+  } else {
+    to_plo <- aggregate(x, by = by, alpha = 0.05)
+  }
 
   ## base plot
   p <- ggplot(to_plo, aes_string(x = 'Date', y = 'means', group = 'Estimate')) +

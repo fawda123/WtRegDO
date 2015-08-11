@@ -1,14 +1,12 @@
-#' Aggregate metabolism data
-#'
-#' Aggregate a metabolism data by a specified time period and method
-#'
 #' @param na.action function for treating missing data, default \code{na.pass}
 #'
 #' @import data.table
 #'
+#' @export
+#'
 #' @importFrom stats na.omit na.pass qt sd
 #'
-#' @details The function summarizes metabolism data by averaging across set periods of observation. Confidence intervals are also returned based on the specified alpha level.  It is used within the \code{\link{plot}} function to view summarized metabolism results.  Data can be aggregated by \code{'years'}, \code{'quarters'}, \code{'months'}, or \code{'weeks'} for the supplied function, which defaults to the \code{\link[base]{mean}}.
+#' @details The aggregate method summarizes metabolism data by averaging across set periods of observation. Confidence intervals are also returned based on the specified alpha level.  It is used within the \code{\link{plot}} function to view summarized metabolism results.  Data can be aggregated by \code{'years'}, \code{'quarters'}, \code{'months'}, or \code{'weeks'} for the supplied function, which defaults to the \code{\link[base]{mean}}.
 #'
 #' @return Returns an aggregated metabolism \code{\link[base]{data.frame}}.
 #'

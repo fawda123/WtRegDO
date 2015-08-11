@@ -3,13 +3,16 @@
 \name{aggregate.metab}
 \alias{aggregate.metab}
 \alias{ecometab}
+\alias{ecometab.default}
 \alias{plot.metab}
-\title{Aggregate metabolism data}
+\title{Ecosystem metabolism}
 \usage{
 \method{aggregate}{metab}(x, by = "weeks", na.action = na.pass,
   alpha = 0.05, ...)
 
-ecometab(dat_in, DO_var = "DO_mgl", depth_val = NULL,
+ecometab(dat_in, ...)
+
+\method{ecometab}{default}(dat_in, DO_var = "DO_mgl", depth_val = NULL,
   metab_units = "mmol", bott_stat = FALSE, ...)
 
 \method{plot}{metab}(x, by = "months", metab_units = "mmol", alpha = 0.05,
@@ -48,14 +51,10 @@ A data frame with daily integrated metabolism estimates including gross producit
 A \code{\link[ggplot2]{ggplot}} object which can be further modified.
 }
 \description{
-Aggregate a metabolism data by a specified time period and method
-
 Estimate ecosystem metabolism using the Odum open-water method.  Estimates of daily integrated gross production, total respiration, and net ecosystem metabolism are returned.
-
-Plot gross production, total respiration, and net ecosystem metabolism for different time period aggregations.
 }
 \details{
-The function summarizes metabolism data by averaging across set periods of observation. Confidence intervals are also returned based on the specified alpha level.  It is used within the \code{\link{plot}} function to view summarized metabolism results.  Data can be aggregated by \code{'years'}, \code{'quarters'}, \code{'months'}, or \code{'weeks'} for the supplied function, which defaults to the \code{\link[base]{mean}}.
+The aggregate method summarizes metabolism data by averaging across set periods of observation. Confidence intervals are also returned based on the specified alpha level.  It is used within the \code{\link{plot}} function to view summarized metabolism results.  Data can be aggregated by \code{'years'}, \code{'quarters'}, \code{'months'}, or \code{'weeks'} for the supplied function, which defaults to the \code{\link[base]{mean}}.
 
 Input data include both water quality and weather time series, which are typically collected with independent instrument systems.  This requires merging of the time series datasets.
 
@@ -69,7 +68,7 @@ All DO calculations within the function are done using molar units (e.g., mmol O
 
 The specific approach for estimating metabolism with the open-water method is described in Caffrey et al. 2013 and references cited therein.
 
-Daily metabolism estimates are aggregated into weekly averages by default.  Accepted aggregation periods are \code{'years'}, \code{'quarters'}, \code{'months'}, \code{'weeks'}, and \code{'days'} (if no aggregation is preferred).
+The plotting method plots daily metabolism estimates using different aggregatin periods.  Accepted aggregation periods are \code{'years'}, \code{'quarters'}, \code{'months'}, \code{'weeks'}, and \code{'days'} (if no aggregation is preferred).
 
 By default, \code{pretty = TRUE} will return a \code{\link[ggplot2]{ggplot}} object with predefined aesthetics.  Setting \code{pretty = FALSE} will return the plot with minimal modifications to the \code{\link[ggplot2]{ggplot}} object.  Use the latter approach for easier customization of the plot.
 }
