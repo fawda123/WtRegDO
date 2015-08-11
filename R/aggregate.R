@@ -13,7 +13,7 @@
 #' @importFrom stats na.omit na.pass qt sd
 #'
 #' @method aggregate metab
-aggregate.metab <- function(x, by = 'weeks', na.action = na.pass, alpha = 0.05, ...){
+aggregate.metab <- function(x, by = 'weeks', na.action = 'na.pass', alpha = 0.05, ...){
 
   # sanity checks
   if(!by %in% c('years', 'quarters', 'months', 'weeks', 'days'))
@@ -50,7 +50,7 @@ aggregate.metab <- function(x, by = 'weeks', na.action = na.pass, alpha = 0.05, 
       return(c(means, upper, lower))
     }
   aggs <- stats::aggregate(Value ~ Date + Estimate, to_agg,
-    FUN = function(x) sum_fun(x, alpha_in = alpha))
+    FUN = function(x) sum_fun(x, alpha_in = alpha), na.action = na.action)
   aggs_vals <- data.frame(aggs[, 'Value'])
   names(aggs_vals) <- c('means', 'lower', 'upper')
   aggs <- data.frame(aggs[, c('Date', 'Estimate')], aggs_vals)

@@ -4,7 +4,7 @@
 \alias{aggregate.metab}
 \title{Aggregete metabolism data}
 \usage{
-\method{aggregate}{metab}(x, by = "weeks", na.action = na.pass,
+\method{aggregate}{metab}(x, by = "weeks", na.action = "na.pass",
   alpha = 0.05, ...)
 }
 \arguments{

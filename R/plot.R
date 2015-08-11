@@ -20,9 +20,9 @@ plot.metab <- function(x, by = 'months', metab_units = 'mmol', alpha = 0.05, wid
 
   # aggregate metab results by time period
   if(!is.null(alpha)){
-    to_plo <- aggregate(x, by = by, alpha = alpha)
+    to_plo <- aggregate(x, by = by, alpha = alpha, ...)
   } else {
-    to_plo <- aggregate(x, by = by, alpha = 0.05)
+    to_plo <- aggregate(x, by = by, alpha = 0.05, ...)
   }
 
   ## base plot
