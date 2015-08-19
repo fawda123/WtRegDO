@@ -30,7 +30,7 @@ plot.metab <- function(x, by = 'months', metab_units = 'mmol', alpha = 0.05, wid
     geom_line()
 
   # add bars if not days and alpha not null
-  if(inherits(by, 'numeric')) alpha <- NULL
+  if(inherits(by, c('numeric', 'integer'))) alpha <- NULL
   if(by != 'days' & !is.null(alpha))
     p <- p +
       geom_errorbar(

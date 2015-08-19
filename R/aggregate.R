@@ -61,7 +61,7 @@ aggregate.metab <- function(x, by = 'weeks', na.action = 'na.pass', alpha = 0.05
   } else {
 
     # stop if not numeric
-    if(!inherits(by, 'numeric'))
+    if(!inherits(by, c('numeric', 'integer')))
       stop('By argument must be character string of aggregation period or numeric indicating number of days')
 
     # use smoother default method

@@ -12,13 +12,9 @@ smoother(x, ...)
 \arguments{
 \item{x}{input object}
 
-\item{...}{arguments passed to or from other methods}
-
 \item{window}{numeric vector defining size of the smoothing window, passed to \code{filter}}
 
 \item{sides}{numeric vector defining method of averaging, passed to \code{filter}}
-
-\item{params}{is chr string of swmpr parameters to smooth, default all}
 }
 \value{
 Returns a filtered swmpr object. QAQC columns are removed if included with input object.

@@ -5,8 +5,6 @@
 #' @param x input object
 #' @param window numeric vector defining size of the smoothing window, passed to \code{filter}
 #' @param sides numeric vector defining method of averaging, passed to \code{filter}
-#' @param params is chr string of swmpr parameters to smooth, default all
-#' @param ... arguments passed to or from other methods
 #'
 #' @concept analyze
 #'
