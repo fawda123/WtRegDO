@@ -12,6 +12,8 @@ smoother(x, ...)
 \arguments{
 \item{x}{input object}
 
+\item{...}{additional arguments passed to \code{\link[stats]{filter}}}
+
 \item{window}{numeric vector defining size of the smoothing window, passed to \code{filter}}
 
 \item{sides}{numeric vector defining method of averaging, passed to \code{filter}}

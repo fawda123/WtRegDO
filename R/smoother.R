@@ -5,6 +5,7 @@
 #' @param x input object
 #' @param window numeric vector defining size of the smoothing window, passed to \code{filter}
 #' @param sides numeric vector defining method of averaging, passed to \code{filter}
+#' @param ... additional arguments passed to \code{\link[stats]{filter}}
 #'
 #' @concept analyze
 #'
