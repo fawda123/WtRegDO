@@ -57,7 +57,7 @@ metab_dtd <- ecometab(res, DO_var = 'DO_nrm', tz = tz,
   lat = lat, long = long)
 ```
 
-The metabolism results can be plotted by aggregation periods of the daily estimates.
+The metabolism results can be plotted by aggregation periods of the daily estimates or smoothed using a moving window filter.
 
 
 ```r
@@ -72,11 +72,18 @@ long <- -89.28
 met_ex <- ecometab(SAPDC, DO_var = 'DO_obs', tz = tz,
  lat = lat, long = long)
 
-## plot
+# plot by monthly averages
 plot(met_ex)
 ```
 
 ![](README_files/figure-html/unnamed-chunk-4-1.png) 
+
+```r
+# plot after filtering with a centered 20 day moving average
+plot(met_ex, by = 20)
+```
+
+![](README_files/figure-html/unnamed-chunk-4-2.png) 
 
 ### License
 

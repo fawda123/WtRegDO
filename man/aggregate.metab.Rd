@@ -10,7 +10,7 @@
 \arguments{
 \item{x}{input data object as returned by \code{\link{ecometab}}}
 
-\item{by}{character string indicating aggregation period}
+\item{by}{character string indicating aggregation period or numeric value indicating moving window width for daily averages}
 
 \item{na.action}{function for treating missing data, default \code{na.pass}}
 

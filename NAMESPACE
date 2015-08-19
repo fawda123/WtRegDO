@@ -2,9 +2,11 @@
 
 S3method(ecometab,default)
 S3method(plot,metab)
+S3method(smoother,default)
 export(ecometab)
 export(f_calcKL)
 export(met_day_fun)
+export(smoother)
 export(wtfun)
 export(wtreg)
 import(StreamMetabolism)

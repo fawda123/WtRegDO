@@ -108,7 +108,7 @@ metab_obs &lt;- ecometab(res, DO_var = &#39;DO_obs&#39;, tz = tz,
 # estimate ecosystem metabolism using detided DO time series
 metab_dtd &lt;- ecometab(res, DO_var = &#39;DO_nrm&#39;, tz = tz, 
   lat = lat, long = long)</code></pre>
-<p>The metabolism results can be plotted by aggregation periods of the daily estimates.</p>
+<p>The metabolism results can be plotted by aggregation periods of the daily estimates or smoothed using a moving window filter.</p>
 <pre class="r"><code>data(SAPDC)
 
 # metadata for the location
@@ -120,9 +120,12 @@ long &lt;- -89.28
 met_ex &lt;- ecometab(SAPDC, DO_var = &#39;DO_obs&#39;, tz = tz,
  lat = lat, long = long)
 
-## plot
+# plot by monthly averages
 plot(met_ex)</code></pre>
 <p><img src="README_files/figure-html/unnamed-chunk-4-1.png" /></p>
+<pre class="r"><code># plot after filtering with a centered 20 day moving average
+plot(met_ex, by = 20)</code></pre>
+<p><img src="README_files/figure-html/unnamed-chunk-4-2.png" /></p>
 </div>
 <div id="license" class="section level3">
 <h3>License</h3>
