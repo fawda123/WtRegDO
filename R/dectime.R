@@ -3,7 +3,7 @@
 #' Create decimal time using day on a 24 hour scale in prep for weighted regression
 #'
 #' @param dat_in data frame input with time vector as posix, must be preprocessed with \code{\link{met_day_fun}}
-#' @import plyr reshape2
+#' @import plyr
 #'
 dectime <- function(dat_in){
 
@@ -24,7 +24,7 @@ dectime <- function(dat_in){
   # get continuous day value
   days <- as.character(seq(1:(length(by_met))) - 1)
   names(by_met) <- days
-  by_met <- melt(by_met)
+  by_met <- reshape2::melt(by_met)
   by_met$L1 <- as.numeric(by_met$L1)
 
   # add continuous day value to decimal value

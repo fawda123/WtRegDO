@@ -8,7 +8,7 @@
 #' @param lat numeric for latitude
 #' @param long numeric for longitude (negative west of prime meridian)
 #'
-#' @import reshape2 StreamMetabolism
+#' @import StreamMetabolism
 #'
 #' @export
 #'
@@ -35,7 +35,7 @@ met_day_fun<-function(dat_in,
     ss.dat,
     met.date=as.Date(ss.dat$sunrise,tz=tz)
     )
-  ss.dat<-melt(ss.dat,id.vars='met.date')
+  ss.dat<-reshape2::melt(ss.dat,id.vars='met.date')
   if(!"POSIXct" %in% class(ss.dat$value))
     ss.dat$value<-as.POSIXct(ss.dat$value, origin='1970-01-01',tz=tz)
   ss.dat<-ss.dat[order(ss.dat$value),]
