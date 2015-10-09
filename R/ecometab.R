@@ -146,9 +146,9 @@ ecometab.default <- function(dat_in, DO_var = 'DO_mgl', depth_val = NULL, metab_
   # get sigma_t estimates
   SigT<-with(dat_in,swSigmaT(Sal,Temp,mean(dat_in$BP/100,na.rm=TRUE)))
 
-  #DOsat is DO at saturation given temp (C), salinity (st. unit), and press (atm)
-  #DOsat converted to mmol/m3
-  #used to get loss of O2 from diffusion
+  # DOsat is a ratio between DO (mg/L) and DO at saturation (mg/L), gets around a unit conversion issue
+  # oxysol returns the actual DO saturation in mg/L
+  # used to get loss of O2 from diffusion
   DOsat<-with(dat_in,get(DO_var)/(oxySol(Temp*(1000+SigT)/1000,Sal)))
 
   #station depth, defaults to mean depth value plus 0.5 in case not on bottom
@@ -168,6 +168,7 @@ ecometab.default <- function(dat_in, DO_var = 'DO_mgl', depth_val = NULL, metab_
   Ka<-KL/24/H
 
   #get exchange at air water interface
+  # DO/DOsat - DO reduces to Cs - C in mmol/m3 (DOsat is actually a ratio between DO and DO at saturation
   D=Ka*(DO/DOsat-DO)
 
   #combine all data for processing

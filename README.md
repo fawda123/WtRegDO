@@ -1,7 +1,7 @@
 
 ## WtRegDO
 
-#### *Marcus W. Beck, mbafs2012@gmail.com*
+#### *Marcus W. Beck, beck.marcus@epa.gov*
 
 Linux: [![Travis-CI Build Status](https://travis-ci.org/fawda123/WtRegDO.svg?branch=master)](https://travis-ci.org/fawda123/WtRegDO)
 
@@ -22,7 +22,7 @@ install_github('fawda123/WtRegDO')
 
 Please cite this package using the submitted manuscript.
 
-*Beck MW, Hagy III JD, Murrell MC. 2015 (in press). Improving estimates of ecosystem metabolism by reducing effects of tidal advection on dissolved oxygen time series. Limnology and Oceanography Methods.*
+*Beck MW, Hagy III JD, Murrell MC. 2015 (in press). Improving estimates of ecosystem metabolism by reducing effects of tidal advection on dissolved oxygen time series. Limnology and Oceanography Methods. DOI: [10.1002/lom3.10062](http://onlinelibrary.wiley.com/doi/10.1002/lom3.10062/abstract)*
 
 ### Functions
 
