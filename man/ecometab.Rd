@@ -15,7 +15,7 @@ ecometab(dat_in, ...)
   width = 10, pretty = TRUE, ...)
 }
 \arguments{
-\item{dat_in}{Input data frame which must include time series of dissolved oxygen (mg L-1)}
+\item{dat_in}{Input data frame which must include time series of dissolved oxygen (mg L-1), see \code{\link{SAPDC}} for data structure}
 
 \item{...}{arguments passed to or from other methods}
 
@@ -46,7 +46,7 @@ The plot method returns a \code{\link[ggplot2]{ggplot}} object which can be furt
 Estimate ecosystem metabolism using the Odum open-water method.  Estimates of daily integrated gross production, total respiration, and net ecosystem metabolism are returned.  A plotting method is also provided.
 }
 \details{
-Input data include both water quality and weather time series, which are typically collected with independent instrument systems.  This requires merging of the time series datasets.
+Input data include both water quality and weather time series, which are typically collected with independent instrument systems.  This requires merging of the time series datasets.  These include time series of dissolved oxygen, salinity, air and water temperature, barometric pressure, and wind speed (see \code{\link{SAPDC}} for an example of the data structure for \code{ecometab}).
 
 The open-water method is a common approach to quantify net ecosystem metabolism using a mass balance equation that describes the change in dissolved oxygen over time from the balance between photosynthetic and respiration processes, corrected using an empirically constrained air-sea gas diffusion model (see Ro and Hunt 2006, Thebault et al. 2008).  The diffusion-corrected DO flux estimates are averaged separately over each day and night of the time series. The nighttime average DO flux is used to estimate respiration rates, while the daytime DO flux is used to estimate net primary production. To generate daily integrated rates, respiration rates are assumed constant such that hourly night time DO flux rates are multiplied by 24. Similarly, the daytime DO flux rates are multiplied by the number of daylight hours, which varies with location and time of year, to yield net daytime primary production. Respiration rates are subtracted from daily net production estimates to yield gross production rates.  The metabolic day is considered the 24 hour period between sunsets on two adjacent calendar days.
 
