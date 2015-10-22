@@ -21,7 +21,7 @@ ecometab(dat_in, ...)
 
 \item{DO_var}{chr string indicating the name of the column with the dissolved oxygen variable for estimating metabolism}
 
-\item{depth_val}{alternative value to use for station depth}
+\item{depth_val}{alternative value to use for station depth (m), can be a single value for the whole dataset or a vector of depth values equal in length to the time series.}
 
 \item{metab_units}{chr indicating desired units of output for oxygen, either as mmol or grams}
 
