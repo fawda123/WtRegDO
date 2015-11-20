@@ -5,6 +5,7 @@
 #' @param dat_in data frame input with time vector as posix, must be preprocessed with \code{\link{met_day_fun}}
 #' @import plyr
 #'
+#' @export
 dectime <- function(dat_in){
 
   # get decimal value by metabolic date for hour/min
