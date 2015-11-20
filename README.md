@@ -85,7 +85,7 @@ plot(met_ex, by = 20)
 
 ![](README_files/figure-html/unnamed-chunk-4-2.png) 
 
-The `evalcor` function can be used to assess the potentail effectiveness of weighted regression by identifying points in the time series when tidal and solar changes are not correlated.  In general, the `wtreg` will be most effective when correlations between the two are zero, whereas `wtreg` will remove both the biological and physical components of the dissolved oxygen time series when the sun and tide are correlated.   The correlation between tide change and sun angle is estimated using a moving window for the time series.  Tide changes are estimated as angular rates for the tidal height vector and sun angles are estimated from the time of day and geographic location.
+The `evalcor` function can be used to assess the potential effectiveness of weighted regression by identifying points in the time series when tidal and solar changes are not correlated.  In general, the `wtreg` will be most effective when correlations between the two are zero, whereas `wtreg` will remove both the biological and physical components of the dissolved oxygen time series when the sun and tide are correlated.   The correlation between tide change and sun angle is estimated using a moving window for the time series.  Tide changes are estimated as angular rates for the tidal height vector and sun angles are estimated from the time of day and geographic location.
 
 
 ```r
