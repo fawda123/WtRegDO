@@ -1,8 +1,8 @@
 Package: WtRegDO
 Type: Package
 Title: Implement Weighted Regression on Dissolved Oxygen Time Series
-Version: 0.3.9000
-Date: 2015-08-19
+Version: 0.4.9000
+Date: 2015-11-20
 Author: Marcus W. Beck [aut, cre]
 Maintainer: Marcus W. Beck <mbafs2012@gmail.com>
 Description: A sample dataset and functions to implement weighted regression on dissolved
@@ -13,6 +13,7 @@ BugReports: https://github.com/fawda123/WtRegDO/issues
 License: CC0
 Imports:
     data.table,
+    foreach,
     ggplot2,
     plyr,
     oce,
@@ -20,7 +21,6 @@ Imports:
     StreamMetabolism,
     wq
 Suggests:
-    foreach,
     doParallel
 Depends:
     R (>= 3.1.1)

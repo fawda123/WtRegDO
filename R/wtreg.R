@@ -19,10 +19,13 @@
 #'
 #' @examples
 #' \dontrun{
-#' ## import data
 #' data(SAPDC)
 #'
-#' res <- wtreg(SAPDC)
+#' tz <- 'America/Jamaica'
+#' lat <- 31.39
+#' long <- -89.28
+#'
+#' res <- wtreg(SAPDC, tz = tz, lat = lat, long = long)
 #'
 #' }
 wtreg <- function(dat_in, DO_obs = 'DO_obs', wins = list(4, 12, NULL),
