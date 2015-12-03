@@ -25,6 +25,9 @@ plot.metab <- function(x, by = 'months', metab_units = 'mmol', alpha = 0.05, wid
     to_plo <- aggregate(x, by = by, alpha = 0.05, ...)
   }
 
+  # set factor levels
+  to_plo$Estimate <- factor(to_plo$Estimate, levels = c('NEM', 'Pg', 'Rt'))
+
   ## base plot
   p <- ggplot(to_plo, aes_string(x = 'Date', y = 'val', group = 'Estimate')) +
     geom_line()

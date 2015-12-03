@@ -154,23 +154,23 @@ ecometab.default <- function(dat_in, DO_var = 'DO_mgl', depth_val = NULL, metab_
   #station depth, defaults to mean depth value plus 0.5 in case not on bottom
   # uses 'depth_val' if provided, can be single value or vector with equal to nrow dat_in
   if(is.null(depth_val)){
-    
+
     H<-rep(0.5 + mean(pmax(1,dat_in$Depth), na.rm = TRUE), nrow(dat_in))
-  
+
   } else {
-    
+
     if(length(depth_val) > 1){
-      
+
       depth_val <- depth_val[-1]
       stopifnot(length(depth_val) == nrow(dat_in))
       H <- depth_val
-      
+
     } else {
-      
+
       H<-rep(depth_val,nrow(dat_in))
-      
+
     }
-    
+
   }
 
   #use met_day_fun to add columns indicating light/day, date, and hours of sunlight
@@ -247,6 +247,9 @@ ecometab.default <- function(dat_in, DO_var = 'DO_mgl', depth_val = NULL, metab_
     out <- data.frame(Date = out[, 'Date'], as_grams)
 
   }
+
+  # remove extra DO columns
+  out <- out[, !names(out) %in% c('DO_obs', 'DO_prd', 'DO_nrm')]
 
   # make metab class
   class(out) <- c('metab', 'data.frame')

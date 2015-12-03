@@ -57,35 +57,25 @@ metab_dtd <- ecometab(res, DO_var = 'DO_nrm', tz = tz,
   lat = lat, long = long)
 ```
 
-The metabolism results can be plotted by aggregation periods of the daily estimates or smoothed using a moving window filter.
+Plot metabolism results from observed dissolved oxygen time series (see `?plot.metab` for options).  Note the periodicity with fortnightly tidal variation and instances with negative production/positive respiration.
 
 
 ```r
-data(SAPDC)
-
-# metadata for the location
-tz <- 'America/Jamaica'
-lat <- 31.39
-long <- -89.28
-
-# estimate ecosystem metabolism using observed DO time series
-met_ex <- ecometab(SAPDC, DO_var = 'DO_obs', tz = tz,
- lat = lat, long = long)
-
-# plot by monthly averages
-plot(met_ex)
+plot(metab_obs, by = 'days')
 ```
 
 ![](README_files/figure-html/unnamed-chunk-4-1.png) 
 
+Plot metabolism results from detided dissolved oxygen time series.
+
+
 ```r
-# plot after filtering with a centered 20 day moving average
-plot(met_ex, by = 20)
+plot(metab_dtd, by = 'days')
 ```
 
-![](README_files/figure-html/unnamed-chunk-4-2.png) 
+![](README_files/figure-html/unnamed-chunk-6-1.png) 
 
-The `evalcor` function can be used to assess the potential effectiveness of weighted regression by identifying points in the time series when tidal and solar changes are not correlated.  In general, the `wtreg` will be most effective when correlations between the two are zero, whereas `wtreg` will remove both the biological and physical components of the dissolved oxygen time series when the sun and tide are correlated.   The correlation between tide change and sun angle is estimated using a moving window for the time series.  Tide changes are estimated as angular rates for the tidal height vector and sun angles are estimated from the time of day and geographic location.
+The `evalcor` function can be used to assess the potential effectiveness of weighted regression by identifying points in the time series when tidal and solar changes are not correlated.  In general, the `wtreg` will be most effective when correlations between the two are zero, whereas `wtreg` will remove both the biological and physical components of the dissolved oxygen time series when the sun and tide are correlated.   The correlation between tide change and sun angle is estimated using a moving window for the time series.  Tide changes are estimated as angular rates for the tidal height vector and sun angles are estimated from the time of day and geographic location.  Correlations are low for the sample dataset, suggesting the results from weighted regression are valid for the entire time series.
 
 
 ```r
