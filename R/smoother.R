@@ -1,6 +1,6 @@
-#' Smooth swmpr data
+#' Smooth a plot of metabolism data
 #'
-#' Smooth swmpr data with a moving window average
+#' Smooth a plot of metabolism data using a moving window average
 #'
 #' @param x input object
 #' @param window numeric vector defining size of the smoothing window, passed to \code{filter}
@@ -11,9 +11,9 @@
 #'
 #' @export smoother
 #'
-#' @return Returns a filtered swmpr object. QAQC columns are removed if included with input object.
+#' @return Returns a \code{data.frame} of the smoothed metabolism data.
 #'
-#' @details The \code{smoother} function can be used to smooth parameters in a swmpr object using a specified window size. This method is a simple wrapper to \code{\link[stats]{filter}}. The window argument specifies the number of observations included in the moving average. The sides argument specifies how the average is calculated for each observation (see the documentation for \code{\link[stats]{filter}}). A value of 1 will filter observations within the window that are previous to the current observation, whereas a value of 2 will filter all observations within the window centered at zero lag from the current observation. The params argument specifies which parameters to smooth.
+#' @details This function uses a moving window average to smooth metabolism data for plotting.  It has nothing to do with weighted regression (\code{\link{wtreg}}) and is meant only for plotting aesthetics. The function is a simple wrapper to \code{\link[stats]{filter}}. The window argument specifies the number of observations included in the moving average. The sides argument specifies how the average is calculated for each observation (see the documentation for \code{\link[stats]{filter}}). A value of 1 will filter observations within the window that are previous to the current observation, whereas a value of 2 will filter all observations within the window centered at zero lag from the current observation.
 #'
 #' @seealso \code{\link[stats]{filter}}
 #'

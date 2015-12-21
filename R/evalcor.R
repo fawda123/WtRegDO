@@ -46,7 +46,7 @@
 #' evalcor(SAPDC, tz, lat, long, progress = TRUE)
 #'
 #' }
-evalcor <- function(dat_in, tz, lat, long, daywin = 12, method = 'pearson', plot = TRUE, lims = c(-0.5, 0.5), progress = FALSE){
+evalcor <- function(dat_in, tz, lat, long, daywin = 6, method = 'pearson', plot = TRUE, lims = c(-0.5, 0.5), progress = FALSE){
 
   # get decimal time
   tocor <- met_day_fun(dat_in, tz, lat, long)

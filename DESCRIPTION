@@ -5,9 +5,10 @@ Version: 0.5.9000
 Date: 2015-12-03
 Author: Marcus W. Beck [aut, cre]
 Maintainer: Marcus W. Beck <mbafs2012@gmail.com>
-Description: A sample dataset and functions to implement weighted regression on dissolved
-  oxygen time series are included as a simple example to reduce the effects of tidal advection.
-  Functions are also available to estimate net ecosystem metabolism using the open-water method.
+Description: A sample dataset and functions to implement weighted regression
+    on dissolved oxygen time series are included as a simple example to reduce
+    the effects of tidal advection. Functions are also available to estimate net
+    ecosystem metabolism using the open-water method.
 LazyData: TRUE
 BugReports: https://github.com/fawda123/WtRegDO/issues
 License: CC0
@@ -27,3 +28,4 @@ Depends:
 Authors@R: person(given = "Marcus W.", family = "Beck",
     role = c("aut","cre"),
     email = "mbafs2012@gmail.com")
+RoxygenNote: 5.0.1
