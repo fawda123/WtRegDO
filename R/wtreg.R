@@ -5,6 +5,9 @@
 #' @param dat_in input data frame
 #' @param DO_obs name of dissolved oxygen column
 #' @param wins list of half-window widths to use in the order specified by \code{\link{wtfun}} (i.e., days, hours, tide height).
+#' @param tz chr string specifying timezone of location, e.g., 'America/Jamaica' for EST, no daylight savings
+#' @param lat numeric for latitude of location
+#' @param long numeric for longitude of location (negative west of prime meridian)
 #' @param progress logical if progress saved to a txt file names 'log.txt' in the working directory
 #' @param parallel logical if regression is run in parallel to reduce processing time, requires a parallel backend outside of the function
 #' @param ... additional arguments passed to \code{\link{met_day_fun}}, particularly timezone, lat, and long information.
@@ -13,7 +16,9 @@
 #'
 #' @import plyr
 #'
-#' @details See the supplied dataset for required input data
+#' @details See the supplied dataset for required input data. The \code{\link{wtreg}} function only requires date/time, dissolved oxygen, and tidal height columns.
+#'
+#' Timezone specifications can be found here: \url{https://en.wikipedia.org/wiki/List_of_tz_database_time_zones}
 #'
 #' @return The original data frame with additional columns describing the metabolic day, decimal time, predicted DO from weighted regression (\code{DO_prd}) and detided (normalized) DO from weighted regression (\code{DO_nrm}).
 #'
@@ -28,14 +33,14 @@
 #' res <- wtreg(SAPDC, tz = tz, lat = lat, long = long)
 #'
 #' }
-wtreg <- function(dat_in, DO_obs = 'DO_obs', wins = list(4, 12, NULL),
+wtreg <- function(dat_in, DO_obs = 'DO_obs', wins = list(4, 12, NULL), tz, lat, long,
   progress = FALSE, parallel = FALSE, ...){
 
   # get mean tidal height from empirical data
   mean_tide <- mean(dat_in$Tide)
 
   # get decimal time based on metabolic days
-  dat_in <- met_day_fun(dat_in,  ...)
+  dat_in <- met_day_fun(dat_in, tz = tz, long = long, lat = lat)
   dat_in <- dectime(dat_in)
 
   # add hour column
@@ -48,7 +53,7 @@ wtreg <- function(dat_in, DO_obs = 'DO_obs', wins = list(4, 12, NULL),
   out <- ddply(dat_in,
     .variables = 'DateTimeStamp',
     .parallel = parallel,
-    .paropts = list(.export = 'wtfun', .packages = 'WtRegDO'),
+    .paropts = list(.export = c('wtfun', 'wins'), .packages = 'WtRegDO'),
     .fun = function(row){
 
       # row for prediction

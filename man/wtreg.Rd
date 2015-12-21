@@ -4,7 +4,7 @@
 \alias{wtreg}
 \title{Weighted regression for dissolved oxygen time series}
 \usage{
-wtreg(dat_in, DO_obs = "DO_obs", wins = list(4, 12, NULL),
+wtreg(dat_in, DO_obs = "DO_obs", wins = list(4, 12, NULL), tz, lat, long,
   progress = FALSE, parallel = FALSE, ...)
 }
 \arguments{
@@ -13,6 +13,12 @@ wtreg(dat_in, DO_obs = "DO_obs", wins = list(4, 12, NULL),
 \item{DO_obs}{name of dissolved oxygen column}
 
 \item{wins}{list of half-window widths to use in the order specified by \code{\link{wtfun}} (i.e., days, hours, tide height).}
+
+\item{tz}{chr string specifying timezone of location, e.g., 'America/Jamaica' for EST, no daylight savings}
+
+\item{lat}{numeric for latitude of location}
+
+\item{long}{numeric for longitude of location (negative west of prime meridian)}
 
 \item{progress}{logical if progress saved to a txt file names 'log.txt' in the working directory}
 
@@ -27,7 +33,9 @@ The original data frame with additional columns describing the metabolic day, de
 Use weighted regression to reduce effects of tidal advection on dissolved oxygen time series
 }
 \details{
-See the supplied dataset for required input data
+See the supplied dataset for required input data. The \code{\link{wtreg}} function only requires date/time, dissolved oxygen, and tidal height columns.
+
+Timezone specifications can be found here: \url{https://en.wikipedia.org/wiki/List_of_tz_database_time_zones}
 }
 \examples{
 \dontrun{
