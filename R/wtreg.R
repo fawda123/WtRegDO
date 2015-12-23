@@ -4,6 +4,7 @@
 #'
 #' @param dat_in input data frame
 #' @param DO_obs name of dissolved oxygen column
+#' @param Tide name of tidal height column
 #' @param wins list of half-window widths to use in the order specified by \code{\link{wtfun}} (i.e., days, hours, tide height).
 #' @param tz chr string specifying timezone of location, e.g., 'America/Jamaica' for EST, no daylight savings
 #' @param lat numeric for latitude of location
@@ -33,11 +34,12 @@
 #' res <- wtreg(SAPDC, tz = tz, lat = lat, long = long)
 #'
 #' }
-wtreg <- function(dat_in, DO_obs = 'DO_obs', wins = list(4, 12, NULL), tz, lat, long,
+wtreg <- function(dat_in, DO_obs = 'DO_obs', Tide = 'Tide', wins = list(4, 12, NULL), tz, lat, long,
   progress = FALSE, parallel = FALSE, ...){
 
   # get mean tidal height from empirical data
-  mean_tide <- mean(dat_in$Tide)
+  names(dat_in)[names(dat_in) %in% Tide] <- 'Tide'
+  mean_tide <- mean(dat_in$Tide, na.rm = TRUE)
 
   # get decimal time based on metabolic days
   dat_in <- met_day_fun(dat_in, tz = tz, long = long, lat = lat)

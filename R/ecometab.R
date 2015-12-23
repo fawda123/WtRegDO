@@ -85,6 +85,7 @@ ecometab.default <- function(dat_in, DO_var = 'DO_mgl', depth_val = NULL, metab_
   #columns to be removed prior to processing
   to.rem<-c('flag', 'dTide', 'met.date', 'variable', 'value', 'day.hrs',
     'dec_time', 'hour')
+  orig_dat <- dat_in[, c('DateTimeStamp', 'DO_obs', 'Tide', 'DO_nrm')]
   dat_in<-dat_in[,!names(dat_in) %in% to.rem]
 
   #convert DO from mg/L to mmol/m3
@@ -252,7 +253,11 @@ ecometab.default <- function(dat_in, DO_var = 'DO_mgl', depth_val = NULL, metab_
   out <- out[, !names(out) %in% c('DO_obs', 'DO_prd', 'DO_nrm')]
 
   # make metab class
-  class(out) <- c('metab', 'data.frame')
+  out <- structure(
+    .Data = out,
+    class = c('metab', 'data.frame'),
+    rawdat = orig_dat
+  )
 
   return(out)
 

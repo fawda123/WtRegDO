@@ -8,11 +8,10 @@
 #'   \item{Temp}{numeric, water temperature, celsius}
 #'   \item{Sal}{numeric, salinity, ppt}
 #'   \item{DO_obs}{numeric, dissolved oxygen, mg L-1}
-#'   \item{Depth}{numeric, water column depth, m}
 #'   \item{ATemp}{numeric, air temperature, celsius}
 #'   \item{BP}{numeric, barometric pressure, mb}
 #'   \item{WSpd}{numeric, wind speed, m s-1}
-#'   \item{Tide}{numeric, tide height, m, estimated from depth variable using harmonic regression}
+#'   \item{Tide}{numeric, tide height, m, estimated from pressure data using harmonic regression}
 #' }
 #'
 "SAPDC"
