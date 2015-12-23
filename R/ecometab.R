@@ -5,9 +5,10 @@
 #'
 #' @param dat_in Input data frame which must include time series of dissolved oxygen (mg L-1), see \code{\link{SAPDC}} for data structure
 #' @param DO_var chr string indicating the name of the column with the dissolved oxygen variable for estimating metabolism
-#' @param depth_val alternative value to use for station depth (m), can be a single value for the whole dataset or a vector of depth values equal in length to the time series.
+#' @param depth_val chr indicating the name of a column in the input data for estimating depth for volumetric integration.  This column is typically the tidal height vector.  Use \code{depth_val = NULL} if supplying an alternative depth vector to \code{depth_vec}.
 #' @param metab_units chr indicating desired units of output for oxygen, either as mmol or grams
 #' @param bott_stat logical if air-sea gas exchange is removed from the estimate
+#' @param depth_vec numeric value for manual entry of station depth (m).  Use a single value if the integration depth is constant or a vector of depth values equal in length to the time series.  Leave \code{NULL} if estimated from \code{depth_val} column.
 #'
 #' @import oce plyr wq
 #'
@@ -28,7 +29,7 @@
 #'
 #' The plotting method plots daily metabolism estimates using different aggregation periods.  Accepted aggregation periods are \code{'years'}, \code{'quarters'}, \code{'months'}, \code{'weeks'}, and \code{'days'} (if no aggregation is preferred). The default function for aggregating is the \code{\link[base]{mean}} for the periods specified by the \code{by} argument.  Setting \code{pretty = FALSE} will return the plot with minimal modifications to the \code{\link[ggplot2]{ggplot}} object.
 #'
-#' @return A \code{metab} object with daily integrated metabolism estimates including gross produciton (Pg), total respiration (Rt), and net ecosystem metabolism (NEM).
+#' @return A \code{metab} object with daily integrated metabolism estimates including gross produciton (Pg), total respiration (Rt), and net ecosystem metabolism (NEM).  The raw data are also returned as an attribute of \code{metab} named \code{rawdat}.
 #'
 #' The plot method returns a \code{\link[ggplot2]{ggplot}} object which can be further modified.
 #'
@@ -73,8 +74,8 @@ ecometab <- function(dat_in, ...) UseMethod('ecometab')
 #' @export
 #'
 #' @method ecometab default
-ecometab.default <- function(dat_in, DO_var = 'DO_mgl', depth_val = NULL, metab_units = 'mmol',
-  bott_stat = FALSE, ...){
+ecometab.default <- function(dat_in, DO_var = 'DO_mgl', depth_val = 'Tide', metab_units = 'mmol',
+  bott_stat = FALSE, depth_vec = NULL, ...){
 
   # stop if units not mmol or grams
   if(any(!(grepl('mmol|grams', metab_units))))
@@ -85,7 +86,7 @@ ecometab.default <- function(dat_in, DO_var = 'DO_mgl', depth_val = NULL, metab_
   #columns to be removed prior to processing
   to.rem<-c('flag', 'dTide', 'met.date', 'variable', 'value', 'day.hrs',
     'dec_time', 'hour')
-  orig_dat <- dat_in[, c('DateTimeStamp', 'DO_obs', 'Tide', 'DO_nrm')]
+  orig_dat <- dat_in[, c('DateTimeStamp', 'DO_obs', depth_val, 'DO_nrm')]
   dat_in<-dat_in[,!names(dat_in) %in% to.rem]
 
   #convert DO from mg/L to mmol/m3
@@ -150,25 +151,27 @@ ecometab.default <- function(dat_in, DO_var = 'DO_mgl', depth_val = NULL, metab_
   # DOsat is a ratio between DO (mg/L) and DO at saturation (mg/L), gets around a unit conversion issue
   # oxysol returns the actual DO saturation in mg/L
   # used to get loss of O2 from diffusion
-  DOsat<-with(dat_in,get(DO_var)/(oxySol(Temp*(1000+SigT)/1000,Sal)))
+  DOsat<-with(dat_in, get(DO_var) / (oxySol(Temp * (1000 + SigT) / 1000, Sal)))
 
-  #station depth, defaults to mean depth value plus 0.5 in case not on bottom
-  # uses 'depth_val' if provided, can be single value or vector with equal to nrow dat_in
-  if(is.null(depth_val)){
+  # station depth, defaults to mean depth value plus 0.5 in case not on bottom
+  # uses 'depth_val' if provided, otherwis needs 'depth_vec'
+  if(!is.null(depth_val)){
 
-    H<-rep(0.5 + mean(pmax(1,dat_in$Depth), na.rm = TRUE), nrow(dat_in))
+    H<-rep(0.5 + mean(pmax(1, dat_in[, depth_val]), na.rm = TRUE), nrow(dat_in))
 
   } else {
 
-    if(length(depth_val) > 1){
+    if(is.null(depth_vec)) stop('Requires value for depth_vec if depth_val is NULL')
 
-      depth_val <- depth_val[-1]
-      stopifnot(length(depth_val) == nrow(dat_in))
-      H <- depth_val
+    if(length(depth_vec) > 1){
+
+      depth_vec <- depth_vec[-1]
+      stopifnot(length(depth_vec) == nrow(dat_in))
+      H <- depth_vec
 
     } else {
 
-      H<-rep(depth_val,nrow(dat_in))
+      H<-rep(depth_vec,nrow(dat_in))
 
     }
 
@@ -189,9 +192,9 @@ ecometab.default <- function(dat_in, DO_var = 'DO_mgl', depth_val = NULL, metab_
   D=Ka*(DO/DOsat-DO)
 
   #combine all data for processing
-  proc.dat<-dat_in[,!names(dat_in) %in% c('DateTimeStamp','cDepth','Wdir',
+  proc.dat<-dat_in[,!names(dat_in) %in% c('DateTimeStamp','cTide','Wdir',
     'SDWDir','ChlFluor','Turb','pH','RH',DO_var,'DO_pct','SpCond','TotPrcp',
-    'CumPrcp','TotSoRad','Depth')]
+    'CumPrcp','TotSoRad','Tide')]
   proc.dat<-data.frame(proc.dat,DOsat,dDO,SigT,H,D)
 
   #get daily/nightly flux estimates for Pg, Rt, NEM estimates
@@ -229,11 +232,9 @@ ecometab.default <- function(dat_in, DO_var = 'DO_mgl', depth_val = NULL, metab_
       Pg_vol<-Pg/mean(x$H,na.rm=TRUE)
       Rt_vol<-Rt/mean(x$H,na.rm=TRUE)
 
-      #dep vars to take mean
-      var.out<-x[!names(x) %in% c('variable','value','met.date','dDO', 'SigT', 'H', 'D',
-        'day.hrs')]
-      var.out<-data.frame(rbind(apply(var.out,2,function(x) mean(x,na.rm=TRUE))))
-      data.frame(Date=unique(x$met.date),var.out,Pg,Rt,NEM)
+      # output
+      data.frame(Date=unique(x$met.date),Pg,Rt,NEM)
+
       }
     )
 
@@ -248,9 +249,6 @@ ecometab.default <- function(dat_in, DO_var = 'DO_mgl', depth_val = NULL, metab_
     out <- data.frame(Date = out[, 'Date'], as_grams)
 
   }
-
-  # remove extra DO columns
-  out <- out[, !names(out) %in% c('DO_obs', 'DO_prd', 'DO_nrm')]
 
   # make metab class
   out <- structure(

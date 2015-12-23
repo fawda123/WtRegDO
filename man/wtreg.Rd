@@ -4,15 +4,15 @@
 \alias{wtreg}
 \title{Weighted regression for dissolved oxygen time series}
 \usage{
-wtreg(dat_in, DO_obs = "DO_obs", Tide = "Tide", wins = list(4, 12, NULL),
-  tz, lat, long, progress = FALSE, parallel = FALSE, ...)
+wtreg(dat_in, DO_obs = "DO_obs", depth_val = "Tide", wins = list(4, 12,
+  NULL), tz, lat, long, progress = FALSE, parallel = FALSE, ...)
 }
 \arguments{
 \item{dat_in}{input data frame}
 
 \item{DO_obs}{name of dissolved oxygen column}
 
-\item{Tide}{name of tidal height column}
+\item{depth_val}{name of tidal height column}
 
 \item{wins}{list of half-window widths to use in the order specified by \code{\link{wtfun}} (i.e., days, hours, tide height).}
 

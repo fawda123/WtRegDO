@@ -6,6 +6,7 @@
 #' @param tz chr string for timezone, e.g., 'America/Chicago'
 #' @param lat numeric for latitude
 #' @param long numeric for longitude (negative west of prime meridian)
+#' @param depth_val chr indicating name of the tidal height column in \code{dat_in}
 #' @param daywin numeric for half-window width used in moving window correlatin
 #' @param method chr string for corrrelation method, passed to \code{\link[stats]{cor}}
 #' @param plot logical to return a plot
@@ -46,7 +47,9 @@
 #' evalcor(SAPDC, tz, lat, long, progress = TRUE)
 #'
 #' }
-evalcor <- function(dat_in, tz, lat, long, daywin = 6, method = 'pearson', plot = TRUE, lims = c(-0.5, 0.5), progress = FALSE){
+evalcor <- function(dat_in, tz, lat, long, depth_val = 'Tide', daywin = 6, method = 'pearson', plot = TRUE, lims = c(-0.5, 0.5), progress = FALSE){
+
+  names(dat_in)[names(dat_in) %in% depth_val] <- 'Tide'
 
   # get decimal time
   tocor <- met_day_fun(dat_in, tz, lat, long)

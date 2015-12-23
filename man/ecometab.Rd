@@ -8,8 +8,8 @@
 \usage{
 ecometab(dat_in, ...)
 
-\method{ecometab}{default}(dat_in, DO_var = "DO_mgl", depth_val = NULL,
-  metab_units = "mmol", bott_stat = FALSE, ...)
+\method{ecometab}{default}(dat_in, DO_var = "DO_mgl", depth_val = "Tide",
+  metab_units = "mmol", bott_stat = FALSE, depth_vec = NULL, ...)
 
 \method{plot}{metab}(x, by = "months", metab_units = "mmol", alpha = 0.05,
   width = 10, pretty = TRUE, ...)
@@ -21,11 +21,13 @@ ecometab(dat_in, ...)
 
 \item{DO_var}{chr string indicating the name of the column with the dissolved oxygen variable for estimating metabolism}
 
-\item{depth_val}{alternative value to use for station depth (m), can be a single value for the whole dataset or a vector of depth values equal in length to the time series.}
+\item{depth_val}{chr indicating the name of a column in the input data for estimating depth for volumetric integration.  This column is typically the tidal height vector.  Use \code{depth_val = NULL} if supplying an alternative depth vector to \code{depth_vec}.}
 
 \item{metab_units}{chr indicating desired units of output for oxygen, either as mmol or grams}
 
 \item{bott_stat}{logical if air-sea gas exchange is removed from the estimate}
+
+\item{depth_vec}{numeric value for manual entry of station depth (m).  Use a single value if the integration depth is constant or a vector of depth values equal in length to the time series.  Leave \code{NULL} if estimated from \code{depth_val} column.}
 
 \item{x}{input object to plot}
 
@@ -38,7 +40,7 @@ ecometab(dat_in, ...)
 \item{pretty}{logical indicating use of predefined plot aesthetics}
 }
 \value{
-A \code{metab} object with daily integrated metabolism estimates including gross produciton (Pg), total respiration (Rt), and net ecosystem metabolism (NEM).
+A \code{metab} object with daily integrated metabolism estimates including gross produciton (Pg), total respiration (Rt), and net ecosystem metabolism (NEM).  The raw data are also returned as an attribute of \code{metab} named \code{rawdat}.
 
 The plot method returns a \code{\link[ggplot2]{ggplot}} object which can be further modified.
 }

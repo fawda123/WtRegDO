@@ -4,8 +4,9 @@
 \alias{evalcor}
 \title{Evaluate tide and sun correlation}
 \usage{
-evalcor(dat_in, tz, lat, long, daywin = 6, method = "pearson",
-  plot = TRUE, lims = c(-0.5, 0.5), progress = FALSE)
+evalcor(dat_in, tz, lat, long, depth_val = "Tide", daywin = 6,
+  method = "pearson", plot = TRUE, lims = c(-0.5, 0.5),
+  progress = FALSE)
 }
 \arguments{
 \item{dat_in}{Input \code{data.frame}}
@@ -15,6 +16,8 @@ evalcor(dat_in, tz, lat, long, daywin = 6, method = "pearson",
 \item{lat}{numeric for latitude}
 
 \item{long}{numeric for longitude (negative west of prime meridian)}
+
+\item{depth_val}{chr indicating name of the tidal height column in \code{dat_in}}
 
 \item{daywin}{numeric for half-window width used in moving window correlatin}
 
