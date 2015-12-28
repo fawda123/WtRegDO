@@ -15,7 +15,7 @@
 metab_dtd
 }
 \description{
-Ecosystem metabolism results for \link{SAPDC} from detided dissolved oxygen time series.  The dataset was created by running \code{\link{wtreg}} on the sample dataset for Sapelo Island Dean Creek station, 2012 data.  Each row represents a daily estimate or average for each metabolic day defined as the period between sunrises for two calendar days.  The raw data are also available as an attribute named \code{rawdat}.
+Ecosystem metabolism results for \link{SAPDC} from detided dissolved oxygen time series.  The dataset was created by running \code{\link{wtreg}} on the sample dataset for Sapelo Island Dean Creek station, 2012 data.  Each row represents a daily estimate or average for each metabolic day defined as the period between sunrises for two calendar days.  See documentation for \code{\link{ecometab}} for a description of the object attributes.
 }
 \keyword{datasets}
 

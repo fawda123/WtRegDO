@@ -40,7 +40,7 @@ ecometab(dat_in, ...)
 \item{pretty}{logical indicating use of predefined plot aesthetics}
 }
 \value{
-A \code{metab} object with daily integrated metabolism estimates including gross produciton (Pg), total respiration (Rt), and net ecosystem metabolism (NEM).  The raw data are also returned as an attribute of \code{metab} named \code{rawdat}.
+A \code{metab} object with daily integrated metabolism estimates including gross produciton (Pg), total respiration (Rt), and net ecosystem metabolism (NEM).  Attributes of the object include the raw data (\code{rawdat}), a character string indicating name of the tidal column if supplied in the raw data (\code{depth_val}), and a character string indicating name of the dissolved oxygen column in the raw data that was used to estimate metabolism (\code{DO_var}).
 
 The plot method returns a \code{\link[ggplot2]{ggplot}} object which can be further modified.
 }

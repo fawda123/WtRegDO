@@ -51,8 +51,8 @@ tz <- 'America/Jamaica'
 lat <- 31.39
 long <- -89.28
 
-# weighted regression
-wtreg_res <- wtreg(SAPDC, parallel = TRUE, wins = list(6, 1, NULL), progress = TRUE, 
+# weighted regression, optimal window widths for SAPDC from the paper
+wtreg_res <- wtreg(SAPDC, parallel = TRUE, wins = list(3, 1, 0.6), progress = TRUE, 
   tz = tz, lat = lat, long = long)
 
 # estimate ecosystem metabolism using observed DO time series
@@ -64,11 +64,25 @@ metab_dtd <- ecometab(wtreg_res, DO_var = 'DO_nrm', tz = tz,
   lat = lat, long = long)
 ```
 
-Plot metabolism results from observed dissolved oxygen time series (see `?plot.metab` for options).  Note the periodicity with fortnightly tidal variation and instances with negative production/positive respiration.
+The `meteval` function provides summary statistics of metabolism results to evaluate the effectiveness of weighted regression.  These estimates are mean production, standard deviation of production, percent of production estimates that were anomalous, mean respiration, standard deviation of respiration, percent of respiration estimates that were anomalous, correlation of dissolved oxygen with tidal height changes, correlation of production with tidal height changes, and the correlation of respiration with tidal height changes.  The correlation estimates are based on an average of separate correlations by each month in the time series.  Dissolved oxygen is correlated directly with tidal height at each time step.  The metabolic estimates are correlated with the tidal height ranges during the day for production and during the night for respiration.  
+
+In general, useful results for weighted regression are those that remove the correlation of dissolved oxygen, production, and respiration with tidal changes.  Similarly, the mean estimates of metabolism should not change if a long time series is evaluated, whereas the standard deviation and percent anomalous estimates should decrease.
+
 ```{r message = F, echo = F, results = 'hide'}
 devtools::load_all()
 data(metab_obs)
+data(metab_dtd)
 ```
+```{r}
+# evaluate before weighted regression
+meteval(metab_obs)
+
+# evaluate after weighted regression
+meteval(metab_dtd)
+```
+
+Plot metabolism results from observed dissolved oxygen time series (see `?plot.metab` for options).  Note the periodicity with fortnightly tidal variation and instances with negative production/positive respiration.
+
 ```{r fig.height = 4, fig.width = 12, message = F, warning = F}
 plot(metab_obs, by = 'days')
 ```
@@ -81,7 +95,7 @@ data(metab_dtd)
 plot(metab_dtd, by = 'days')
 ```
 
-The `evalcor` function can be used to assess the potential effectiveness of weighted regression by identifying points in the time series when tidal and solar changes are not correlated.  In general, the `wtreg` will be most effective when correlations between the two are zero, whereas `wtreg` will remove both the biological and physical components of the dissolved oxygen time series when the sun and tide are correlated.   The correlation between tide change and sun angle is estimated using a moving window for the time series.  Tide changes are estimated as angular rates for the tidal height vector and sun angles are estimated from the time of day and geographic location.  Correlations are low for the sample dataset, suggesting the results from weighted regression are valid for the entire time series.
+The `evalcor` function can be used before weighted regression to identify locations in the time series when tidal and solar changes are not correlated.  In general, the `wtreg` will be most effective when correlations between the two are zero, whereas `wtreg` will remove both the biological and physical components of the dissolved oxygen time series when the sun and tide are correlated.   The correlation between tide change and sun angle is estimated using a moving window for the time series.  Tide changes are estimated as angular rates for the tidal height vector and sun angles are estimated from the time of day and geographic location.  Correlations are low for the sample dataset, suggesting the results from weighted regression are valid for the entire time series.
 
 ```{r eval = F}
 data(SAPDC)

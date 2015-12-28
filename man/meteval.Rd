@@ -15,19 +15,17 @@ meteval(metab_in)
 \item{...}{additional arguments passed to other methods}
 }
 \value{
-A \code{data.frame} of summary statistics...
+A vector of summary statistics named \code{meanPg}, \code{sdPg}, \code{anomPg}, \code{meanRt}, \code{sdRt}, \code{anomRt}, \code{DOcor}, \code{Pgcor}, and \code{Rtcor}.  See the details above for a meaning of each.
 }
 \description{
 Evaluate metabolism results before and after weighted regression
 }
 \details{
-This function provides summary statistics of metabolism results to evaluate the effectiveness of weighted regression. Summary statistics include the correlation of dissolved oxygen time series with predicted tidal height change, the correlation of metabolism estimates with mean tidal height change between observations during day or night periods for production and respiration (respectively), mean and standard deviation of metabolism estimates across all daily integrated values, and percent `anomalous' estimates of metabolism.
+This function provides summary statistics of metabolism results to evaluate the effectiveness of weighted regression.  These estimates are mean production, standard deviation of production, percent of production estimates that were anomalous, mean respiration, standard deviation of respiration, percent of respiration estimates that were anomalous, correlation of dissolved oxygen with tidal height changes, correlation of production with tidal height changes, and the correlation of respiration with tidal height changes.  The correlation estimates are based on an average of the correlations by each month in the time series from the raw data for dissolved oxygen and the daily results for the metabolic estimates.  Dissolved oxygen is correlated directly with tidal height at each time step.  The metabolic estimates are correlated with the tidal height ranges during the day for production and during the night for respiration.  Tidal height ranges are estimated from the raw data during each diurnal period for each metabolic day.
 
-Statistics are estimated for the dissolved oxygen time series in the input dataset specified by the user (observed or filtered), whereas summary  before and after use of weighted regression and metabolism estimates based
+In general, useful results for weighted regression are those that remove the correlation of dissolved oxygen, production, and respiration with tidal changes.  Similarly, the mean estimates of metabolism should not change if a long time series is evaluated, whereas the standard deviation and percent anomalous estimates should decrease.
 
-In general, useful results for weighted regression are those that remove the correlation of dissolved oxygen, production, and respiration with tidal changes.  Similarly, the mean estimates of metabolism should not change, whereas the standard deviation and percent anomalous should decrease.
-
-Tables 2 and 3 in Beck et al. 2015 were created using similar functions.
+Tables 2 and 3 in Beck et al. 2015 were created using these methods.
 }
 \examples{
 \dontrun{

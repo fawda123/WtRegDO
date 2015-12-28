@@ -13,7 +13,7 @@ lat <- 31.39
 long <- -89.28
 
 # weighted regression
-wtreg_res <- wtreg(SAPDC, parallel = TRUE, wins = list(6, 1, NULL), progress = TRUE,
+wtreg_res <- wtreg(SAPDC, parallel = TRUE, wins = list(3, 1, 0.6), progress = TRUE,
   tz = tz, lat = lat, long = long)
 
 # save

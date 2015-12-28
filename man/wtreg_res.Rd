@@ -3,7 +3,7 @@
 \docType{data}
 \name{wtreg_res}
 \alias{wtreg_res}
-\title{Results from weighted regression with \link{SAPDC} dataset}
+\title{Results from weighted regression with the \link{SAPDC} dataset}
 \format{A \code{data.frame} with 17568 rows and 16 columns.
 \describe{
   \item{DateTimeStamp}{POSIXct, timestamp of water quality observation}

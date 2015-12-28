@@ -6,15 +6,13 @@
 #' @param ... additional arguments passed to other methods
 #'
 #' @details
-#' This function provides summary statistics of metabolism results to evaluate the effectiveness of weighted regression. Summary statistics include the correlation of dissolved oxygen time series with predicted tidal height change, the correlation of metabolism estimates with mean tidal height change between observations during day or night periods for production and respiration (respectively), mean and standard deviation of metabolism estimates across all daily integrated values, and percent `anomalous' estimates of metabolism.
+#' This function provides summary statistics of metabolism results to evaluate the effectiveness of weighted regression.  These estimates are mean production, standard deviation of production, percent of production estimates that were anomalous, mean respiration, standard deviation of respiration, percent of respiration estimates that were anomalous, correlation of dissolved oxygen with tidal height changes, correlation of production with tidal height changes, and the correlation of respiration with tidal height changes.  The correlation estimates are based on an average of the correlations by each month in the time series from the raw data for dissolved oxygen and the daily results for the metabolic estimates.  Dissolved oxygen is correlated directly with tidal height at each time step.  The metabolic estimates are correlated with the tidal height ranges during the day for production and during the night for respiration.  Tidal height ranges are estimated from the raw data during each diurnal period for each metabolic day.
 #'
-#' Statistics are estimated for the dissolved oxygen time series in the input dataset specified by the user (observed or filtered), whereas summary  before and after use of weighted regression and metabolism estimates based
+#' In general, useful results for weighted regression are those that remove the correlation of dissolved oxygen, production, and respiration with tidal changes.  Similarly, the mean estimates of metabolism should not change if a long time series is evaluated, whereas the standard deviation and percent anomalous estimates should decrease.
 #'
-#' In general, useful results for weighted regression are those that remove the correlation of dissolved oxygen, production, and respiration with tidal changes.  Similarly, the mean estimates of metabolism should not change, whereas the standard deviation and percent anomalous should decrease.
+#' Tables 2 and 3 in Beck et al. 2015 were created using these methods.
 #'
-#' Tables 2 and 3 in Beck et al. 2015 were created using similar functions.
-#'
-#' @return A \code{data.frame} of summary statistics...
+#' @return A vector of summary statistics named \code{meanPg}, \code{sdPg}, \code{anomPg}, \code{meanRt}, \code{sdRt}, \code{anomRt}, \code{DOcor}, \code{Pgcor}, and \code{Rtcor}.  See the details above for a meaning of each.
 #'
 #' @export
 #'
@@ -44,13 +42,13 @@ meteval <- function(metab_in) UseMethod('meteval')
 #' @method meteval metab
 meteval.metab <- function(metab_in, ...){
 
-  browser()
-  # remove NA values
+  # get attributes
   toeval <- na.omit(metab_in)
   rawdat <- attr(metab_in, 'rawdat')
-  tidecol <- attr(metab_in, 'tidecol')
+  depth_val <- attr(metab_in, 'depth_val')
+  DO_var <- attr(metab_in, 'DO_var')
 
-  # summarize metab data
+  # summarize metab data - means, sd, perc anoms
   out <- list(
     meanPg = mean(toeval$Pg),
     sdPg = sd(toeval$Pg),
@@ -61,8 +59,71 @@ meteval.metab <- function(metab_in, ...){
   )
 
   # exit if no tidal vector column
-  if(is.null(tidecol)) return(out)
+  if(is.null(depth_val)){
+    warning('No tidal height column in raw data')
+    return(out)
+  }
 
+  # DO obs v tide
+  # correlations by month, then averaged
+  # add month column
+  rawdat$month <- strftime(rawdat$Date, '%m')
+  DOcor<- plyr::ddply(
+    rawdat,
+    .variable = c('month'),
+    .fun = function(x) cor.test(x[, DO_var], x[, depth_val])$estimate
+  )
+  DOcor <- mean(DOcor[, 'cor'], na.rm = TRUE)
 
+  # get tidal range for metabolic day/night periods
+  # for correlation with daily integrated metab
+  tide_rngs <- plyr::ddply(rawdat,
+    .variables = c('met.date'),
+    .fun = function(x){
+
+      # mean tidal derivative for day hours
+      sunrise <- mean(diff(x[x$variable %in% 'sunrise', 'Tide'],
+        na.rm = T))
+
+      # mean tidal derivative for night hours
+      sunset <- mean(diff(x[x$variable %in% 'sunset', 'Tide'],
+        na.rm = T))
+      if(sunrise == 'Inf') sunrise <- NA
+      if(sunset == 'Inf') sunset <- NA
+
+      # mean tidal derivative for metabolic day
+      daytot <- mean(diff(x$Tide, na.rm = T))
+
+      c(daytot, sunrise, sunset)
+
+      }
+    )
+  names(tide_rngs) <- c('Date','daytot', 'sunrise', 'sunset')
+
+  # get metab data from list
+  toeval <- merge(toeval, tide_rngs, by = 'Date', all.x = T)
+  toeval$month <- strftime(toeval$Date, '%m')
+
+  # Pg values correlated with tidal range during sunlight hours
+  # Rt values correlated with tidal range during night hours
+  # done separately for each month, then averaged
+  metcor <- plyr::ddply(
+      toeval,
+      .variable = c('month'),
+      .fun = function(x){
+
+        with(x, c(
+          Pgcor = cor.test(Pg, sunrise)$estimate,
+          Rtcor = cor.test(Rt, sunset)$estimate
+        ))
+
+      }
+    )
+  names(metcor) <- gsub('\\.cor$', '', names(metcor))
+  metcor <- colMeans(metcor[, !names(metcor) %in% 'month'], na.rm = TRUE)
+
+  # add to out
+  out <- unlist(c(out, DOcor = DOcor, metcor))
+  return(out)
 
 }
