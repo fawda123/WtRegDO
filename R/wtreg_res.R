@@ -1,0 +1,25 @@
+#' Results from weighted regression with the \link{SAPDC} dataset
+#'
+#' Results after detiding the \link{SAPDC} sample dataset with \code{\link{wtreg}}.  The dataset is identical to SAPDC with the addition of eight columns that were used during regression.
+#'
+#' @format A \code{data.frame} with 17568 rows and 16 columns.
+#' \describe{
+#'   \item{DateTimeStamp}{POSIXct, timestamp of water quality observation}
+#'   \item{Temp}{numeric, water temperature, celsius}
+#'   \item{Sal}{numeric, salinity, ppt}
+#'   \item{DO_obs}{numeric, dissolved oxygen, mg L-1}
+#'   \item{ATemp}{numeric, air temperature, celsius}
+#'   \item{BP}{numeric, barometric pressure, mb}
+#'   \item{WSpd}{numeric, wind speed, m s-1}
+#'   \item{Tide}{numeric, tide height, m, estimated from pressure data using harmonic regression}
+#'   \item{met.date}{Date, the metabolic day defined as the period from sunrise to sunrise on two adjacent calender days}
+#'   \item{variable}{Factor, identifier that categorizes each time step as occuring during daylight (\code{sunrise}) or nighttime (\code{sunset}) based on sunrise and sunset times in the \code{value} column}
+#'   \item{value}{POSIXct, sequential sunrise and sunset times for the time series}
+#'   \item{day.hrs}{numeric, total time of sunlight in the metabolic day}
+#'   \item{dec_time}{numeric, decimal time in days}
+#'   \item{hour}{numeric, hour of the day}
+#'   \item{DO_prd}{numeric, predicted dissolved oxygen from \code{\link{wtreg}}}
+#'   \item{DO_nrm}{numeric, detided (or normalized) dissolved oxygen from \code{\link{wtreg}}}
+#' }
+#'
+"wtreg_res"

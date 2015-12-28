@@ -29,7 +29,7 @@
 #'
 #' The plotting method plots daily metabolism estimates using different aggregation periods.  Accepted aggregation periods are \code{'years'}, \code{'quarters'}, \code{'months'}, \code{'weeks'}, and \code{'days'} (if no aggregation is preferred). The default function for aggregating is the \code{\link[base]{mean}} for the periods specified by the \code{by} argument.  Setting \code{pretty = FALSE} will return the plot with minimal modifications to the \code{\link[ggplot2]{ggplot}} object.
 #'
-#' @return A \code{metab} object with daily integrated metabolism estimates including gross produciton (Pg), total respiration (Rt), and net ecosystem metabolism (NEM).  The raw data are also returned as an attribute of \code{metab} named \code{rawdat}.
+#' @return A \code{metab} object with daily integrated metabolism estimates including gross produciton (Pg), total respiration (Rt), and net ecosystem metabolism (NEM).  Attributes of the object include the raw data named \code{rawdat}, a tidal vector named \code{tidecol} if supplied with the original dataset (otherwise \code{NULL}), and a character string indicating name of the dissolved oxygen column in the raw data that was used to estimate metabolism (same as \code{DO_var} argument).
 #'
 #' The plot method returns a \code{\link[ggplot2]{ggplot}} object which can be further modified.
 #'
@@ -86,7 +86,6 @@ ecometab.default <- function(dat_in, DO_var = 'DO_mgl', depth_val = 'Tide', meta
   #columns to be removed prior to processing
   to.rem<-c('flag', 'dTide', 'met.date', 'variable', 'value', 'day.hrs',
     'dec_time', 'hour')
-  orig_dat <- dat_in[, c('DateTimeStamp', 'DO_obs', depth_val, 'DO_nrm')]
   dat_in<-dat_in[,!names(dat_in) %in% to.rem]
 
   #convert DO from mg/L to mmol/m3
@@ -153,11 +152,17 @@ ecometab.default <- function(dat_in, DO_var = 'DO_mgl', depth_val = 'Tide', meta
   # used to get loss of O2 from diffusion
   DOsat<-with(dat_in, get(DO_var) / (oxySol(Temp * (1000 + SigT) / 1000, Sal)))
 
+  # tidecol argument, for metab class, used wiht meteval if provided
+
   # station depth, defaults to mean depth value plus 0.5 in case not on bottom
-  # uses 'depth_val' if provided, otherwis needs 'depth_vec'
+  tidecol <- NULL
+
+  # uses 'depth_val' if provided, otherwise needs 'depth_vec'
   if(!is.null(depth_val)){
 
+    if(!depth_val %in% names(dat_in)) stop(paste(depth_val, 'column for depth_val not in dat_in'))
     H<-rep(0.5 + mean(pmax(1, dat_in[, depth_val]), na.rm = TRUE), nrow(dat_in))
+    tidecol <- dat_in[, depth_val] # for attributes
 
   } else {
 
@@ -238,7 +243,7 @@ ecometab.default <- function(dat_in, DO_var = 'DO_mgl', depth_val = 'Tide', meta
       }
     )
 
-  out<-do.call('rbind',out)
+  out <- do.call('rbind',out)
 
   # change units to grams
   if('grams' %in% metab_units){
@@ -254,7 +259,9 @@ ecometab.default <- function(dat_in, DO_var = 'DO_mgl', depth_val = 'Tide', meta
   out <- structure(
     .Data = out,
     class = c('metab', 'data.frame'),
-    rawdat = orig_dat
+    rawdat = dat_in,
+    tidecol = tidecol,
+    DO_var = DO_var
   )
 
   return(out)

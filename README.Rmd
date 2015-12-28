@@ -52,15 +52,15 @@ lat <- 31.39
 long <- -89.28
 
 # weighted regression
-res <- wtreg(SAPDC, parallel = TRUE, wins = list(6, 1, NULL), progress = TRUE, 
+wtreg_res <- wtreg(SAPDC, parallel = TRUE, wins = list(6, 1, NULL), progress = TRUE, 
   tz = tz, lat = lat, long = long)
 
 # estimate ecosystem metabolism using observed DO time series
-metab_obs <- ecometab(res, DO_var = 'DO_obs', tz = tz, 
+metab_obs <- ecometab(wtreg_res, DO_var = 'DO_obs', tz = tz, 
   lat = lat, long = long)
 
 # estimate ecosystem metabolism using detided DO time series
-metab_dtd <- ecometab(res, DO_var = 'DO_nrm', tz = tz, 
+metab_dtd <- ecometab(wtreg_res, DO_var = 'DO_nrm', tz = tz, 
   lat = lat, long = long)
 ```
 

@@ -10,29 +10,15 @@ meteval(metab_in)
 \method{meteval}{metab}(metab_in, ...)
 }
 \arguments{
-\item{dat_in}{Input \code{data.frame}}
+\item{metab_in}{input \code{metab} object as returned from \code{\link{ecometab}}}
 
-\item{tz}{chr string for timezone, e.g., 'America/Chicago'}
-
-\item{lat}{numeric for latitude}
-
-\item{long}{numeric for longitude (negative west of prime meridian)}
-
-\item{daywin}{numeric for half-window width used in moving window correlatin}
-
-\item{method}{chr string for corrrelation method, passed to \code{\link[stats]{cor}}}
-
-\item{plot}{logical to return a plot}
-
-\item{lims}{two element numeric vector indicating y-axis limits on plot}
-
-\item{progress}{logical if progress saved to a txt file names 'log.txt' in the working directory}
+\item{...}{additional arguments passed to other methods}
 }
 \value{
 A \code{data.frame} of summary statistics...
 }
 \description{
-Evaluation metabolism results before and after weighted regression
+Evaluate metabolism results before and after weighted regression
 }
 \details{
 This function provides summary statistics of metabolism results to evaluate the effectiveness of weighted regression. Summary statistics include the correlation of dissolved oxygen time series with predicted tidal height change, the correlation of metabolism estimates with mean tidal height change between observations during day or night periods for production and respiration (respectively), mean and standard deviation of metabolism estimates across all daily integrated values, and percent `anomalous' estimates of metabolism.

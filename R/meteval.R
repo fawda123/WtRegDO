@@ -1,16 +1,9 @@
 #' Evaluate metabolism results
 #'
-#' Evaluation metabolism results before and after weighted regression
+#' Evaluate metabolism results before and after weighted regression
 #'
-#' @param dat_in Input \code{data.frame}
-#' @param tz chr string for timezone, e.g., 'America/Chicago'
-#' @param lat numeric for latitude
-#' @param long numeric for longitude (negative west of prime meridian)
-#' @param daywin numeric for half-window width used in moving window correlatin
-#' @param method chr string for corrrelation method, passed to \code{\link[stats]{cor}}
-#' @param plot logical to return a plot
-#' @param lims two element numeric vector indicating y-axis limits on plot
-#' @param progress logical if progress saved to a txt file names 'log.txt' in the working directory
+#' @param metab_in input \code{metab} object as returned from \code{\link{ecometab}}
+#' @param ... additional arguments passed to other methods
 #'
 #' @details
 #' This function provides summary statistics of metabolism results to evaluate the effectiveness of weighted regression. Summary statistics include the correlation of dissolved oxygen time series with predicted tidal height change, the correlation of metabolism estimates with mean tidal height change between observations during day or night periods for production and respiration (respectively), mean and standard deviation of metabolism estimates across all daily integrated values, and percent `anomalous' estimates of metabolism.
@@ -51,10 +44,13 @@ meteval <- function(metab_in) UseMethod('meteval')
 #' @method meteval metab
 meteval.metab <- function(metab_in, ...){
 
+  browser()
   # remove NA values
   toeval <- na.omit(metab_in)
+  rawdat <- attr(metab_in, 'rawdat')
+  tidecol <- attr(metab_in, 'tidecol')
 
-  # summarize metab
+  # summarize metab data
   out <- list(
     meanPg = mean(toeval$Pg),
     sdPg = sd(toeval$Pg),
@@ -64,6 +60,9 @@ meteval.metab <- function(metab_in, ...){
     anomRt = 100 * sum(toeval$Rt >= 0)/nrow(toeval)
   )
 
-  return(unlist(out))
+  # exit if no tidal vector column
+  if(is.null(tidecol)) return(out)
+
+
 
 }
