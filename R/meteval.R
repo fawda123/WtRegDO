@@ -73,7 +73,7 @@ meteval.metab <- function(metab_in, ...){
     .variable = c('month'),
     .fun = function(x) cor.test(x[, DO_var], x[, depth_val])$estimate
   )
-  DOcor <- mean(DOcor[, 'cor'], na.rm = TRUE)
+  # DOcor <- mean(DOcor[, 'cor'], na.rm = TRUE)
 
   # get tidal range for metabolic day/night periods
   # for correlation with daily integrated metab
@@ -120,10 +120,10 @@ meteval.metab <- function(metab_in, ...){
       }
     )
   names(metcor) <- gsub('\\.cor$', '', names(metcor))
-  metcor <- colMeans(metcor[, !names(metcor) %in% 'month'], na.rm = TRUE)
+  # metcor <- colMeans(metcor[, !names(metcor) %in% 'month'], na.rm = TRUE)
 
   # add to out
-  out <- unlist(c(out, DOcor = DOcor, metcor))
+  out <- c(out, DOcor = DOcor, metcor)
   return(out)
 
 }
