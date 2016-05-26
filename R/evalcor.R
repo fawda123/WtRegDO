@@ -48,7 +48,7 @@
 #'
 #' }
 evalcor <- function(dat_in, tz, lat, long, depth_val = 'Tide', daywin = 6, method = 'pearson', plot = TRUE, lims = c(-0.5, 0.5), progress = FALSE){
-browser()
+
   names(dat_in)[names(dat_in) %in% depth_val] <- 'Tide'
 
   # get decimal time
@@ -84,14 +84,23 @@ browser()
       }
 
     ref_in <- tocor[row, ]
-
-    wts <- WtRegDO::wtfun(ref_in, tocor, wins = list(daywin, 1e6, 1e6))
-    gr_zero <- which(wts > 0)
-
-    sun_in <- (sun_angle)[gr_zero]
-    tide_in <- (tide_angle)[gr_zero]
-
-    cor(sun_in, tide_in, method = method)
+  
+    # return NA if no tide value at obs
+    if(is.na(ref_in$Tide)){ 
+      
+      NA 
+      
+    } else {
+      
+      wts <- WtRegDO::wtfun(ref_in, tocor, wins = list(daywin, 1e6, 1e6))
+      gr_zero <- which(wts > 0)
+  
+      sun_in <- (sun_angle)[gr_zero]
+      tide_in <- (tide_angle)[gr_zero]
+  
+      cor(sun_in, tide_in, method = method)
+        
+    }
 
   }
 

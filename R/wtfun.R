@@ -101,7 +101,7 @@ wtfun <- function(ref_in, dat_in,
   # all as product
   out <- sapply(1:nrow(ref_in), function(x) wts_1[, x] * wts_2[, x] * wts_3[, x])
 
-  gr_zero <- colSums(out > 0)
+  gr_zero <- colSums(out > 0, na.rm = TRUE)
   #cat('   Number of weights greater than zero =',gr.zero,'\n')
 
   # extend window widths of weight vector is less than 100
