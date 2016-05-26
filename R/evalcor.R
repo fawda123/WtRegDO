@@ -7,7 +7,7 @@
 #' @param lat numeric for latitude
 #' @param long numeric for longitude (negative west of prime meridian)
 #' @param depth_val chr indicating name of the tidal height column in \code{dat_in}
-#' @param daywin numeric for half-window width used in moving window correlatin
+#' @param daywin numeric for half-window width used in moving window correlation
 #' @param method chr string for corrrelation method, passed to \code{\link[stats]{cor}}
 #' @param plot logical to return a plot
 #' @param lims two element numeric vector indicating y-axis limits on plot
@@ -48,7 +48,7 @@
 #'
 #' }
 evalcor <- function(dat_in, tz, lat, long, depth_val = 'Tide', daywin = 6, method = 'pearson', plot = TRUE, lims = c(-0.5, 0.5), progress = FALSE){
-
+browser()
   names(dat_in)[names(dat_in) %in% depth_val] <- 'Tide'
 
   # get decimal time

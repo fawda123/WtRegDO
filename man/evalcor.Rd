@@ -19,7 +19,7 @@ evalcor(dat_in, tz, lat, long, depth_val = "Tide", daywin = 6,
 
 \item{depth_val}{chr indicating name of the tidal height column in \code{dat_in}}
 
-\item{daywin}{numeric for half-window width used in moving window correlatin}
+\item{daywin}{numeric for half-window width used in moving window correlation}
 
 \item{method}{chr string for corrrelation method, passed to \code{\link[stats]{cor}}}
 

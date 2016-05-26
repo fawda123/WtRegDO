@@ -17,9 +17,9 @@ Imports:
     foreach,
     ggplot2,
     plyr,
+    maptools,
     oce,
     reshape2,
-    StreamMetabolism,
     wq
 Suggests:
     doParallel
