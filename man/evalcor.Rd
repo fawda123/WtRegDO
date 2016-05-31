@@ -29,7 +29,7 @@ evalcor(dat_in, tz, lat, long, depth_val = "Tide", daywin = 6,
 
 \item{lims}{two element numeric vector indicating y-axis limits on plot}
 
-\item{progress}{logical if progress saved to a txt file names 'log.txt' in the working directory}
+\item{progress}{logical if progress is saved to a text file named 'log.txt' in the working directory}
 
 \item{harm}{logical indicating if the tidal height vector indicated in \code{depth_val} is modelled using harmonic regression, see details}
 
@@ -41,10 +41,10 @@ evalcor(dat_in, tz, lat, long, depth_val = "Tide", daywin = 6,
 A \code{\link[ggplot2]{ggplot}} object if \code{plot = TRUE}, otherwise a numeric vector of the correlations for each row in the input dataset. A two-element list will be returned for the tidal model and predicted resutls of \code{chk_tide = TRUE}
 }
 \description{
-Evaluation correlation between tide change and sun angle to determine effectiveness of weighted regression
+Evaluate the correlation between tide change and sun angle to determine potential effectiveness of weighted regression
 }
 \details{
-This function can be used before weighted regression to identify locations in the time series when tidal and solar changes are not correlated.  In general, the \code{\link{wtreg}} will be most effective when correlations between the two are zero, whereas \code{\link{wtreg}} will remove both the biological and physical components of the dissolved oxygen time series when the sun and tide are correlated. The correlation between tide change and sun angle is estimated using a moving window for the time series, where the window width is defined by \code{daywin}.  Tide changes are estimated as angular rates for the tidal height vector and sun angles are estimated from the time of day and geographic location.
+This function can be used before weighted regression to identify locations in the time series when tidal and solar changes are not correlated.  In general, the \code{\link{wtreg}} will be most effective when correlations between the two are zero, whereas \code{\link{wtreg}} will remove both the biological and physical components of the dissolved oxygen time series when the sun and tide are correlated. The correlation between tide change and sun angle is estimated using a moving window for the time series, where the half-window width is defined by \code{daywin} (i.e., the default value is a moving window with six days on each side for 12 days total).  Tide changes are estimated as angular rates for the tidal height vector and sun angles are estimated from the time of day and geographic location.
 
 The \code{\link[foreach]{foreach}} function is used to execute the moving window correlation in parallel and will be run automatically if a backend is created.
 
