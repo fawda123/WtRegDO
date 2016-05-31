@@ -6,7 +6,9 @@
 \usage{
 evalcor(dat_in, tz, lat, long, depth_val = "Tide", daywin = 6,
   method = "pearson", plot = TRUE, lims = c(-0.5, 0.5),
-  progress = FALSE)
+  progress = FALSE, harm = TRUE, chk_tide = FALSE,
+  constituents = c("M2", "S2", "N2", "K2", "K1", "O1", "P1", "Q1", "MF", "MM",
+  "SSA", "M4", "M6", "S4", "MS4"))
 }
 \arguments{
 \item{dat_in}{Input \code{data.frame}}
@@ -28,17 +30,26 @@ evalcor(dat_in, tz, lat, long, depth_val = "Tide", daywin = 6,
 \item{lims}{two element numeric vector indicating y-axis limits on plot}
 
 \item{progress}{logical if progress saved to a txt file names 'log.txt' in the working directory}
+
+\item{harm}{logical indicating if the tidal height vector indicated in \code{depth_val} is modelled using harmonic regression, see details}
+
+\item{chk_tide}{logical indicating if harmonic regression output is returned for diagnostics}
+
+\item{constituents}{chr string of harmonic constituents to predict if \code{harm = TRUE}}
 }
 \value{
-A \code{\link[ggplot2]{ggplot}} object if \code{plot = TRUE}, otherwise a numeric vector of the correlations for each row in the input dataset.
+A \code{\link[ggplot2]{ggplot}} object if \code{plot = TRUE}, otherwise a numeric vector of the correlations for each row in the input dataset. A two-element list will be returned for the tidal model and predicted resutls of \code{chk_tide = TRUE}
 }
 \description{
 Evaluation correlation between tide change and sun angle to determine effectiveness of weighted regression
 }
 \details{
-This function can be used before weighted regression to identify locations in the time series when tidal and solar changes are not correlated.  In general, the \code{\link{wtreg}} will be most effective when correlations between the two are zero, whereas \code{\link{wtreg}} will remove both the biological and physical components of the dissolved oxygen time series when the sun and tide are correlated.   The correlation between tide change and sun angle is estimated using a moving window for the time series, where the window width is defined by \code{daywin}.  Tide changes are estimated as angular rates for the tidal height vector and sun angles are estimated from the time of day and geographic location.
+This function can be used before weighted regression to identify locations in the time series when tidal and solar changes are not correlated.  In general, the \code{\link{wtreg}} will be most effective when correlations between the two are zero, whereas \code{\link{wtreg}} will remove both the biological and physical components of the dissolved oxygen time series when the sun and tide are correlated. The correlation between tide change and sun angle is estimated using a moving window for the time series, where the window width is defined by \code{daywin}.  Tide changes are estimated as angular rates for the tidal height vector and sun angles are estimated from the time of day and geographic location.
 
 The \code{\link[foreach]{foreach}} function is used to execute the moving window correlation in parallel and will be run automatically if a backend is created.
+
+Setting \code{harm = TRUE} will predict the tidal time series with harmonic regression using the \code{\link[oce]{tidem}} function.  This is useful if there are missing observations in the observed tidal vector.  The correlation time series in the plot will also be smoother.  Use the \code{chk_tide} function before applying this option to verify the harmonic regression model is adequate for the observed time series.  The predicted tidal constituents in the default argument should account for a majority of the variation in the observed data.  These include M2:	principal lunar semidiurnal, S2:	principal solar semidiurnal, N2: larger lunar elliptic semidiurnal, K2: lunisolar semidiurnal, K1: lunisolar declinational diurnal, O1:	principal lunar diurnal, P1:	principal solar diurnal, Q1:	larger lunar elliptic diurnal, MF: lunar fortnightly, MM: lunar monthly, SSA: solar semi annual, M4: first overtide of M2, M6: second overtide of M2, S4: first overtide of S2, and MS4: compound tide of M2 and S2.
+
 Figure 9 in Beck et al. 2015 was created using this function.
 }
 \examples{
@@ -56,6 +67,12 @@ library(doParallel)
 registerDoParallel(cores = 7)
 
 evalcor(SAPDC, tz, lat, long, progress = TRUE)
+
+# check fit of tidal predictions
+# in this case, predictions = observed because sample data are already predicted
+tochk <- evalcor(SAPDC, tz, lat, long, progress = TRUE, chk_tide = TRUE)
+tochk <- tochk$tide_pred
+plot(tide_obs ~ tide_pred, tochk)
 
 }
 }
