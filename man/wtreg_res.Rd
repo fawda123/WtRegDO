@@ -14,10 +14,10 @@
   \item{BP}{numeric, barometric pressure, mb}
   \item{WSpd}{numeric, wind speed, m s-1}
   \item{Tide}{numeric, tide height, m, estimated from pressure data using harmonic regression}
-  \item{met.date}{Date, the metabolic day defined as the period from sunrise to sunrise on two adjacent calender days}
-  \item{variable}{Factor, identifier that categorizes each time step as occuring during daylight (\code{sunrise}) or nighttime (\code{sunset}) based on sunrise and sunset times in the \code{value} column}
-  \item{value}{POSIXct, sequential sunrise and sunset times for the time series}
-  \item{day.hrs}{numeric, total time of sunlight in the metabolic day}
+  \item{metab_date}{Date, the metabolic day defined as the period from sunrise to sunrise on two adjacent calender days}
+  \item{solar_period}{Factor, identifier that categorizes each time step as occuring during daylight (\code{sunrise}) or nighttime (\code{sunset}) based on sunrise and sunset times in the \code{value} column}
+  \item{solar_time}{POSIXct, sequential sunrise and sunset times for the time series}
+  \item{day_hrs}{numeric, total time of sunlight in the metabolic day}
   \item{dec_time}{numeric, decimal time in days}
   \item{hour}{numeric, hour of the day}
   \item{DO_prd}{numeric, predicted dissolved oxygen from \code{\link{wtreg}}}

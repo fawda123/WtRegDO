@@ -83,10 +83,10 @@ ecometab.default <- function(dat_in, DO_var = 'DO_mgl', depth_val = 'Tide', meta
 
   ##begin calculations
 
+  # keep these columns
   #columns to be removed prior to processing
-  to.rem<-c('flag', 'dTide', 'met.date', 'variable', 'value', 'day.hrs',
-    'dec_time', 'hour')
-  dat_in<-dat_in[,!names(dat_in) %in% to.rem]
+  tokp <- c('DateTimeStamp', 'Temp', 'Sal', 'ATemp', 'BP', 'Tide', 'WSpd', DO_var)
+  dat_in <- dat_in[, names(dat_in) %in% tokp]
 
   #convert DO from mg/L to mmol/m3
   dat_in$DO<-dat_in[, DO_var]/32*1000
@@ -94,7 +94,7 @@ ecometab.default <- function(dat_in, DO_var = 'DO_mgl', depth_val = 'Tide', meta
   # get change in DO per hour, as mmol m^-3 hr^-1
   # scaled to time interval to equal hourly rates
   # otherwise, mmol m^-3 0.5hr^-1
-  dDO_scl <- as.numeric(diff(dat_in$DateTimeStamp)/60)
+  dDO_scl <- as.double(diff(dat_in$DateTimeStamp), units = 'hours')
   dDO<-diff(dat_in$DO)/dDO_scl
 
   #take diff of each column, divide by 2, add original value
@@ -144,14 +144,10 @@ ecometab.default <- function(dat_in, DO_var = 'DO_mgl', depth_val = 'Tide', meta
   BP_mix[is.na(BP_mix)] <- clim_means$BP[is.na(BP_mix)]
 
   ##
-  # get sigma_t estimates
-  SigT<-with(dat_in,swSigmaT(Sal,Temp,mean(dat_in$BP/100,na.rm=TRUE)))
-
   # DOsat is a ratio between DO (mg/L) and DO at saturation (mg/L), gets around a unit conversion issue
   # oxysol returns the actual DO saturation in mg/L
   # used to get loss of O2 from diffusion
-  DOsat<-with(dat_in, get(DO_var) / (oxySol(Temp * (1000 + SigT) / 1000, Sal)))
-
+  DOsat<-with(dat_in, get(DO_var) / oxySol(Temp, Sal, BP * 1/1013.25))
 
   # station depth, defaults to mean depth value plus 0.5 in case not on bottom
   # uses 'depth_val' if provided, otherwise needs 'depth_vec'
@@ -196,37 +192,37 @@ ecometab.default <- function(dat_in, DO_var = 'DO_mgl', depth_val = 'Tide', meta
   proc.dat<-dat_in[,!names(dat_in) %in% c('DateTimeStamp','cTide','Wdir',
     'SDWDir','ChlFluor','Turb','pH','RH',DO_var,'DO_pct','SpCond','TotPrcp',
     'CumPrcp','TotSoRad','Tide')]
-  proc.dat<-data.frame(proc.dat,DOsat,dDO,SigT,H,D)
+  proc.dat<-data.frame(proc.dat,DOsat,dDO,H,D)
 
   #get daily/nightly flux estimates for Pg, Rt, NEM estimates
   out<-lapply(
-    split(proc.dat,proc.dat$met.date),
+    split(proc.dat,proc.dat$metab_date),
     function(x){
 
       #filter for minimum no. of records
-      if(length(with(x[x$variable=='sunrise',],na.omit(dDO))) < 3 |
-         length(with(x[x$variable=='sunset',],na.omit(dDO))) < 3 ){
+      if(length(with(x[x$solar_period=='sunrise',],na.omit(dDO))) < 3 |
+         length(with(x[x$solar_period=='sunset',],na.omit(dDO))) < 3 ){
         DOF_d<-NA; D_d<-NA; DOF_n<-NA; D_n<-NA
         }
 
       else{
         #day
-        DOF_d<-mean(with(x[x$variable=='sunrise',],dDO*H),na.rm=TRUE)
-        D_d<-mean(with(x[x$variable=='sunrise',],D),na.rm=TRUE)
+        DOF_d<-mean(with(x[x$solar_period=='sunrise',],dDO*H),na.rm=TRUE)
+        D_d<-mean(with(x[x$solar_period=='sunrise',],D),na.rm=TRUE)
 
         #night
-        DOF_n<-mean(with(x[x$variable=='sunset',],dDO*H),na.rm=TRUE)
-        D_n<-mean(with(x[x$variable=='sunset',],D),na.rm=TRUE)
+        DOF_n<-mean(with(x[x$solar_period=='sunset',],dDO*H),na.rm=TRUE)
+        D_n<-mean(with(x[x$solar_period=='sunset',],D),na.rm=TRUE)
         }
 
       #metabolism
       #account for air-sea exchange if surface station
       #else do not
       if(!bott_stat){
-        Pg<-((DOF_d-D_d) - (DOF_n-D_n))*unique(x$day.hrs)
+        Pg<-((DOF_d-D_d) - (DOF_n-D_n))*unique(x$day_hrs)
         Rt<-(DOF_n-D_n)*24
       } else {
-        Pg<-(DOF_d - DOF_n)*unique(x$day.hrs)
+        Pg<-(DOF_d - DOF_n)*unique(x$day_hrs)
         Rt<-DOF_n*24
         }
       NEM<-Pg+Rt
@@ -234,7 +230,7 @@ ecometab.default <- function(dat_in, DO_var = 'DO_mgl', depth_val = 'Tide', meta
       Rt_vol<-Rt/mean(x$H,na.rm=TRUE)
 
       # output
-      data.frame(Date=unique(x$met.date),Pg,Rt,NEM)
+      data.frame(Date=unique(x$metab_date),Pg,Rt,NEM)
 
       }
     )

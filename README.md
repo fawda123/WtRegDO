@@ -70,22 +70,22 @@ meteval(metab_obs)
 
 ```
 ## $meanPg
-## [1] 135.3987
+## [1] 136.0918
 ## 
 ## $sdPg
-## [1] 129.9936
+## [1] 129.9487
 ## 
 ## $anomPg
-## [1] 15.02732
+## [1] 14.52055
 ## 
 ## $meanRt
-## [1] -172.6532
+## [1] -174.5961
 ## 
 ## $sdRt
-## [1] 143.2133
+## [1] 143.112
 ## 
 ## $anomRt
-## [1] 10.92896
+## [1] 10.41096
 ## 
 ## $DOcor.month
 ##  [1] "01" "02" "03" "04" "05" "06" "07" "08" "09" "10" "11" "12"
@@ -98,13 +98,12 @@ meteval(metab_obs)
 ##  [1] "01" "02" "03" "04" "05" "06" "07" "08" "09" "10" "11" "12"
 ## 
 ## $Pgcor
-##  [1]  0.58665768  0.31821146 -0.35562800  0.48818007  0.84510266
-##  [6]  0.79158487  0.71184720  0.18093929  0.06116896  0.47522981
-## [11]  0.52853113  0.46391903
+##  [1]  0.5855800  0.3175887 -0.3562183  0.4885538  0.8421015  0.7919766
+##  [7]  0.7118354  0.1796495  0.0594478  0.4742226  0.5419348  0.4643577
 ## 
 ## $Rtcor
-##  [1] 0.7190483 0.4623587 0.7775887 0.6197052 0.7694675 0.7486285 0.7676385
-##  [8] 0.7452710 0.8045039 0.6167957 0.6648443 0.5378011
+##  [1] 0.7213334 0.4628575 0.7812258 0.6185484 0.7625915 0.7487531 0.7674479
+##  [8] 0.7457532 0.8046064 0.6156189 0.6875412 0.5381141
 ```
 
 ```r
@@ -114,19 +113,19 @@ meteval(metab_dtd)
 
 ```
 ## $meanPg
-## [1] 135.7661
+## [1] 135.3959
 ## 
 ## $sdPg
-## [1] 48.99728
+## [1] 49.21859
 ## 
 ## $anomPg
 ## [1] 0
 ## 
 ## $meanRt
-## [1] -174.0489
+## [1] -174.8359
 ## 
 ## $sdRt
-## [1] 58.5115
+## [1] 58.77977
 ## 
 ## $anomRt
 ## [1] 0
@@ -135,22 +134,22 @@ meteval(metab_dtd)
 ##  [1] "01" "02" "03" "04" "05" "06" "07" "08" "09" "10" "11" "12"
 ## 
 ## $DOcor.cor
-##  [1]  0.07870710  0.01131530 -0.06937389 -0.18395007 -0.10768210
-##  [6] -0.05824140  0.01614504  0.06841365  0.10683226  0.11684338
-## [11]  0.07392343 -0.10198817
+##  [1]  0.07870710  0.01131530 -0.06950567 -0.18395007 -0.10768210
+##  [6] -0.05824140  0.01614504  0.06841365  0.10683226  0.11687569
+## [11]  0.07368755 -0.10198817
 ## 
 ## $month
 ##  [1] "01" "02" "03" "04" "05" "06" "07" "08" "09" "10" "11" "12"
 ## 
 ## $Pgcor
-##  [1] -0.47682101  0.02910631 -0.07309105 -0.02250082  0.60347387
-##  [6]  0.27516584 -0.23198078 -0.61985764 -0.53092717 -0.36783649
-## [11] -0.11080474 -0.06746171
+##  [1] -0.47954765  0.02699337  0.02219251 -0.02092694  0.60293642
+##  [6]  0.27435024 -0.22756992 -0.62069363 -0.53048256 -0.36986621
+## [11] -0.09005135 -0.06758431
 ## 
 ## $Rtcor
-##  [1]  0.21066000  0.28724434 -0.11942154  0.03122116  0.11521264
-##  [6]  0.08881729  0.11571877  0.16399793  0.76315897 -0.49940414
-## [11]  0.17771218 -0.34045483
+##  [1]  0.22541894  0.28820259 -0.19785004  0.02907434  0.10522547
+##  [6]  0.08964735  0.11499784  0.16384986  0.76111970 -0.50026397
+## [11]  0.17767841 -0.33802579
 ```
 
 Plot metabolism results from observed dissolved oxygen time series (see `?plot.metab` for options).  Note the periodicity with fortnightly tidal variation and instances with negative production/positive respiration.
@@ -160,7 +159,7 @@ Plot metabolism results from observed dissolved oxygen time series (see `?plot.m
 plot(metab_obs, by = 'days')
 ```
 
-![](README_files/figure-html/unnamed-chunk-5-1.png)
+![](README_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
 
 Plot metabolism results from detided dissolved oxygen time series.
 
@@ -169,7 +168,7 @@ Plot metabolism results from detided dissolved oxygen time series.
 plot(metab_dtd, by = 'days')
 ```
 
-![](README_files/figure-html/unnamed-chunk-7-1.png)
+![](README_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
 
 The `evalcor` function can be used before weighted regression to identify locations in the time series when tidal and solar changes are not correlated.  In general, the `wtreg` will be most effective when correlations between the two are zero, whereas `wtreg` will remove both the biological and physical components of the dissolved oxygen time series when the sun and tide are correlated.   The correlation between tide change and sun angle is estimated using a moving window for the time series.  Tide changes are estimated as angular rates for the tidal height vector and sun angles are estimated from the time of day and geographic location.  Correlations are low for the sample dataset, suggesting the results from weighted regression are valid for the entire time series.
 

@@ -78,15 +78,15 @@ meteval.metab <- function(metab_in, ...){
   # get tidal range for metabolic day/night periods
   # for correlation with daily integrated metab
   tide_rngs <- plyr::ddply(rawdat,
-    .variables = c('met.date'),
+    .variables = c('metab_date'),
     .fun = function(x){
 
       # mean tidal derivative for day hours
-      sunrise <- mean(diff(x[x$variable %in% 'sunrise', 'Tide'],
+      sunrise <- mean(diff(x[x$solar_period %in% 'sunrise', 'Tide'],
         na.rm = T))
 
       # mean tidal derivative for night hours
-      sunset <- mean(diff(x[x$variable %in% 'sunset', 'Tide'],
+      sunset <- mean(diff(x[x$solar_period %in% 'sunset', 'Tide'],
         na.rm = T))
       if(sunrise == 'Inf') sunrise <- NA
       if(sunset == 'Inf') sunset <- NA

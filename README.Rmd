@@ -79,12 +79,14 @@ meteval(metab_obs)
 
 # evaluate after weighted regression
 meteval(metab_dtd)
+
 ```
 
 Plot metabolism results from observed dissolved oxygen time series (see `?plot.metab` for options).  Note the periodicity with fortnightly tidal variation and instances with negative production/positive respiration.
 
 ```{r fig.height = 4, fig.width = 12, message = F, warning = F}
 plot(metab_obs, by = 'days')
+
 ```
 
 Plot metabolism results from detided dissolved oxygen time series.
@@ -93,6 +95,7 @@ data(metab_dtd)
 ```
 ```{r fig.height = 4, fig.width = 12, message = F, warning = F}
 plot(metab_dtd, by = 'days')
+
 ```
 
 The `evalcor` function can be used before weighted regression to identify locations in the time series when tidal and solar changes are not correlated.  In general, the `wtreg` will be most effective when correlations between the two are zero, whereas `wtreg` will remove both the biological and physical components of the dissolved oxygen time series when the sun and tide are correlated.   The correlation between tide change and sun angle is estimated using a moving window for the time series.  Tide changes are estimated as angular rates for the tidal height vector and sun angles are estimated from the time of day and geographic location.  Correlations are low for the sample dataset, suggesting the results from weighted regression are valid for the entire time series.
