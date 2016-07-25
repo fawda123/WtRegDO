@@ -22,6 +22,7 @@ Imports:
     reshape2,
     wq
 Suggests:
+    chron,
     doParallel
 Depends:
     R (>= 3.1.1)
