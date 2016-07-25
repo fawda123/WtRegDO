@@ -23,7 +23,8 @@ Imports:
     wq
 Suggests:
     chron,
-    doParallel
+    doParallel,
+    iterators
 Depends:
     R (>= 3.1.1)
 Authors@R: person(given = "Marcus W.", family = "Beck",
