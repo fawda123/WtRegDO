@@ -24,6 +24,7 @@ Imports:
 Suggests:
     chron,
     doParallel,
+    gtable,
     iterators
 Depends:
     R (>= 3.1.1)
