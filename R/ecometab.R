@@ -10,7 +10,7 @@
 #' @param bott_stat logical if air-sea gas exchange is removed from the estimate
 #' @param depth_vec numeric value for manual entry of station depth (m).  Use a single value if the integration depth is constant or a vector of depth values equal in length to the time series.  Leave \code{NULL} if estimated from \code{depth_val} column.
 #'
-#' @import oce plyr wq
+#' @import oce plyr
 #'
 #' @export
 #'
