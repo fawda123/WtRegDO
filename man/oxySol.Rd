@@ -25,6 +25,7 @@ Calculations are based on the approach of Benson and Krause (1984), using Green 
 \examples{
 # Convert DO into \% saturation for 1-m depth at Station 32.
 # Use convention of expressing saturation at 1 atm.
+data(sfbay)
 
 sfb1 <- subset(sfbay, depth == 1 & stn == 32)
 dox.pct <- with(sfb1, 100 * dox/oxySol(temp, sal))
