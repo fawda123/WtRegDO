@@ -130,7 +130,7 @@ wtfun <- function(ref_in, dat_in,
     out <- sapply(1:nrow(ref_in),
       function(x) wts_1[, x] * wts_2[, x] * wts_3[, x])
 
-    gr_zero <- colSums(out > 0)
+    gr_zero <- colSums(out > 0, na.rm = TRUE)
 
     }
 
