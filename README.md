@@ -26,18 +26,30 @@ Please cite this package using the manuscript.
 
 ### Functions
 
-Load the sample dataset and run weighted regression.  See the function help files for details.
+Load the sample dataset and run weighted regression. All functions require data with the same format as SAPDC, with no missing values in the tidal depth column. See the help files for details.
 
 
 ```r
 # load library and sample data
 library(WtRegDO)
-data(SAPDC)
+head(SAPDC)
+```
 
+```
+##         DateTimeStamp Temp  Sal DO_obs ATemp   BP WSpd      Tide
+## 1 2012-01-01 00:00:00 14.9 33.3    5.0  11.9 1022  0.5 0.8914295
+## 2 2012-01-01 00:30:00 14.9 33.4    5.5  11.3 1022  0.6 1.0011830
+## 3 2012-01-01 01:00:00 14.9 33.4    5.9   9.9 1021  0.6 1.0728098
+## 4 2012-01-01 01:30:00 14.8 33.3    6.4  10.0 1022  2.4 1.1110885
+## 5 2012-01-01 02:00:00 14.7 33.2    6.6  11.4 1022  1.3 1.1251628
+## 6 2012-01-01 02:30:00 14.7 33.3    6.1  10.7 1021  0.0 1.1223799
+```
+
+```r
 # run weighted regression in parallel
 # requires parallel backend
 library(doParallel)
-registerDoParallel(cores = 7)
+registerDoParallel(cores = detectCores() - 1)
 
 # metadata for the location
 tz <- 'America/Jamaica'
@@ -159,7 +171,7 @@ Plot metabolism results from observed dissolved oxygen time series (see `?plot.m
 plot(metab_obs, by = 'days')
 ```
 
-![](README_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
+![](README_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
 
 Plot metabolism results from detided dissolved oxygen time series.
 
@@ -168,7 +180,7 @@ Plot metabolism results from detided dissolved oxygen time series.
 plot(metab_dtd, by = 'days')
 ```
 
-![](README_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
+![](README_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
 
 The `evalcor` function can be used before weighted regression to identify locations in the time series when tidal and solar changes are not correlated.  In general, the `wtreg` will be most effective when correlations between the two are zero, whereas `wtreg` will remove both the biological and physical components of the dissolved oxygen time series when the sun and tide are correlated.   The correlation between tide change and sun angle is estimated using a moving window for the time series.  Tide changes are estimated as angular rates for the tidal height vector and sun angles are estimated from the time of day and geographic location.  Correlations are low for the sample dataset, suggesting the results from weighted regression are valid for the entire time series.
 

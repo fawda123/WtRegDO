@@ -34,17 +34,18 @@ Please cite this package using the manuscript.
 
 ### Functions
 
-Load the sample dataset and run weighted regression.  See the function help files for details.
+Load the sample dataset and run weighted regression. All functions require data with the same format as SAPDC, with no missing values in the tidal depth column. See the help files for details.
 
-```{r, eval = FALSE}
+```{r, message = F, warning = F}
 # load library and sample data
 library(WtRegDO)
-data(SAPDC)
-
+head(SAPDC)
+```
+```{r, eval = FALSE}
 # run weighted regression in parallel
 # requires parallel backend
 library(doParallel)
-registerDoParallel(cores = 7)
+registerDoParallel(cores = detectCores() - 1)
 
 # metadata for the location
 tz <- 'America/Jamaica'

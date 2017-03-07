@@ -37,6 +37,11 @@
 wtreg <- function(dat_in, DO_obs = 'DO_obs', depth_val = 'Tide', wins = list(4, 12, NULL), tz, lat,
   long, progress = FALSE, parallel = FALSE, ...){
 
+  # sanity check
+  chk <- sum(is.na(dat_in[, depth_val]))
+  if(chk > 0)
+    stop('Remove ', chk,  ' missing obervations in ', depth_val)
+
   # get mean tidal height from empirical data
   names(dat_in)[names(dat_in) %in% depth_val] <- 'Tide'
   mean_tide <- mean(dat_in$Tide, na.rm = TRUE)
