@@ -7,7 +7,7 @@ Linux: [![Travis-CI Build Status](https://travis-ci.org/fawda123/WtRegDO.svg?bra
 
 Windows: [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/fawda123/WtRegDO?branch=master&svg=true)](https://ci.appveyor.com/project/fawda123/WtRegDO)
 
-This is the public repository of supplementary material to accompany the manuscript "Improving estimates of ecosystem metabolism by reducing effects of tidal advection on dissolved oxygen time series", submitted to Limnology and Oceanography Methods.  The package includes a sample dataset and functions to implement weighted regression on dissolved oxygen time series to reduce the effects of tidal advection.  Functions are also available to estimate net ecosystem metabolism using the open-water method.  
+This is the public repository of supplementary material to accompany the manuscript "Improving estimates of ecosystem metabolism by reducing effects of tidal advection on dissolved oxygen time series", published in Limnology and Oceanography Methods.  The package includes a sample dataset and functions to implement weighted regression on dissolved oxygen time series to reduce the effects of tidal advection.  Functions are also available to estimate net ecosystem metabolism using the open-water method.  
 
 The development version of this package can be installed from Github:
 
@@ -26,7 +26,7 @@ Please cite this package using the manuscript.
 
 ### Functions
 
-Load the sample dataset and run weighted regression. All functions require data with the same format as SAPDC, with no missing values in the tidal depth column. See the help files for details.
+A sample dataset, `SAPDC`, is included with the package that demonstrates the required format of the data.  All functions require data with the same format, with no missing values in the tidal depth column. See the help files for details.
 
 
 ```r
@@ -44,6 +44,29 @@ head(SAPDC)
 ## 5 2012-01-01 02:00:00 14.7 33.2    6.6  11.4 1022  1.3 1.1251628
 ## 6 2012-01-01 02:30:00 14.7 33.3    6.1  10.7 1021  0.0 1.1223799
 ```
+
+Before applying weighted regression, the data should be checked with the `evalcor` function to identify locations in the time series when tidal and solar changes are not correlated.  In general, the `wtreg` function for weighted regression will be most effective when correlations between the two are zero, whereas `wtreg` will remove both the biological and physical components of the dissolved oxygen time series when the sun and tide are correlated.   The correlation between tide change and sun angle is estimated using a moving window for the time series.  Tide changes are estimated as angular rates for the tidal height vector and sun angles are estimated from the time of day and geographic location.  Correlations are low for the sample dataset, suggesting the results from weighted regression are reasonable for the entire time series.
+
+
+```r
+data(SAPDC)
+
+# metadata for the location
+tz <- 'America/Jamaica'
+lat <- 31.39
+long <- -89.28
+
+# setup parallel backend
+library(doParallel)
+registerDoParallel(cores = 7)
+
+# run the function
+evalcor(SAPDC, tz, lat, long, progress = TRUE)
+```
+
+![](README_files/figure-html/evalcor_ex.png) 
+
+The `wtreg` function can be used to detide the dissolved oxygen time series.  The example below demonstrates detiding, following by a comparison of ecosystem metabolism using the observed and detided data.
 
 ```r
 # run weighted regression in parallel
@@ -171,7 +194,7 @@ Plot metabolism results from observed dissolved oxygen time series (see `?plot.m
 plot(metab_obs, by = 'days')
 ```
 
-![](README_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
+![](README_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
 
 Plot metabolism results from detided dissolved oxygen time series.
 
@@ -180,28 +203,7 @@ Plot metabolism results from detided dissolved oxygen time series.
 plot(metab_dtd, by = 'days')
 ```
 
-![](README_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
-
-The `evalcor` function can be used before weighted regression to identify locations in the time series when tidal and solar changes are not correlated.  In general, the `wtreg` will be most effective when correlations between the two are zero, whereas `wtreg` will remove both the biological and physical components of the dissolved oxygen time series when the sun and tide are correlated.   The correlation between tide change and sun angle is estimated using a moving window for the time series.  Tide changes are estimated as angular rates for the tidal height vector and sun angles are estimated from the time of day and geographic location.  Correlations are low for the sample dataset, suggesting the results from weighted regression are valid for the entire time series.
-
-
-```r
-data(SAPDC)
-
-# metadata for the location
-tz <- 'America/Jamaica'
-lat <- 31.39
-long <- -89.28
-
-# setup parallel backend
-library(doParallel)
-registerDoParallel(cores = 7)
-
-# run the function
-evalcor(SAPDC, tz, lat, long, progress = TRUE)
-```
-
-![](README_files/figure-html/evalcor_ex.png) 
+![](README_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
 
 ### License
 
