@@ -113,8 +113,8 @@ meteval.metab <- function(metab_in, ...){
       .fun = function(x){
 
         with(x, c(
-          Pgcor = cor.test(Pg, sunrise)$estimate,
-          Rtcor = cor.test(Rt, sunset)$estimate
+          Pgcor = try({cor.test(Pg, sunrise)$estimate}),
+          Rtcor = try({cor.test(Rt, sunset)$estimate})
         ))
 
       }
