@@ -48,7 +48,4 @@ smoother(tosmooth, window = 20)
 \seealso{
 \code{\link[stats]{filter}}
 }
-\concept{
-analyze
-}
-
+\concept{analyze}

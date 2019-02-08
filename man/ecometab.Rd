@@ -8,16 +8,19 @@
 \usage{
 ecometab(dat_in, ...)
 
-\method{ecometab}{default}(dat_in, DO_var = "DO_mgl", depth_val = "Tide",
-  metab_units = "mmol", bott_stat = FALSE, depth_vec = NULL, ...)
+\method{ecometab}{default}(dat_in, tz, DO_var = "DO_mgl",
+  depth_val = "Tide", metab_units = "mmol", bott_stat = FALSE,
+  depth_vec = NULL, ...)
 
-\method{plot}{metab}(x, by = "months", metab_units = "mmol", alpha = 0.05,
-  width = 10, pretty = TRUE, ...)
+\method{plot}{metab}(x, by = "months", metab_units = "mmol",
+  alpha = 0.05, width = 10, pretty = TRUE, ...)
 }
 \arguments{
 \item{dat_in}{Input data frame which must include time series of dissolved oxygen (mg L-1), see \code{\link{SAPDC}} for data structure}
 
 \item{...}{arguments passed to or from other methods}
+
+\item{tz}{chr string for timezone, e.g., 'America/Chicago', must match the time zone in \code{dat_in$DateTimeStamp}}
 
 \item{DO_var}{chr string indicating the name of the column with the dissolved oxygen variable for estimating metabolism}
 
@@ -97,4 +100,3 @@ Thebault J, Schraga TS, Cloern JE, Dunlavey EG. 2008. Primary production and car
 \seealso{
 \code{\link{f_calcKL}} for estimating the oxygen mass transfer coefficient used with the air-sea gas exchange model and \code{\link{met_day_fun}} for identifying the metabolic day for each observation in the time series
 }
-

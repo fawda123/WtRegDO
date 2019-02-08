@@ -7,13 +7,13 @@
 evalcor(dat_in, tz, lat, long, depth_val = "Tide", daywin = 6,
   method = "pearson", plot = TRUE, lims = c(-0.5, 0.5),
   progress = FALSE, harm = TRUE, chk_tide = FALSE,
-  constituents = c("M2", "S2", "N2", "K2", "K1", "O1", "P1", "Q1", "MF", "MM",
-  "SSA", "M4", "M6", "S4", "MS4"))
+  constituents = c("M2", "S2", "N2", "K2", "K1", "O1", "P1", "Q1", "MF",
+  "MM", "SSA", "M4", "M6", "S4", "MS4"))
 }
 \arguments{
 \item{dat_in}{Input \code{data.frame}}
 
-\item{tz}{chr string for timezone, e.g., 'America/Chicago'}
+\item{tz}{chr string for timezone, e.g., 'America/Chicago', must match the time zone in \code{dat_in$DateTimeStamp}}
 
 \item{lat}{numeric for latitude}
 
@@ -82,4 +82,3 @@ Beck MW, Hagy III JD, Murrell MC. 2015. Improving estimates of ecosystem metabol
 \seealso{
 \code{\link{wtreg}}
 }
-

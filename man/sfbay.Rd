@@ -33,4 +33,3 @@ Selected observations and variables from U.S. Geological Survey water quality st
 The original downloaded dataset was modified by taking a subset of six well-sampled stations and the period 1985--2004. Variable names were also simplified.
 }
 \keyword{datasets}
-

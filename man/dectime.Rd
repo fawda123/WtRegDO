@@ -12,4 +12,3 @@ dectime(dat_in)
 \description{
 Create decimal time using day on a 24 hour scale in prep for weighted regression
 }
-

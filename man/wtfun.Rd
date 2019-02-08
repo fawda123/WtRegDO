@@ -32,4 +32,3 @@ The default behavior is to subset the data frame for faster wt selection by limi
 \seealso{
 \code{\link{wtreg}}
 }
-

@@ -9,7 +9,7 @@ met_day_fun(dat_in, tz, lat, long)
 \arguments{
 \item{dat_in}{data.frame}
 
-\item{tz}{chr string for timezone, e.g., 'America/Chicago'}
+\item{tz}{chr string for timezone, e.g., 'America/Chicago', must match the time zone in \code{dat_in$DateTimeStamp}}
 
 \item{lat}{numeric for latitude}
 
@@ -24,4 +24,3 @@ This function is only used within \code{\link{ecometab}} and should not be calle
 \seealso{
 \code{\link{ecometab}}
 }
-

@@ -4,6 +4,7 @@
 #' Estimate ecosystem metabolism using the Odum open-water method.  Estimates of daily integrated gross production, total respiration, and net ecosystem metabolism are returned.  A plotting method is also provided.
 #'
 #' @param dat_in Input data frame which must include time series of dissolved oxygen (mg L-1), see \code{\link{SAPDC}} for data structure
+#' @param tz chr string for timezone, e.g., 'America/Chicago', must match the time zone in \code{dat_in$DateTimeStamp}
 #' @param DO_var chr string indicating the name of the column with the dissolved oxygen variable for estimating metabolism
 #' @param depth_val chr indicating the name of a column in the input data for estimating depth for volumetric integration.  This column is typically the tidal height vector.  Use \code{depth_val = NULL} if supplying an alternative depth vector to \code{depth_vec}.
 #' @param metab_units chr indicating desired units of output for oxygen, either as mmol or grams
@@ -74,12 +75,17 @@ ecometab <- function(dat_in, ...) UseMethod('ecometab')
 #' @export
 #'
 #' @method ecometab default
-ecometab.default <- function(dat_in, DO_var = 'DO_mgl', depth_val = 'Tide', metab_units = 'mmol',
+ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', metab_units = 'mmol',
   bott_stat = FALSE, depth_vec = NULL, ...){
 
   # stop if units not mmol or grams
   if(any(!(grepl('mmol|grams', metab_units))))
     stop('Units must be mmol or grams')
+
+  # sanity check
+  chktz <- attr(dat_in$DateTimeStamp, 'tzone')
+  if(tz != chktz)
+    stop('dat_in timezone differs from tz argument')
 
   ##begin calculations
 
@@ -175,7 +181,7 @@ ecometab.default <- function(dat_in, DO_var = 'DO_mgl', depth_val = 'Tide', meta
   }
 
   #use met_day_fun to add columns indicating light/day, date, and hours of sunlight
-  dat_in <- met_day_fun(dat_in, ...)
+  dat_in <- met_day_fun(dat_in, tz = tz, ...)
 
   #get air sea gas-exchange using wx data with climate means
   KL<-with(dat_in,f_calcKL(Temp,Sal,ATemp_mix,WSpd_mix,BP_mix))

@@ -30,4 +30,3 @@ wtreg_res
 Results after detiding the \link{SAPDC} sample dataset with \code{\link{wtreg}}.  The dataset is identical to SAPDC with the addition of eight columns that were used during regression.
 }
 \keyword{datasets}
-

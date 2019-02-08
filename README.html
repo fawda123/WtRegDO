@@ -4,14 +4,14 @@
 
 <head>
 
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
 
 
 
-<title></title>
+<title>README.utf8.md</title>
 
 <script src="README_files/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -20,8 +20,8 @@
 <script src="README_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="README_files/bootstrap-3.3.5/shim/respond.min.js"></script>
 <script src="README_files/navigation-1.1/tabsets.js"></script>
-<link href="README_files/highlightjs-1.1/default.css" rel="stylesheet" />
-<script src="README_files/highlightjs-1.1/highlight.js"></script>
+<link href="README_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="README_files/highlightjs-9.12.0/highlight.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -30,10 +30,12 @@
   }
 </style>
 <script type="text/javascript">
-if (window.hljs && document.readyState && document.readyState === "complete") {
-   window.setTimeout(function() {
-      hljs.initHighlighting();
-   }, 0);
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
 }
 </script>
 
@@ -87,6 +89,9 @@ img {
 }
 .tabbed-pane {
   padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
 }
 button.code-folding-btn:focus {
   outline: none;
@@ -163,10 +168,7 @@ registerDoParallel(cores = 7)
 
 # run the function
 evalcor(SAPDC, tz, lat, long, progress = TRUE)</code></pre>
-<div class="figure">
-<img src="README_files/figure-html/evalcor_ex.png" />
-
-</div>
+<p><img src="README_files/figure-html/evalcor_ex.png" /></p>
 <p>The <code>wtreg</code> function can be used to detide the dissolved oxygen time series. The example below demonstrates detiding, following by a comparison of ecosystem metabolism using the observed and detided data.</p>
 <pre class="r"><code># run weighted regression in parallel
 # requires parallel backend
@@ -215,8 +217,8 @@ meteval(metab_obs)</code></pre>
 ##  [1] &quot;01&quot; &quot;02&quot; &quot;03&quot; &quot;04&quot; &quot;05&quot; &quot;06&quot; &quot;07&quot; &quot;08&quot; &quot;09&quot; &quot;10&quot; &quot;11&quot; &quot;12&quot;
 ## 
 ## $DOcor.cor
-##  [1] 0.6637291 0.6190974 0.6004334 0.4983921 0.5289581 0.5894151 0.7458457
-##  [8] 0.7261328 0.6739781 0.5297470 0.6395344 0.6271354
+##  [1] 0.6646612 0.6166314 0.6003988 0.4989452 0.5306333 0.5893606 0.7453262
+##  [8] 0.7259921 0.6741132 0.5284192 0.6399957 0.6267612
 ## 
 ## $month
 ##  [1] &quot;01&quot; &quot;02&quot; &quot;03&quot; &quot;04&quot; &quot;05&quot; &quot;06&quot; &quot;07&quot; &quot;08&quot; &quot;09&quot; &quot;10&quot; &quot;11&quot; &quot;12&quot;
@@ -252,9 +254,9 @@ meteval(metab_dtd)</code></pre>
 ##  [1] &quot;01&quot; &quot;02&quot; &quot;03&quot; &quot;04&quot; &quot;05&quot; &quot;06&quot; &quot;07&quot; &quot;08&quot; &quot;09&quot; &quot;10&quot; &quot;11&quot; &quot;12&quot;
 ## 
 ## $DOcor.cor
-##  [1]  0.07870710  0.01131530 -0.06950567 -0.18395007 -0.10768210
-##  [6] -0.05824140  0.01614504  0.06841365  0.10683226  0.11687569
-## [11]  0.07368755 -0.10198817
+##  [1]  0.08100432  0.01100334 -0.07073071 -0.18330192 -0.10438508
+##  [6] -0.05700405  0.01605680  0.06739800  0.10742046  0.11355387
+## [11]  0.07454076 -0.10676377
 ## 
 ## $month
 ##  [1] &quot;01&quot; &quot;02&quot; &quot;03&quot; &quot;04&quot; &quot;05&quot; &quot;06&quot; &quot;07&quot; &quot;08&quot; &quot;09&quot; &quot;10&quot; &quot;11&quot; &quot;12&quot;
@@ -304,7 +306,7 @@ $(document).ready(function () {
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

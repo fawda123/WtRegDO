@@ -46,4 +46,3 @@ Beck MW, Hagy III JD, Murrell MC. 2015. Improving estimates of ecosystem metabol
 \seealso{
 \code{\link{ecometab}}
 }
-

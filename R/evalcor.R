@@ -3,7 +3,7 @@
 #' Evaluate the correlation between tide change and sun angle to determine potential effectiveness of weighted regression
 #'
 #' @param dat_in Input \code{data.frame}
-#' @param tz chr string for timezone, e.g., 'America/Chicago'
+#' @param tz chr string for timezone, e.g., 'America/Chicago', must match the time zone in \code{dat_in$DateTimeStamp}
 #' @param lat numeric for latitude
 #' @param long numeric for longitude (negative west of prime meridian)
 #' @param depth_val chr indicating name of the tidal height column in \code{dat_in}
@@ -61,6 +61,11 @@
 #' }
 evalcor <- function(dat_in, tz, lat, long, depth_val = 'Tide', daywin = 6, method = 'pearson', plot = TRUE, lims = c(-0.5, 0.5), progress = FALSE, harm = TRUE, chk_tide = FALSE, constituents = c('M2', 'S2', 'N2', 'K2', 'K1', 'O1', 'P1', 'Q1', 'MF', 'MM', 'SSA', 'M4', 'M6', 'S4', 'MS4')
 ){
+
+  # sanity check
+  chktz <- attr(dat_in$DateTimeStamp, 'tzone')
+  if(tz != chktz)
+    stop('dat_in timezone differs from tz argument')
 
   names(dat_in)[names(dat_in) %in% depth_val] <- 'Tide'
 

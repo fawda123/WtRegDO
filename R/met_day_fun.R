@@ -1,10 +1,11 @@
+
 ######
 #' Identify metabolic days in a swmpr time series
 #'
 #' Identify metabolic days in a time series based on sunrise and sunset times for a location and date.  The metabolic day is considered the 24 hour period between sunsets for two adjacent calendar days.
 #'
 #' @param dat_in data.frame
-#' @param tz chr string for timezone, e.g., 'America/Chicago'
+#' @param tz chr string for timezone, e.g., 'America/Chicago', must match the time zone in \code{dat_in$DateTimeStamp}
 #' @param lat numeric for latitude
 #' @param long numeric for longitude (negative west of prime meridian)
 #'
@@ -20,7 +21,12 @@
 #'
 met_day_fun<-function(dat_in, tz, lat, long){
 
- dtrng <- range(as.Date(dat_in$DateTimeStamp), na.rm = TRUE)
+  # sanity check
+  chktz <- attr(dat_in$DateTimeStamp, 'tzone')
+  if(tz != chktz)
+    stop('dat_in timezone differs from tz argument')
+
+  dtrng <- range(as.Date(dat_in$DateTimeStamp), na.rm = TRUE)
   start_day <- dtrng[1] - 1
   end_day <- dtrng[2] + 1
   lat.long <- matrix(c(long, lat), nrow = 1)

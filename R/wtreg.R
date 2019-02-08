@@ -6,7 +6,7 @@
 #' @param DO_obs name of dissolved oxygen column
 #' @param depth_val name of tidal height column
 #' @param wins list of half-window widths to use in the order specified by \code{\link{wtfun}} (i.e., days, hours, tide height).
-#' @param tz chr string specifying timezone of location, e.g., 'America/Jamaica' for EST, no daylight savings
+#' @param tz chr string specifying timezone of location, e.g., 'America/Jamaica' for EST, no daylight savings, must match the time zone in \code{dat_in$DateTimeStamp}
 #' @param lat numeric for latitude of location
 #' @param long numeric for longitude of location (negative west of prime meridian)
 #' @param progress logical if progress saved to a txt file names 'log.txt' in the working directory
@@ -41,6 +41,11 @@ wtreg <- function(dat_in, DO_obs = 'DO_obs', depth_val = 'Tide', wins = list(4, 
   chk <- sum(is.na(dat_in[, depth_val]))
   if(chk > 0)
     stop('Remove ', chk,  ' missing obervations in ', depth_val)
+
+  # sanity check
+  chktz <- attr(dat_in$DateTimeStamp, 'tzone')
+  if(tz != chktz)
+    stop('dat_in timezone differs from tz argument')
 
   # get mean tidal height from empirical data
   names(dat_in)[names(dat_in) %in% depth_val] <- 'Tide'

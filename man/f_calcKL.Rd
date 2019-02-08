@@ -33,4 +33,3 @@ Thebault J, Schraga TS, Cloern JE, Dunlavey EG. 2008. Primary production and car
 \seealso{
 \code{\link{ecometab}}
 }
-

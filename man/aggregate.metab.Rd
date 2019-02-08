@@ -21,4 +21,3 @@
 \description{
 Aggregate metabolism data for a metab object
 }
-

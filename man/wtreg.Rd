@@ -4,8 +4,8 @@
 \alias{wtreg}
 \title{Weighted regression for dissolved oxygen time series}
 \usage{
-wtreg(dat_in, DO_obs = "DO_obs", depth_val = "Tide", wins = list(4, 12,
-  NULL), tz, lat, long, progress = FALSE, parallel = FALSE, ...)
+wtreg(dat_in, DO_obs = "DO_obs", depth_val = "Tide", wins = list(4,
+  12, NULL), tz, lat, long, progress = FALSE, parallel = FALSE, ...)
 }
 \arguments{
 \item{dat_in}{input data frame}
@@ -16,7 +16,7 @@ wtreg(dat_in, DO_obs = "DO_obs", depth_val = "Tide", wins = list(4, 12,
 
 \item{wins}{list of half-window widths to use in the order specified by \code{\link{wtfun}} (i.e., days, hours, tide height).}
 
-\item{tz}{chr string specifying timezone of location, e.g., 'America/Jamaica' for EST, no daylight savings}
+\item{tz}{chr string specifying timezone of location, e.g., 'America/Jamaica' for EST, no daylight savings, must match the time zone in \code{dat_in$DateTimeStamp}}
 
 \item{lat}{numeric for latitude of location}
 
@@ -51,4 +51,3 @@ res <- wtreg(SAPDC, tz = tz, lat = lat, long = long)
 
 }
 }
-
