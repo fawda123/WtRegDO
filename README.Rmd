@@ -48,7 +48,8 @@ long <- -89.28
 
 # setup parallel backend
 library(doParallel)
-registerDoParallel(cores = 7)
+ncores <- detectCores()  
+registerDoParallel(cores = ncores - 1)
 
 # run the function
 evalcor(SAPDC, tz, lat, long, progress = TRUE)
@@ -61,7 +62,8 @@ The `wtreg` function can be used to detide the dissolved oxygen time series.  Th
 # run weighted regression in parallel
 # requires parallel backend
 library(doParallel)
-registerDoParallel(cores = detectCores() - 1)
+ncores <- detectCores()  
+registerDoParallel(cores = ncores - 1)
 
 # metadata for the location
 tz <- 'America/Jamaica'

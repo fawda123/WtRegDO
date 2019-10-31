@@ -80,7 +80,8 @@ long <- -89.28
 
 # setup parallel backend
 library(doParallel)
-registerDoParallel(cores = 7)
+ncores <- detectCores()  
+registerDoParallel(cores = ncores - 1)
 
 # run the function
 evalcor(SAPDC, tz, lat, long, progress = TRUE)
@@ -96,7 +97,8 @@ comparison of ecosystem metabolism using the observed and detided data.
 # run weighted regression in parallel
 # requires parallel backend
 library(doParallel)
-registerDoParallel(cores = detectCores() - 1)
+ncores <- detectCores()  
+registerDoParallel(cores = ncores - 1)
 
 # metadata for the location
 tz <- 'America/Jamaica'
