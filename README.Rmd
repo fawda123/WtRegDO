@@ -1,16 +1,10 @@
 ---
-output:
-  html_document:
-    keep_md: yes
-    toc: no
-    self_contained: no
-  pdf_document:
-    toc: yes
+output: github_document
 ---
 
 ## WtRegDO
 
-#### *Marcus W. Beck, beck.marcus@epa.gov*
+#### *Marcus W. Beck, [mbeck@tbep.org](mailto:mbeck@tbep.org)*
 
 Linux: [![Travis-CI Build Status](https://travis-ci.org/fawda123/WtRegDO.svg?branch=master)](https://travis-ci.org/fawda123/WtRegDO)
 
