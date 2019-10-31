@@ -47,6 +47,12 @@ wtreg <- function(dat_in, DO_obs = 'DO_obs', depth_val = 'Tide', wins = list(4, 
   if(tz != chktz)
     stop('dat_in timezone differs from tz argument')
 
+  # sanity check
+  nmchk <- c('DateTimeStamp', 'Temp', 'Sal', 'DO_obs', 'ATemp', 'BP', 'WSpd', 'Tide')
+  chk <- nmchk  %in% names(dat_in)
+  if(any(!chk))
+    stop('The following columns are missing from dat_in: ', paste(nmchk[!chk], collapse = ', '))
+
   # get mean tidal height from empirical data
   names(dat_in)[names(dat_in) %in% depth_val] <- 'Tide'
   mean_tide <- mean(dat_in$Tide, na.rm = TRUE)

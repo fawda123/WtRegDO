@@ -83,6 +83,14 @@ ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', 
     stop('Units must be mmol or grams')
 
   # sanity check
+  nmchk <- c('DateTimeStamp', 'Temp', 'Sal', 'DO_obs', 'ATemp', 'BP', 'WSpd',
+             'Tide', 'metab_date', 'solar_period', 'solar_time', 'day_hrs',
+             'dec_time', 'hour', 'DO_prd', 'DO_nrm')
+  chk <- nmchk  %in% names(dat_in)
+  if(any(!chk))
+    stop('The following columns are missing from dat_in: ', paste(nmchk[!chk], collapse = ', '))
+
+  # sanity check
   chktz <- attr(dat_in$DateTimeStamp, 'tzone')
   if(tz != chktz)
     stop('dat_in timezone differs from tz argument')
