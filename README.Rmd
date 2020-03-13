@@ -38,7 +38,7 @@ head(SAPDC)
 
 Before applying weighted regression, the data should be checked with the `evalcor` function to identify locations in the time series when tidal and solar changes are not correlated.  In general, the `wtreg` function for weighted regression will be most effective when correlations between the two are zero, whereas `wtreg` will remove both the biological and physical components of the dissolved oxygen time series when the sun and tide are correlated.   The correlation between tide change and sun angle is estimated using a moving window for the time series.  Tide changes are estimated as angular rates for the tidal height vector and sun angles are estimated from the time of day and geographic location.  Correlations are low for the sample dataset, suggesting the results from weighted regression are reasonable for the entire time series.
 
-```{r eval = F}
+```{r eval = T, fig.height = 3, fig.width = 8, message = F, warning = F}
 data(SAPDC)
 
 # metadata for the location
@@ -55,7 +55,7 @@ registerDoParallel(cores = ncores - 1)
 evalcor(SAPDC, tz, lat, long, progress = TRUE)
 ```
 
-![](README_files/figure-html/evalcor_ex.png) 
+<!-- ![](README_files/figure-html/evalcor_ex.png)  -->
 
 The `wtreg` function can be used to detide the dissolved oxygen time series.  The example below demonstrates detiding, following by a comparison of ecosystem metabolism using the observed and detided data.
 ```{r, eval = FALSE}

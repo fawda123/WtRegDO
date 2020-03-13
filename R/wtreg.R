@@ -59,7 +59,7 @@ wtreg <- function(dat_in, DO_obs = 'DO_obs', depth_val = 'Tide', wins = list(4, 
 
   # get decimal time based on metabolic days
   dat_in <- met_day_fun(dat_in, tz = tz, long = long, lat = lat)
-  dat_in <- dectime(dat_in)
+  dat_in$dec_time <- 365 * (lubridate::decimal_date(dat_in$DateTimeStamp) - max(lubridate::year(dat_in$DateTimeStamp)))
 
   # add hour column
   dat_in$hour <- as.numeric(format(dat_in$DateTimeStamp, '%H')) +

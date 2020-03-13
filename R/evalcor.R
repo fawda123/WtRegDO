@@ -71,7 +71,7 @@ evalcor <- function(dat_in, tz, lat, long, depth_val = 'Tide', daywin = 6, metho
 
   # get decimal time
   tocor <- met_day_fun(dat_in, tz, lat, long)
-  tocor <- dectime(tocor)
+  tocor$dec_time <- 365 * (lubridate::decimal_date(tocor$DateTimeStamp) - max(lubridate::year(tocor$DateTimeStamp)))
 
   # sun angle
   locs <- c(long, lat)
