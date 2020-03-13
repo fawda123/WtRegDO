@@ -102,7 +102,8 @@ evalcor <- function(dat_in, tz, lat, long, depth_val = 'Tide', daywin = 6, metho
   }
 
   # replace tidal observations with tidal predictions
-  tocor$Tide <- tide_pred
+  if(harm)
+    tocor$Tide <- tide_pred
 
   # polar coords for tidal height, in degrees
   tocor$dTide <- with(tocor, c(diff(Tide)[1], diff(Tide)))
