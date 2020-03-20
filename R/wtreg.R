@@ -47,6 +47,9 @@ wtreg <- function(dat_in, DO_obs = 'DO_obs', depth_val = 'Tide', wins = list(4, 
   if(tz != chktz)
     stop('dat_in timezone differs from tz argument')
 
+  # rename DO_obs if other value provided
+  names(dat_in)[names(dat_in) %in% DO_obs] <- 'DO_obs'
+
   # sanity check
   nmchk <- c('DateTimeStamp', 'Temp', 'Sal', 'DO_obs', 'ATemp', 'BP', 'WSpd', 'Tide')
   chk <- nmchk  %in% names(dat_in)
