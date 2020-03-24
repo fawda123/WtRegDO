@@ -95,6 +95,11 @@ ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', 
   if(tz != chktz)
     stop('dat_in timezone differs from tz argument')
 
+  # check for duplicated rows
+  chk <- duplicated(dat_in)
+  if(any(chk))
+    stop('Duplicated observations found, check rows: ', paste(which(chk), collapse = ', '))
+
   ##begin calculations
 
   # keep these columns

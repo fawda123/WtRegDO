@@ -67,6 +67,11 @@ evalcor <- function(dat_in, tz, lat, long, depth_val = 'Tide', daywin = 6, metho
   if(tz != chktz)
     stop('dat_in timezone differs from tz argument')
 
+  # check for duplicated rows
+  chk <- duplicated(dat_in)
+  if(any(chk))
+    stop('Duplicated observations found, check rows: ', paste(which(chk), collapse = ', '))
+
   names(dat_in)[names(dat_in) %in% depth_val] <- 'Tide'
 
   # get decimal time

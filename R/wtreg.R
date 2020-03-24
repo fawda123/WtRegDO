@@ -47,6 +47,11 @@ wtreg <- function(dat_in, DO_obs = 'DO_obs', depth_val = 'Tide', wins = list(4, 
   if(tz != chktz)
     stop('dat_in timezone differs from tz argument')
 
+  # check for duplicated rows
+  chk <- duplicated(dat_in)
+  if(any(chk))
+    stop('Duplicated observations found, check rows: ', paste(which(chk), collapse = ', '))
+
   # rename DO_obs if other value provided
   names(dat_in)[names(dat_in) %in% DO_obs] <- 'DO_obs'
 
