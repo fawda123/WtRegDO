@@ -82,13 +82,12 @@ ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', 
   if(any(!(grepl('mmol|grams', metab_units))))
     stop('Units must be mmol or grams')
 
+  tokp <- c('DateTimeStamp', 'Temp', 'Sal', 'ATemp', 'BP', 'Tide', 'WSpd', DO_var)
+
   # sanity check
-  nmchk <- c('DateTimeStamp', 'Temp', 'Sal', 'DO_obs', 'ATemp', 'BP', 'WSpd',
-             'Tide', 'metab_date', 'solar_period', 'solar_time', 'day_hrs',
-             'dec_time', 'hour', 'DO_prd', 'DO_nrm')
-  chk <- nmchk  %in% names(dat_in)
+  chk <- tokp %in% names(dat_in)
   if(any(!chk))
-    stop('The following columns are missing from dat_in: ', paste(nmchk[!chk], collapse = ', '))
+    stop('The following columns are missing from dat_in: ', paste(tokp[!chk], collapse = ', '))
 
   # sanity check
   chktz <- attr(dat_in$DateTimeStamp, 'tzone')
@@ -103,8 +102,6 @@ ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', 
   ##begin calculations
 
   # keep these columns
-  #columns to be removed prior to processing
-  tokp <- c('DateTimeStamp', 'Temp', 'Sal', 'ATemp', 'BP', 'Tide', 'WSpd', DO_var)
   dat_in <- dat_in[, names(dat_in) %in% tokp]
 
   #convert DO from mg/L to mmol/m3
