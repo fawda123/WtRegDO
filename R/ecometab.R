@@ -224,11 +224,11 @@ ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', 
       else{
         #day
         DOF_d<-mean(with(x[x$solar_period=='sunrise',],dDO*H),na.rm=TRUE)
-        D_d<-mean(with(x[x$solar_period=='sunrise',],D),na.rm=TRUE)
+        D_d<-mean(with(x[x$solar_period=='sunrise',],D*H),na.rm=TRUE)
 
         #night
         DOF_n<-mean(with(x[x$solar_period=='sunset',],dDO*H),na.rm=TRUE)
-        D_n<-mean(with(x[x$solar_period=='sunset',],D),na.rm=TRUE)
+        D_n<-mean(with(x[x$solar_period=='sunset',],D*H),na.rm=TRUE)
         }
 
       #metabolism
