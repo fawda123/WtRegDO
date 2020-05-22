@@ -4,7 +4,8 @@
 \name{sfbay}
 \alias{sfbay}
 \title{San Francisco Bay water quality data}
-\format{\code{sfbay} is a data frame with 23207 observations (rows) of 12 variables (columns):
+\format{
+\code{sfbay} is a data frame with 23207 observations (rows) of 12 variables (columns):
 
 \tabular{rll}{
 	 \code{[, 1]} \tab \code{date} \tab date\cr
@@ -19,7 +20,8 @@
 	 \code{[, 10]} \tab \code{temp} \tab water temperature\cr
 	 \code{[, 11]} \tab \code{nox} \tab nitrate + nitrite\cr
 	 \code{[, 12]} \tab \code{nhx} \tab ammonium\cr
-}}
+}
+}
 \source{
 Downloaded from \url{http://sfbay.wr.usgs.gov/access/wqdata} on 2009-11-17.
 }

@@ -4,9 +4,15 @@
 \alias{wtfun}
 \title{Get weights used during weighted regression}
 \usage{
-wtfun(ref_in, dat_in, wt_vars = c("dec_time", "hour", "Tide"),
-  wins = list(4, 12, NULL), all = FALSE, slice = TRUE,
-  subs_only = FALSE)
+wtfun(
+  ref_in,
+  dat_in,
+  wt_vars = c("dec_time", "hour", "Tide"),
+  wins = list(4, 12, NULL),
+  all = FALSE,
+  slice = TRUE,
+  subs_only = FALSE
+)
 }
 \arguments{
 \item{ref_in}{one row of the data frame of \code{dat_in} that is teh center of the window}

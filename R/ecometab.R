@@ -10,7 +10,7 @@
 #' @param metab_units chr indicating desired units of output for oxygen, either as mmol or grams
 #' @param bott_stat logical if air-sea gas exchange is removed from the estimate
 #' @param depth_vec numeric value for manual entry of station depth (m).  Use a single value if the integration depth is constant or a vector of depth values equal in length to the time series.  Leave \code{NULL} if estimated from \code{depth_val} column.
-#'
+#' @param instant logical indicating if the instantaneous data (e.g., 30 minutes observations) used to estimate the daily metabolic rates are returned, see details
 #' @import oce plyr
 #'
 #' @export
@@ -33,6 +33,8 @@
 #' @return A \code{metab} object with daily integrated metabolism estimates including gross produciton (Pg), total respiration (Rt), and net ecosystem metabolism (NEM).  Attributes of the object include the raw data (\code{rawdat}), a character string indicating name of the tidal column if supplied in the raw data (\code{depth_val}), and a character string indicating name of the dissolved oxygen column in the raw data that was used to estimate metabolism (\code{DO_var}).
 #'
 #' The plot method returns a \code{\link[ggplot2]{ggplot}} object which can be further modified.
+#'
+#' If \code{instant = TRUE} the instantaneous data (e.g., 30 minutes observations) used to estimate the daily metabolic rates are returned at the midpoint time steps from the raw time series.  The instantaneous data will also include the volumetric air-sea exchange rate (D, mmol m-3), the volumetric reaeration coefficient (Ka, hr-1), and the gas transfer coefficient (KL, m d-1).
 #'
 #' @references
 #' Caffrey JM, Murrell MC, Amacker KS, Harper J, Phipps S, Woodrey M. 2013. Seasonal and inter-annual patterns in primary production, respiration and net ecosystem metabolism in 3 estuaries in the northeast Gulf of Mexico. Estuaries and Coasts. 37(1):222-241.
@@ -76,7 +78,7 @@ ecometab <- function(dat_in, ...) UseMethod('ecometab')
 #'
 #' @method ecometab default
 ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', metab_units = 'mmol',
-  bott_stat = FALSE, depth_vec = NULL, ...){
+  bott_stat = FALSE, depth_vec = NULL, instant = FALSE, ...){
 
   # stop if units not mmol or grams
   if(any(!(grepl('mmol|grams', metab_units))))
@@ -208,7 +210,15 @@ ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', 
   proc.dat<-dat_in[,!names(dat_in) %in% c('DateTimeStamp','cTide','Wdir',
     'SDWDir','ChlFluor','Turb','pH','RH',DO_var,'DO_pct','SpCond','TotPrcp',
     'CumPrcp','TotSoRad','Tide')]
-  proc.dat<-data.frame(proc.dat,DOsat,dDO,H,D)
+  proc.dat<-data.frame(proc.dat,DOsat,dDO,H)
+
+  # exit if true
+  if(instant){
+
+    out <- data.frame(DateTimeStamp, proc.dat, D, KL, Ka)
+    return(out)
+
+  }
 
   #get daily/nightly flux estimates for Pg, Rt, NEM estimates
   out<-lapply(

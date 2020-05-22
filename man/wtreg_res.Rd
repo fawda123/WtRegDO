@@ -4,7 +4,8 @@
 \name{wtreg_res}
 \alias{wtreg_res}
 \title{Results from weighted regression with the \link{SAPDC} dataset}
-\format{A \code{data.frame} with 17568 rows and 16 columns.
+\format{
+A \code{data.frame} with 17568 rows and 16 columns.
 \describe{
   \item{DateTimeStamp}{POSIXct, timestamp of water quality observation}
   \item{Temp}{numeric, water temperature, celsius}
@@ -22,7 +23,8 @@
   \item{hour}{numeric, hour of the day}
   \item{DO_prd}{numeric, predicted dissolved oxygen from \code{\link{wtreg}}}
   \item{DO_nrm}{numeric, detided (or normalized) dissolved oxygen from \code{\link{wtreg}}}
-}}
+}
+}
 \usage{
 wtreg_res
 }

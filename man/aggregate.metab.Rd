@@ -4,8 +4,7 @@
 \alias{aggregate.metab}
 \title{Aggregete metabolism data}
 \usage{
-\method{aggregate}{metab}(x, by = "weeks", na.action = "na.pass",
-  alpha = 0.05, ...)
+\method{aggregate}{metab}(x, by = "weeks", na.action = "na.pass", alpha = 0.05, ...)
 }
 \arguments{
 \item{x}{input data object as returned by \code{\link{ecometab}}}

@@ -4,13 +4,15 @@
 \name{metab_dtd}
 \alias{metab_dtd}
 \title{Ecosystem metabolism for SAPDC from detided DO}
-\format{A metab object with 367 rows and 4 variables:
+\format{
+A metab object with 367 rows and 4 variables:
 \describe{
   \item{Date}{Date, metabolic day}
   \item{Pg}{numeric, gross production, mmol m-2 d-1}
   \item{Rt}{numeric, total respiration, mmol m-2 d-1}
   \item{NEM}{numeric, net ecosytem metabolism, mmol m-2 d-1}
-}}
+}
+}
 \usage{
 metab_dtd
 }

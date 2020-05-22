@@ -8,12 +8,27 @@
 \usage{
 ecometab(dat_in, ...)
 
-\method{ecometab}{default}(dat_in, tz, DO_var = "DO_mgl",
-  depth_val = "Tide", metab_units = "mmol", bott_stat = FALSE,
-  depth_vec = NULL, ...)
+\method{ecometab}{default}(
+  dat_in,
+  tz,
+  DO_var = "DO_mgl",
+  depth_val = "Tide",
+  metab_units = "mmol",
+  bott_stat = FALSE,
+  depth_vec = NULL,
+  instant = FALSE,
+  ...
+)
 
-\method{plot}{metab}(x, by = "months", metab_units = "mmol",
-  alpha = 0.05, width = 10, pretty = TRUE, ...)
+\method{plot}{metab}(
+  x,
+  by = "months",
+  metab_units = "mmol",
+  alpha = 0.05,
+  width = 10,
+  pretty = TRUE,
+  ...
+)
 }
 \arguments{
 \item{dat_in}{Input data frame which must include time series of dissolved oxygen (mg L-1), see \code{\link{SAPDC}} for data structure}
@@ -32,6 +47,8 @@ ecometab(dat_in, ...)
 
 \item{depth_vec}{numeric value for manual entry of station depth (m).  Use a single value if the integration depth is constant or a vector of depth values equal in length to the time series.  Leave \code{NULL} if estimated from \code{depth_val} column.}
 
+\item{instant}{logical indicating if the instantaneous data (e.g., 30 minutes observations) used to estimate the daily metabolic rates are returned, see details}
+
 \item{x}{input object to plot}
 
 \item{by}{chr string describing aggregation period, passed to \code{\link{aggregate}}. See details for accepted values.}
@@ -46,6 +63,8 @@ ecometab(dat_in, ...)
 A \code{metab} object with daily integrated metabolism estimates including gross produciton (Pg), total respiration (Rt), and net ecosystem metabolism (NEM).  Attributes of the object include the raw data (\code{rawdat}), a character string indicating name of the tidal column if supplied in the raw data (\code{depth_val}), and a character string indicating name of the dissolved oxygen column in the raw data that was used to estimate metabolism (\code{DO_var}).
 
 The plot method returns a \code{\link[ggplot2]{ggplot}} object which can be further modified.
+
+If \code{instant = TRUE} the instantaneous data (e.g., 30 minutes observations) used to estimate the daily metabolic rates are returned at the midpoint time steps from the raw time series.  The instantaneous data will also include the volumetric air-sea exchange rate (D, mmol m-3), the volumetric reaeration coefficient (Ka, hr-1), and the gas transfer coefficient (KL, m d-1).
 }
 \description{
 Estimate ecosystem metabolism using the Odum open-water method.  Estimates of daily integrated gross production, total respiration, and net ecosystem metabolism are returned.  A plotting method is also provided.
