@@ -120,7 +120,7 @@ ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', 
   dat_in<-apply(
     dat_in[,2:ncol(dat_in)],
     2,
-    function(x) diff(x)/2 + x[1:(length(x) -1)]
+    function(x) diff(as.numeric(x))/2 + as.numeric(x)[1:(length(x) -1)]
     )
   dat_in<-data.frame(DateTimeStamp,dat_in)
   DO <- dat_in$DO
@@ -210,12 +210,12 @@ ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', 
   proc.dat<-dat_in[,!names(dat_in) %in% c('DateTimeStamp','cTide','Wdir',
     'SDWDir','ChlFluor','Turb','pH','RH',DO_var,'DO_pct','SpCond','TotPrcp',
     'CumPrcp','TotSoRad','Tide')]
-  proc.dat<-data.frame(proc.dat,DOsat,dDO,H)
+  proc.dat<-data.frame(proc.dat,DOsat,dDO,H,D)
 
   # exit if true
   if(instant){
 
-    out <- data.frame(DateTimeStamp, proc.dat, D, KL, Ka)
+    out <- data.frame(DateTimeStamp, proc.dat, KL, Ka)
     return(out)
 
   }
@@ -268,7 +268,7 @@ ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', 
 
     # convert metab data to g m^-2 d^-1
     # 1mmolO2 = 32 mg O2, 1000mg = 1g, multiply by 32/1000
-    as_grams <- apply(out[, -1], 2, function(x) x * 0.032)
+    as_grams <- apply(out[, -1], 2, function(x) as.numeric(x) * 0.032)
     out <- data.frame(Date = out[, 'Date'], as_grams)
 
   }
