@@ -5,7 +5,7 @@ data(wtreg_res)
 # metadata for the location
 tz <- 'America/Jamaica'
 lat <- 31.39
-long <- -89.28
+long <- -81.28
 
 # estimate ecosystem metabolism using detided DO time series
 metab_dtd <- ecometab(wtreg_res, DO_var = 'DO_nrm', tz = tz,

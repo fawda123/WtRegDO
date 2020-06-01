@@ -71,7 +71,7 @@ data(SAPDC)
 # metadata
 tz <- 'America/Jamaica'
 lat <- 31.39
-long <- -89.28
+long <- -81.28
 
 # setup parallel backend
 library(doParallel)

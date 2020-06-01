@@ -29,7 +29,7 @@
 #'
 #' tz <- 'America/Jamaica'
 #' lat <- 31.39
-#' long <- -89.28
+#' long <- -81.28
 #'
 #' res <- wtreg(SAPDC, tz = tz, lat = lat, long = long)
 #'

@@ -10,7 +10,7 @@ registerDoParallel(cores = 7)
 # metadata for the location
 tz <- 'America/Jamaica'
 lat <- 31.39
-long <- -89.28
+long <- -81.28
 
 # weighted regression
 wtreg_res <- wtreg(SAPDC, parallel = TRUE, wins = list(3, 1, 0.6), progress = TRUE,

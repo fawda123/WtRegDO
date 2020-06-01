@@ -44,7 +44,7 @@ data(SAPDC)
 # metadata for the location
 tz <- 'America/Jamaica'
 lat <- 31.39
-long <- -89.28
+long <- -81.28
 
 # setup parallel backend
 library(doParallel)
@@ -68,7 +68,7 @@ registerDoParallel(cores = ncores - 1)
 # metadata for the location
 tz <- 'America/Jamaica'
 lat <- 31.39
-long <- -89.28
+long <- -81.28
 
 # weighted regression, optimal window widths for SAPDC from the paper
 wtreg_res <- wtreg(SAPDC, parallel = TRUE, wins = list(3, 1, 0.6), progress = TRUE, 
