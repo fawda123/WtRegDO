@@ -39,7 +39,7 @@ wtreg(
 \item{...}{additional arguments passed to \code{\link{met_day_fun}}, particularly timezone, lat, and long information.}
 }
 \value{
-The original data frame with additional columns describing the metabolic day, decimal time, predicted DO from weighted regression (\code{DO_prd}) and detided (normalized) DO from weighted regression (\code{DO_nrm}).
+The original data frame with additional columns describing the metabolic day, decimal time, the slope estimate for DO relative to tidal height for each window (\code{Beta2}), predicted DO from weighted regression (\code{DO_prd}) and detided (normalized) DO from weighted regression (\code{DO_nrm}).
 }
 \description{
 Use weighted regression to reduce effects of tidal advection on dissolved oxygen time series

@@ -21,7 +21,7 @@
 #'
 #' Timezone specifications can be found here: \url{https://en.wikipedia.org/wiki/List_of_tz_database_time_zones}
 #'
-#' @return The original data frame with additional columns describing the metabolic day, decimal time, predicted DO from weighted regression (\code{DO_prd}) and detided (normalized) DO from weighted regression (\code{DO_nrm}).
+#' @return The original data frame with additional columns describing the metabolic day, decimal time, the slope estimate for DO relative to tidal height for each window (\code{Beta2}), predicted DO from weighted regression (\code{DO_prd}) and detided (normalized) DO from weighted regression (\code{DO_nrm}).
 #'
 #' @examples
 #' \dontrun{
@@ -114,7 +114,7 @@ wtreg <- function(dat_in, DO_obs = 'DO_obs', depth_val = 'Tide', wins = list(4, 
               any(is.na((ref_in$DO_obs)))){
 
             DO_pred <- NA
-            beta <- NA
+            beta2 <- NA
             Tide <- ref_in$Tide[x]
 
             } else {
@@ -137,19 +137,20 @@ wtreg <- function(dat_in, DO_obs = 'DO_obs', depth_val = 'Tide', wins = list(4, 
                 )
 
               # get beta from model
-              beta <- mod_md$coefficients['Tide']
+              beta2 <- try(mod_md$coefficients['Tide'])
 
             }
 
           # output
-          DO_pred
+          c(beta2, DO_pred)
 
           }
 
         )
 
       out <- unlist(out)
-      names(out) <- c('DO_prd', 'DO_nrm')
+      out <- out[c(1, 2, 4)]
+      names(out) <- c('Beta2', 'DO_prd', 'DO_nrm')
       out
 
       })
