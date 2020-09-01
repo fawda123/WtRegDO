@@ -17,6 +17,7 @@ ecometab(dat_in, ...)
   bott_stat = FALSE,
   depth_vec = NULL,
   instant = FALSE,
+  gasex = c("Thiebault", "Wanninkhof"),
   ...
 )
 
@@ -48,6 +49,8 @@ ecometab(dat_in, ...)
 \item{depth_vec}{numeric value for manual entry of station depth (m).  Use a single value if the integration depth is constant or a vector of depth values equal in length to the time series.  Leave \code{NULL} if estimated from \code{depth_val} column.}
 
 \item{instant}{logical indicating if the instantaneous data (e.g., 30 minutes observations) used to estimate the daily metabolic rates are returned, see details}
+
+\item{gasex}{chr indicating if gas exchange is estimated using equations in Thiebault et al. 2008 or Wanninkhof 2014 (see \code{\link{f_calcKL}} or \code{\link{f_calcWanninkhof}})}
 
 \item{x}{input object to plot}
 

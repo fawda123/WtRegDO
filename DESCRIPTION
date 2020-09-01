@@ -1,8 +1,8 @@
 Package: WtRegDO
 Type: Package
 Title: Implement Weighted Regression on Dissolved Oxygen Time Series
-Version: 0.9.9008
-Date: 2020-06-21
+Version: 0.9.9009
+Date: 2020-09-01
 Author: Marcus W. Beck [aut, cre]
 Maintainer: Marcus W. Beck <mbafs2012@gmail.com>
 Description: A sample dataset and functions to implement weighted regression
@@ -28,4 +28,4 @@ Depends:
 Authors@R: person(given = "Marcus W.", family = "Beck",
     role = c("aut","cre"),
     email = "mbafs2012@gmail.com")
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1

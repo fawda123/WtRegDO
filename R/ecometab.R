@@ -11,6 +11,8 @@
 #' @param bott_stat logical if air-sea gas exchange is removed from the estimate
 #' @param depth_vec numeric value for manual entry of station depth (m).  Use a single value if the integration depth is constant or a vector of depth values equal in length to the time series.  Leave \code{NULL} if estimated from \code{depth_val} column.
 #' @param instant logical indicating if the instantaneous data (e.g., 30 minutes observations) used to estimate the daily metabolic rates are returned, see details
+#' @param gasex chr indicating if gas exchange is estimated using equations in Thiebault et al. 2008 or Wanninkhof 2014 (see \code{\link{f_calcKL}} or \code{\link{f_calcWanninkhof}})
+#'
 #' @import oce plyr
 #'
 #' @export
@@ -78,7 +80,10 @@ ecometab <- function(dat_in, ...) UseMethod('ecometab')
 #'
 #' @method ecometab default
 ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', metab_units = 'mmol',
-  bott_stat = FALSE, depth_vec = NULL, instant = FALSE, ...){
+  bott_stat = FALSE, depth_vec = NULL, instant = FALSE, gasex = c('Thiebault', 'Wanninkhof'), ...){
+
+  # get gas exchange arg
+  gasex <- match.arg(gasex)
 
   # stop if units not mmol or grams
   if(any(!(grepl('mmol|grams', metab_units))))
@@ -195,8 +200,11 @@ ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', 
   #use met_day_fun to add columns indicating light/day, date, and hours of sunlight
   dat_in <- met_day_fun(dat_in, tz = tz, ...)
 
-  #get air sea gas-exchange using wx data with climate means
-  KL<-with(dat_in,f_calcKL(Temp,Sal,ATemp_mix,WSpd_mix,BP_mix))
+  # get air sea gas-exchange using wx data with climate means, thiebault of wanninkhof
+  if(gasex == 'Thiebault')
+    KL <- with(dat_in, f_calcKL(Temp, Sal, ATemp_mix, WSpd_mix, BP_mix))
+  if(gasex == 'Wanninkhof')
+    KL <- with(dat_in, f_calcWanninkhof(Temp, Sal, WSpd_mix))
   rm(list = c('ATemp_mix', 'WSpd_mix', 'BP_mix'))
 
   #get volumetric reaeration coefficient from KL
