@@ -26,7 +26,7 @@ f_calcWanninkhof <- function(Temp, Sal, WSpd){
 
   a <- 0.251 #DO NOT CHANGE ~ Wannikof 2014
 
-  kw <- a * windmag2 * ((sc / 660) ^ (0.5)) # cm/hr
+  kw <- a * windmag2 * ((sc / 660) ^ (-0.5)) # cm/hr
   kw  <- kw / (100 * 60 * 60) # convert from cm/hr to m/s
   kw <- kw * 60 * 60 * 24 # convert to m/d, 60 * 60 * 24 seconds per day
 
