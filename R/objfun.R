@@ -34,9 +34,9 @@ objfun <- function(metab_obs, metab_dtd, vls = c('meanPg', 'sdPg', 'anomPg', 'me
     tidyr::unnest('value') %>%
     tidyr::spread(metdat, value) %>%
     dplyr::mutate(
-      perdif = (abs(obseval - dtdeval)) / ((obseval + dtdeval) / 2),
+      perdif = (obseval - dtdeval) / ((obseval + dtdeval) / 2),
       perdif = dplyr::case_when(
-        name %in% c('meanPg', 'meanRt') ~ 1 / perdif,
+        name %in% c('meanPg', 'meanRt') ~ 1 / abs(perdif),
         T ~ perdif
       )
     )
