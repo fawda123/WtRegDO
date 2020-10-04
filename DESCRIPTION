@@ -14,13 +14,16 @@ BugReports: https://github.com/fawda123/WtRegDO/issues
 License: CC0
 Imports:
     data.table,
+    dplyr,
     foreach,
     ggplot2,
     lubridate,
     plyr,
     maptools,
     oce,
-    reshape2
+    reshape2,
+    tibble, 
+    tidyr
 Suggests:
     doParallel
 Depends:
