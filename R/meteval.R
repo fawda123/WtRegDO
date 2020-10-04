@@ -3,6 +3,7 @@
 #' Evaluate metabolism results before and after weighted regression
 #'
 #' @param metab_in input \code{metab} object as returned from \code{\link{ecometab}}
+#' @param all logical indicating if all evaluation summaries are returned or just mean, sd, and % anomalies
 #' @param ... additional arguments passed to other methods
 #'
 #' @details
@@ -33,14 +34,14 @@
 #'  meteval(metab_obs)
 #'  meteval(metab_dtd)
 #' }
-meteval <- function(metab_in) UseMethod('meteval')
+meteval <- function(metab_in, ...) UseMethod('meteval')
 
 #' @rdname meteval
 #'
 #' @export
 #'
 #' @method meteval metab
-meteval.metab <- function(metab_in, ...){
+meteval.metab <- function(metab_in, all = TRUE, ...){
 
   # get attributes
   toeval <- na.omit(metab_in)
@@ -58,72 +59,77 @@ meteval.metab <- function(metab_in, ...){
     anomRt = 100 * sum(toeval$Rt >= 0)/nrow(toeval)
   )
 
-  # exit if no tidal vector column
-  if(is.null(depth_val)){
-    warning('No tidal height column in raw data')
-    return(out)
-  }
+  if(all){
 
-  # DO obs v tide
-  # correlations by month, then averaged
-  # add month column
-  rawdat$month <- strftime(rawdat$Date, '%m')
-  DOcor<- plyr::ddply(
-    rawdat,
-    .variable = c('month'),
-    .fun = function(x) cor.test(x[, DO_var], x[, depth_val])$estimate
-  )
-  # DOcor <- mean(DOcor[, 'cor'], na.rm = TRUE)
+    # exit if no tidal vector column
+    if(is.null(depth_val)){
+      warning('No tidal height column in raw data')
+      return(out)
+    }
 
-  # get tidal range for metabolic day/night periods
-  # for correlation with daily integrated metab
-  tide_rngs <- plyr::ddply(rawdat,
-    .variables = c('metab_date'),
-    .fun = function(x){
-
-      # mean tidal derivative for day hours
-      sunrise <- mean(diff(x[x$solar_period %in% 'sunrise', 'Tide'],
-        na.rm = T))
-
-      # mean tidal derivative for night hours
-      sunset <- mean(diff(x[x$solar_period %in% 'sunset', 'Tide'],
-        na.rm = T))
-      if(sunrise == 'Inf') sunrise <- NA
-      if(sunset == 'Inf') sunset <- NA
-
-      # mean tidal derivative for metabolic day
-      daytot <- mean(diff(x$Tide, na.rm = T))
-
-      c(daytot, sunrise, sunset)
-
-      }
-    )
-  names(tide_rngs) <- c('Date','daytot', 'sunrise', 'sunset')
-
-  # get metab data from list
-  toeval <- merge(toeval, tide_rngs, by = 'Date', all.x = T)
-  toeval$month <- strftime(toeval$Date, '%m')
-
-  # Pg values correlated with tidal range during sunlight hours
-  # Rt values correlated with tidal range during night hours
-  # done separately for each month, then averaged
-  metcor <- plyr::ddply(
-      toeval,
+    # DO obs v tide
+    # correlations by month, then averaged
+    # add month column
+    rawdat$month <- strftime(rawdat$Date, '%m')
+    DOcor<- plyr::ddply(
+      rawdat,
       .variable = c('month'),
+      .fun = function(x) cor.test(x[, DO_var], x[, depth_val])$estimate
+    )
+    # DOcor <- mean(DOcor[, 'cor'], na.rm = TRUE)
+
+    # get tidal range for metabolic day/night periods
+    # for correlation with daily integrated metab
+    tide_rngs <- plyr::ddply(rawdat,
+      .variables = c('metab_date'),
       .fun = function(x){
 
-        with(x, c(
-          Pgcor = try({cor.test(Pg, sunrise)$estimate}),
-          Rtcor = try({cor.test(Rt, sunset)$estimate})
-        ))
+        # mean tidal derivative for day hours
+        sunrise <- mean(diff(x[x$solar_period %in% 'sunrise', 'Tide'],
+          na.rm = T))
 
-      }
-    )
-  names(metcor) <- gsub('\\.cor$', '', names(metcor))
-  # metcor <- colMeans(metcor[, !names(metcor) %in% 'month'], na.rm = TRUE)
+        # mean tidal derivative for night hours
+        sunset <- mean(diff(x[x$solar_period %in% 'sunset', 'Tide'],
+          na.rm = T))
+        if(sunrise == 'Inf') sunrise <- NA
+        if(sunset == 'Inf') sunset <- NA
 
-  # add to out
-  out <- c(out, DOcor = DOcor, metcor)
+        # mean tidal derivative for metabolic day
+        daytot <- mean(diff(x$Tide, na.rm = T))
+
+        c(daytot, sunrise, sunset)
+
+        }
+      )
+    names(tide_rngs) <- c('Date','daytot', 'sunrise', 'sunset')
+
+    # get metab data from list
+    toeval <- merge(toeval, tide_rngs, by = 'Date', all.x = T)
+    toeval$month <- strftime(toeval$Date, '%m')
+
+    # Pg values correlated with tidal range during sunlight hours
+    # Rt values correlated with tidal range during night hours
+    # done separately for each month, then averaged
+    metcor <- plyr::ddply(
+        toeval,
+        .variable = c('month'),
+        .fun = function(x){
+
+          with(x, c(
+            Pgcor = try({cor.test(Pg, sunrise)$estimate}),
+            Rtcor = try({cor.test(Rt, sunset)$estimate})
+          ))
+
+        }
+      )
+    names(metcor) <- gsub('\\.cor$', '', names(metcor))
+    # metcor <- colMeans(metcor[, !names(metcor) %in% 'month'], na.rm = TRUE)
+
+    # add to out
+    out <- c(out, DOcor = DOcor, metcor)
+
+  }
+
   return(out)
 
 }

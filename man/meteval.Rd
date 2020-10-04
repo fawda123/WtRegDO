@@ -5,14 +5,16 @@
 \alias{meteval.metab}
 \title{Evaluate metabolism results}
 \usage{
-meteval(metab_in)
+meteval(metab_in, ...)
 
-\method{meteval}{metab}(metab_in, ...)
+\method{meteval}{metab}(metab_in, all = TRUE, ...)
 }
 \arguments{
 \item{metab_in}{input \code{metab} object as returned from \code{\link{ecometab}}}
 
 \item{...}{additional arguments passed to other methods}
+
+\item{all}{logical indicating if all evaluation summaries are returned or just mean, sd, and % anomalies}
 }
 \value{
 A vector of summary statistics named \code{meanPg}, \code{sdPg}, \code{anomPg}, \code{meanRt}, \code{sdRt}, \code{anomRt}, \code{DOcor}, \code{Pgcor}, and \code{Rtcor}.  See the details above for a meaning of each.
