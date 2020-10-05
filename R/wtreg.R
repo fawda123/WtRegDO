@@ -76,10 +76,15 @@ wtreg <- function(dat_in, DO_obs = 'DO_obs', depth_val = 'Tide', wins = list(4, 
   #for counter
   strt <- Sys.time()
 
+  # setup five percent intervals for log
+  if(progress){
+    counts <- round(seq(1, nrow(dat_in), length = 10))
+  }
+
   out <- ddply(dat_in,
     .variables = 'DateTimeStamp',
     .parallel = parallel,
-    .paropts = list(.export = c('dy', 'hr', 'td'), .packages = 'WtRegDO'),
+    .paropts = list(.packages = 'WtRegDO'),
     .fun = function(row){
 
       # row for prediction
@@ -90,12 +95,15 @@ wtreg <- function(dat_in, DO_obs = 'DO_obs', depth_val = 'Tide', wins = list(4, 
       # progress
       if(progress){
         prog <- which(row$DateTimeStamp == dat_in$DateTimeStamp)
-        sink('log.txt')
-        cat('Log entry time', as.character(Sys.time()), '\n')
-        cat(prog, ' of ', nrow(dat_in), '\n')
-        print(Sys.time() - strt)
-        sink()
+        perc <- 10 * which(prog == counts)
+        if(length(perc) != 0){
+          sink('log.txt')
+          cat('Log entry time', as.character(Sys.time()), '\n')
+          cat(prog, ' of ', nrow(dat_in), '\n')
+          print(Sys.time() - strt)
+          sink()
         }
+      }
 
       # get wts
       ref_wts <- wtfun(ref_in, dat_in, wins = wins, slice = TRUE,
