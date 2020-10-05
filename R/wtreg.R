@@ -79,7 +79,7 @@ wtreg <- function(dat_in, DO_obs = 'DO_obs', depth_val = 'Tide', wins = list(4, 
   out <- ddply(dat_in,
     .variables = 'DateTimeStamp',
     .parallel = parallel,
-    .paropts = list(.export = c('wtfun'), .packages = 'WtRegDO'),
+    .paropts = list(.export = c('dy', 'hr', 'td'), .packages = 'WtRegDO'),
     .fun = function(row){
 
       # row for prediction
