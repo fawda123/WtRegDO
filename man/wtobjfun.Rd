@@ -5,11 +5,12 @@
 \title{An objective function to minimize plus weighted regression for finding optimal window widths}
 \usage{
 wtobjfun(
+  wins,
   dat_in,
   tz,
   lat,
   long,
-  wins,
+  metab_obs,
   strt = NULL,
   vls = c("meanPg", "sdPg", "anomPg", "meanRt", "sdRt", "anomRt"),
   parallel = F,
@@ -17,6 +18,8 @@ wtobjfun(
 )
 }
 \arguments{
+\item{wins}{list of half-window widths to use in the order specified by \code{\link{wtfun}} (i.e., days, hours, tide height).}
+
 \item{dat_in}{input data frame}
 
 \item{tz}{chr string specifying timezone of location, e.g., 'America/Jamaica' for EST, no daylight savings, must match the time zone in \code{dat_in$DateTimeStamp}}
@@ -25,7 +28,7 @@ wtobjfun(
 
 \item{long}{numeric for longitude of location (negative west of prime meridian)}
 
-\item{wins}{list of half-window widths to use in the order specified by \code{\link{wtfun}} (i.e., days, hours, tide height).}
+\item{metab_obs}{A \code{metab} object returned by \code{\link{ecometab}} based on the observed DO time series in \code{dat_in}, used as comparison for the objective function}
 
 \item{strt}{a \code{\link{POSIXct}} object returned by \code{\link{Sys.time}}}
 
@@ -53,11 +56,13 @@ tz <- 'America/Jamaica'
 lat <- 31.39
 long <- -81.28
 
+metobs <- ecometab(SAPDC, DO_var = 'DO_obs', tz = tz, lat = lat, long = long)
+
 ncores <- detectCores()
 cl <- makeCluster(ncores)
 registerDoParallel(cl)
 
-wtobjfun(SAPDC, tz = tz, lat = lat, long = long, strt = Sys.time(),
+wtobjfun(SAPDC, tz = tz, lat = lat, long = long, metab_obs = metobs, strt = Sys.time(),
    wins = list(6, 6, 0.5), parallel = T)
 
 stopCluster(cl)

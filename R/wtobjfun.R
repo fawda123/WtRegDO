@@ -1,14 +1,15 @@
 #' An objective function to minimize plus weighted regression for finding optimal window widths
 #'
+#' @param wins list of half-window widths to use in the order specified by \code{\link{wtfun}} (i.e., days, hours, tide height).
 #' @param dat_in input data frame
 #' @param tz chr string specifying timezone of location, e.g., 'America/Jamaica' for EST, no daylight savings, must match the time zone in \code{dat_in$DateTimeStamp}
 #' @param lat numeric for latitude of location
 #' @param long numeric for longitude of location (negative west of prime meridian)
-#' @param wins list of half-window widths to use in the order specified by \code{\link{wtfun}} (i.e., days, hours, tide height).
+#' @param metab_obs A \code{metab} object returned by \code{\link{ecometab}} based on the observed DO time series in \code{dat_in}, used as comparison for the objective function
 #' @param strt a \code{\link{POSIXct}} object returned by \code{\link{Sys.time}}
 #' @param vls chr vector of summary evaluation object to optimize, see details for \code{\link{objfun}}
-#' @param progress logical if progress saved to a txt file names 'log.txt' in the working directory
 #' @param parallel logical if regression is run in parallel to reduce processing time, requires a parallel backend outside of the function
+#' @param progress logical if progress saved to a txt file names 'log.txt' in the working directory
 #'
 #' @seealso \code{\link{objfun}}
 #'
@@ -27,16 +28,18 @@
 #' lat <- 31.39
 #' long <- -81.28
 #'
+#' metobs <- ecometab(SAPDC, DO_var = 'DO_obs', tz = tz, lat = lat, long = long)
+#'
 #' ncores <- detectCores()
 #' cl <- makeCluster(ncores)
 #' registerDoParallel(cl)
 #'
-#' wtobjfun(SAPDC, tz = tz, lat = lat, long = long, strt = Sys.time(),
+#' wtobjfun(SAPDC, tz = tz, lat = lat, long = long, metab_obs = metobs, strt = Sys.time(),
 #'    wins = list(6, 6, 0.5), parallel = T)
 #'
 #' stopCluster(cl)
 #' }
-wtobjfun <- function(dat_in, tz, lat, long, wins, strt = NULL, vls = c('meanPg', 'sdPg', 'anomPg', 'meanRt', 'sdRt', 'anomRt'),
+wtobjfun <- function(wins, dat_in, tz, lat, long, metab_obs, strt = NULL, vls = c('meanPg', 'sdPg', 'anomPg', 'meanRt', 'sdRt', 'anomRt'),
                       parallel = F, progress = T){
 
   if(is.null(strt))
