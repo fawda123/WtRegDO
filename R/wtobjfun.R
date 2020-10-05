@@ -1,0 +1,61 @@
+#' An objective function to minimize plus weighted regression for finding optimal window widths
+#'
+#' @param dat_in input data frame
+#' @param tz chr string specifying timezone of location, e.g., 'America/Jamaica' for EST, no daylight savings, must match the time zone in \code{dat_in$DateTimeStamp}
+#' @param lat numeric for latitude of location
+#' @param long numeric for longitude of location (negative west of prime meridian)
+#' @param wins list of half-window widths to use in the order specified by \code{\link{wtfun}} (i.e., days, hours, tide height).
+#' @param strt a \code{\link{POSIXct}} object returned by \code{\link{Sys.time}}
+#' @param vls chr vector of summary evaluation object to optimize, see details for \code{\link{objfun}}
+#' @param progress logical if progress saved to a txt file names 'log.txt' in the working directory
+#' @param parallel logical if regression is run in parallel to reduce processing time, requires a parallel backend outside of the function
+#'
+#' @seealso \code{\link{objfun}}
+#'
+#' @return A single numeric value to minimize, as output from \code{\link{objfun}}
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#'
+#' library(foreach)
+#' library(doParallel)
+#'
+#' data(SAPDC)
+#'
+#' tz <- 'America/Jamaica'
+#' lat <- 31.39
+#' long <- -81.28
+#'
+#' ncores <- detectCores()
+#' cl <- makeCluster(ncores)
+#' registerDoParallel(cl)
+#'
+#' wtobjfun(SAPDC, tz = tz, lat = lat, long = long, strt = Sys.time(),
+#'    wins = list(6, 6, 0.5), parallel = T)
+#'
+#' stopCluster(cl)
+#' }
+wtobjfun <- function(dat_in, tz, lat, long, wins, strt = NULL, vls = c('meanPg', 'sdPg', 'anomPg', 'meanRt', 'sdRt', 'anomRt'),
+                      parallel = F, progress = T){
+
+  if(is.null(strt))
+    strt <- Sys.time()
+
+  txt <- unlist(wins)
+  print(Sys.time() - strt)
+  cat(txt, '\n')
+
+  wtreg_res <- wtreg(dat_in, parallel = parallel, wins = wins, progress = progress,
+                     tz = tz, lat = lat, long = long)
+
+  metab_dtd <- ecometab(wtreg_res, DO_var = 'DO_nrm', tz = tz,
+                        lat = lat, long = long)
+
+  out <- objfun(metab_obs, metab_dtd, vls = vls)
+
+  cat(out, '\n\n')
+
+  return(out)
+
+}
