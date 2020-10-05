@@ -3,7 +3,7 @@
 #' Evaluate metabolism results before and after weighted regression
 #'
 #' @param metab_in input \code{metab} object as returned from \code{\link{ecometab}}
-#' @param all logical indicating if all evaluation summaries are returned or just mean, sd, and % anomalies
+#' @param all logical indicating if all evaluation summaries are returned or just mean, sd, and percent anomalies
 #' @param ... additional arguments passed to other methods
 #'
 #' @details

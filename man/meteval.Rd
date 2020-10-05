@@ -14,7 +14,7 @@ meteval(metab_in, ...)
 
 \item{...}{additional arguments passed to other methods}
 
-\item{all}{logical indicating if all evaluation summaries are returned or just mean, sd, and % anomalies}
+\item{all}{logical indicating if all evaluation summaries are returned or just mean, sd, and percent anomalies}
 }
 \value{
 A vector of summary statistics named \code{meanPg}, \code{sdPg}, \code{anomPg}, \code{meanRt}, \code{sdRt}, \code{anomRt}, \code{DOcor}, \code{Pgcor}, and \code{Rtcor}.  See the details above for a meaning of each.
