@@ -12,7 +12,7 @@
 #'
 #' The quantification of improved fit is based on a sum of percent differences for the six paired measures for percent anomalous production, percent anomalous respiration, mean production, mean respiration, standard deviation of production, and standard deviation of respiration for the estimates from the observed and detided metabolism.  The comparisons of the means are taken as the inverse (1 / mean) such that optimization should attempt to keep the values as similar as possible. The final sum is multiplied by negative one such that the value is to be optimized by minimization, i.e., a lower value indicates improved detiding across all measures.
 #'
-#' The function can also quantify a comparison based on different measures supplied by the user. By default, all six measures are used.  However, selecting specific measures, such only optimizing by reducing anomalous values, may be preferred.  Changing the argument for \code{vls} changes which comparisons are used for the summary value.
+#' The function can also quantify a comparison based on different measures supplied by the user. By default, all six measures are used.  However, selecting specific measures, such as only optimizing by reducing anomalous values, may be preferred.  Changing the argument for \code{vls} changes which comparisons are used for the summary value.
 #'
 #' @importFrom dplyr %>%
 #'
@@ -20,7 +20,7 @@
 #' # estimate a summary value for all six measures
 #' objfun(metab_obs, metab_dtd)
 #'
-#' # esimtae a summary value for only anomalies
+#' # estimate a summary value for only anomalies
 #' objfun(metab_obs, metab_dtd, vls = c('anomPg', 'anomRt'))
 objfun <- function(metab_obs, metab_dtd, vls = c('meanPg', 'sdPg', 'anomPg', 'meanRt', 'sdRt', 'anomRt')){
 
