@@ -148,7 +148,7 @@ winopt(SAPDC, tz = tz, lat = lat, long = long, wins = list(6, 6, 0.5), parallel 
 stopCluser(cl)
 ```
 
-The optimization function can take several hours to run and, if it works, should return three window widths for day, hour, and tide that achieve the rules of thumb.  The above example should return window widths that minimize only the anomalous metabolsim estimates. It's worth noting that the "optimization surface" for the objective function is very irregular and the optimization function may not converge to a solution or may be trapped in a local minima.  For these reasons, it's often easier and less time consuming to create a regular grid of window widths to search and use the `objfun` function separately to manually identify an approximate solution.  An example for using a grid search can be found [here](https://github.com/fawda123/detide_eval/blob/9baf6dfbf7eec0b6b6b14ce340e5b387569ae05c/R/dat_proc.R#L67).
+The optimization function can take several hours to run and, if it works, should return three window widths for day, hour, and tide that achieve the rules of thumb.  The above example should return window widths that minimize only the anomalous metabolism estimates. It's worth noting that the "optimization surface" for the objective function is very irregular and the optimization function may not converge to a solution or may be trapped in a local minima.  For these reasons, it's often easier and less time consuming to create a regular grid of window widths to search and use the `objfun` function separately to manually identify an approximate solution.  An example for using a grid search can be found [here](https://github.com/fawda123/detide_eval/blob/9baf6dfbf7eec0b6b6b14ce340e5b387569ae05c/R/dat_proc.R#L67).
 
 ### License
 

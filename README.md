@@ -310,7 +310,7 @@ stopCluser(cl)
 The optimization function can take several hours to run and, if it
 works, should return three window widths for day, hour, and tide that
 achieve the rules of thumb. The above example should return window
-widths that minimize only the anomalous metabolsim estimates. It’s worth
+widths that minimize only the anomalous metabolism estimates. It’s worth
 noting that the “optimization surface” for the objective function is
 very irregular and the optimization function may not converge to a
 solution or may be trapped in a local minima. For these reasons, it’s
