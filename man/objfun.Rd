@@ -37,3 +37,6 @@ objfun(metab_obs, metab_dtd)
 # estimate a summary value for only anomalies
 objfun(metab_obs, metab_dtd, vls = c('anomPg', 'anomRt'))
 }
+\seealso{
+\code{\link{wtobjfun}}, \code{\link{winopt}}
+}

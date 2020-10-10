@@ -17,6 +17,8 @@
 #' @details
 #' This is a super sketchy function based on many assumptions, see details in \code{\link{objfun}}
 #'
+#' @seealso \code{\link{objfun}}, \code{\link{wtobjfun}}
+#'
 #' @return
 #' @export
 #'

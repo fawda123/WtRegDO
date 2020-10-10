@@ -116,6 +116,8 @@ data(metab_dtd)
 plot(metab_dtd, by = 'days')
 ```
 
+### Optimization 
+
 A critical component of weighted regression is choosing the window widths.  The chosen values affect the relative degree of smoothing in both predicted and detided dissolved oxygen time series. There are no strict rules for choosing window widths, but several rules of thumb can be applied that assess the relative ability of the method in removing the tidal signal in metabolism estimates.  The `meteval` function measures many of these rules of thumb and optimization functions have been included in WtRegDO that attempt to identify window widths to achieve detided time series that satisfy these rules.  
 
 The `winopt` function attempts to find optimal window widths for a given time series.  There are several functions used internally within `winopt` that quantify relative ability of a detided metabolism estimate to achieve the rules of thumb for a desired result.  Specifically, improved estimates are assumed to have lower anomalies (less negative production and positive respiration values), lower standard deviation, and similar mean values for gross production and respiration between the observed and detided estimates.  The detided and observed metabolism estimates are compared during the optimization routine using the `objfun` function that returns a single numeric value that is to be optimized as a measure of how well a detided metabolism estimate achieves the rules of thumb.  

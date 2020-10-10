@@ -69,5 +69,5 @@ stopCluster(cl)
 }
 }
 \seealso{
-\code{\link{objfun}}
+\code{\link{objfun}}, \code{\link{winopt}}
 }

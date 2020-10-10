@@ -240,6 +240,8 @@ plot(metab_dtd, by = 'days')
 
 ![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
 
+### Optimization
+
 A critical component of weighted regression is choosing the window
 widths. The chosen values affect the relative degree of smoothing in
 both predicted and detided dissolved oxygen time series. There are no

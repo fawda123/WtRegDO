@@ -16,6 +16,8 @@
 #'
 #' @importFrom dplyr %>%
 #'
+#' @seealso \code{\link{wtobjfun}}, \code{\link{winopt}}
+#'
 #' @examples
 #' # estimate a summary value for all six measures
 #' objfun(metab_obs, metab_dtd)

@@ -71,3 +71,6 @@ winopt(SAPDC, tz = tz, lat = lat, long = long, wins = list(6, 6, 0.5), parallel 
 stopCluster(cl)
 }
 }
+\seealso{
+\code{\link{objfun}}, \code{\link{wtobjfun}}
+}

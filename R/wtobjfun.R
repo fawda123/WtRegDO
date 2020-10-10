@@ -11,7 +11,7 @@
 #' @param parallel logical if regression is run in parallel to reduce processing time, requires a parallel backend outside of the function
 #' @param progress logical if progress saved to a txt file names 'log.txt' in the working directory
 #'
-#' @seealso \code{\link{objfun}}
+#' @seealso \code{\link{objfun}}, \code{\link{winopt}}
 #'
 #' @return A single numeric value to minimize, as output from \code{\link{objfun}}
 #' @export
