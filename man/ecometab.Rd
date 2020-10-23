@@ -18,6 +18,7 @@ ecometab(dat_in, ...)
   depth_vec = NULL,
   instant = FALSE,
   gasex = c("Thiebault", "Wanninkhof"),
+  gasave = FALSE,
   ...
 )
 
@@ -51,6 +52,8 @@ ecometab(dat_in, ...)
 \item{instant}{logical indicating if the instantaneous data (e.g., 30 minutes observations) used to estimate the daily metabolic rates are returned, see details}
 
 \item{gasex}{chr indicating if gas exchange is estimated using equations in Thiebault et al. 2008 or Wanninkhof 2014 (see \code{\link{f_calcKL}} or \code{\link{f_calcWanninkhof}})}
+
+\item{gasave}{logical indicating if gas exchange estimate are averaged within a day prior to estimating metabolism (default \code{FALSE}), this is experimental}
 
 \item{x}{input object to plot}
 

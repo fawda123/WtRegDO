@@ -12,6 +12,7 @@
 #' @param depth_vec numeric value for manual entry of station depth (m).  Use a single value if the integration depth is constant or a vector of depth values equal in length to the time series.  Leave \code{NULL} if estimated from \code{depth_val} column.
 #' @param instant logical indicating if the instantaneous data (e.g., 30 minutes observations) used to estimate the daily metabolic rates are returned, see details
 #' @param gasex chr indicating if gas exchange is estimated using equations in Thiebault et al. 2008 or Wanninkhof 2014 (see \code{\link{f_calcKL}} or \code{\link{f_calcWanninkhof}})
+#' @param gasave logical indicating if gas exchange estimate are averaged within a day prior to estimating metabolism (default \code{FALSE}), this is experimental
 #'
 #' @import oce plyr
 #'
@@ -80,7 +81,7 @@ ecometab <- function(dat_in, ...) UseMethod('ecometab')
 #'
 #' @method ecometab default
 ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', metab_units = 'mmol',
-  bott_stat = FALSE, depth_vec = NULL, instant = FALSE, gasex = c('Thiebault', 'Wanninkhof'), ...){
+  bott_stat = FALSE, depth_vec = NULL, instant = FALSE, gasex = c('Thiebault', 'Wanninkhof'), gasave = FALSE, ...){
 
   # get gas exchange arg
   gasex <- match.arg(gasex)
@@ -206,6 +207,21 @@ ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', 
   if(gasex == 'Wanninkhof')
     KL <- with(dat_in, f_calcWanninkhof(Temp, Sal, WSpd_mix))
   rm(list = c('ATemp_mix', 'WSpd_mix', 'BP_mix'))
+
+  # average all KL values within a day if TRUE
+  if(gasave){
+
+    KL <- data.frame(Date = as.Date(DateTimeStamp), KL = KL)
+    KL <- lapply(
+      split(KL, KL$Date),
+      function(x){
+        x$KL <- mean(x$KL, na.rm = TRUE)
+        return(x)
+      }
+    )
+    KL <- do.call('rbind', KL)$KL
+
+  }
 
   #get volumetric reaeration coefficient from KL
   Ka<-KL/24/H
