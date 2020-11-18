@@ -12,7 +12,7 @@
 #' @param depth_vec numeric value for manual entry of station depth (m).  Use a single value if the integration depth is constant or a vector of depth values equal in length to the time series.  Leave \code{NULL} if estimated from \code{depth_val} column.
 #' @param instant logical indicating if the instantaneous data (e.g., 30 minutes observations) used to estimate the daily metabolic rates are returned, see details
 #' @param gasex chr indicating if gas exchange is estimated using equations in Thiebault et al. 2008 or Wanninkhof 2014 (see \code{\link{f_calcKL}} or \code{\link{f_calcWanninkhof}})
-#' @param gasave logical indicating if gas exchange estimate are averaged within a day prior to estimating metabolism (default \code{FALSE}), this is experimental
+#' @param gasave chr indicating one of \code{"instant"} (default), \code{"daily"}, or \code{"all"} indicating if gas exchange estimates are based on instantaneous estimates, averaged within a day prior to estimating metabolism, or averaged across the entire period record.  All options require an instantaneous record as a starting point.
 #'
 #' @import oce plyr
 #'
@@ -80,11 +80,14 @@ ecometab <- function(dat_in, ...) UseMethod('ecometab')
 #' @export
 #'
 #' @method ecometab default
-ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', metab_units = 'mmol',
-  bott_stat = FALSE, depth_vec = NULL, instant = FALSE, gasex = c('Thiebault', 'Wanninkhof'), gasave = FALSE, ...){
+ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', metab_units = 'mmol', bott_stat = FALSE,
+  depth_vec = NULL, instant = FALSE, gasex = c('Thiebault', 'Wanninkhof'), gasave = c('instant', 'daily', 'all'), ...){
 
   # get gas exchange arg
   gasex <- match.arg(gasex)
+
+  # get gas exchange aggregation
+  gasave <- match.arg(gasave)
 
   # stop if units not mmol or grams
   if(any(!(grepl('mmol|grams', metab_units))))
@@ -205,11 +208,11 @@ ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', 
   if(gasex == 'Thiebault')
     KL <- with(dat_in, f_calcKL(Temp, Sal, ATemp_mix, WSpd_mix, BP_mix))
   if(gasex == 'Wanninkhof')
-    KL <- with(dat_in, f_calcWanninkhof(Temp, Sal, WSpd_mix))
+    KL <- with(dat_in, f_calcWanninkhof(Temp, Sal, WSpd))
   rm(list = c('ATemp_mix', 'WSpd_mix', 'BP_mix'))
 
-  # average all KL values within a day if TRUE
-  if(gasave){
+  # average all KL values within a day
+  if(gasave == 'daily'){
 
     KL <- data.frame(Date = as.Date(DateTimeStamp), KL = KL)
     KL <- lapply(
@@ -219,7 +222,15 @@ ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', 
         return(x)
       }
     )
+
     KL <- do.call('rbind', KL)$KL
+
+  }
+
+  # average all KL values
+  if(gasave == 'all'){
+
+    KL <- rep(mean(KL, na.rm = T), length = length(KL))
 
   }
 
