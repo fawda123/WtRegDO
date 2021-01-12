@@ -6,9 +6,8 @@ output: github_document
 
 #### *Marcus W. Beck, [mbeck@tbep.org](mailto:mbeck@tbep.org)*
 
-Linux: [![Travis-CI Build Status](https://travis-ci.org/fawda123/WtRegDO.svg?branch=master)](https://travis-ci.org/fawda123/WtRegDO)
-
-Windows: [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/fawda123/WtRegDO?branch=master&svg=true)](https://ci.appveyor.com/project/fawda123/WtRegDO)
+[![R-CMD-check](https://github.com/fawda123/WtRegDO/workflows/R-CMD-check/badge.svg)](https://github.com/fawda123/WtRegDO/actions)
+![build](https://github.com/fawda123/WtRegDO/workflows/build/badge.svg)
 
 This is the public repository of supplementary material to accompany the manuscript "Improving estimates of ecosystem metabolism by reducing effects of tidal advection on dissolved oxygen time series", published in Limnology and Oceanography Methods.  The package includes a sample dataset and functions to implement weighted regression on dissolved oxygen time series to reduce the effects of tidal advection.  Functions are also available to estimate net ecosystem metabolism using the open-water method.  
 

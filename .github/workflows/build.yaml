@@ -1,0 +1,33 @@
+on:
+  push:
+    paths:
+      - README.Rmd
+
+name: build
+
+jobs:
+  render:
+    name: build
+    runs-on: macOS-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 2 # This is important to set for `git diff-tree` to work below
+      - uses: r-lib/actions/setup-r@v1
+      - uses: r-lib/actions/setup-pandoc@v1
+      - name: Install package dependencies
+        run: |
+          install.packages("remotes")
+          remotes::install_github("fawda123/WtRegDO")
+        shell: Rscript {0}
+      - name: Render index
+        run: Rscript -e 'rmarkdown::render("README.Rmd")'
+      - name: Commit results
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add -A
+          git commit -m 'Re-build Rmarkdown files' || echo "No changes to commit"
+          git push origin || echo "No changes to commit"
