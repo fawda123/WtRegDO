@@ -108,6 +108,7 @@ plot(metab_obs, by = 'days')
 ```
 
 Plot metabolism results from detided dissolved oxygen time series.
+
 ```{r echo = F}
 data(metab_dtd)
 ```
