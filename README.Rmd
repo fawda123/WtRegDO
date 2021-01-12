@@ -54,8 +54,6 @@ registerDoParallel(cores = ncores - 1)
 evalcor(SAPDC, tz, lat, long, progress = TRUE)
 ```
 
-<!-- ![](README_files/figure-html/evalcor_ex.png)  -->
-
 The `wtreg` function can be used to detide the dissolved oxygen time series.  The example below demonstrates detiding, following by a comparison of ecosystem metabolism using the observed and detided data.
 ```{r, eval = FALSE}
 # run weighted regression in parallel

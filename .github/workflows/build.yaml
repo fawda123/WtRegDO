@@ -19,7 +19,7 @@ jobs:
       - uses: r-lib/actions/setup-pandoc@v1
       - name: Install package dependencies
         run: |
-          install.packages(c("remotes", "rmarkdown"))
+          install.packages(c("remotes", "rmarkdown", "foreach", "doParallel", "devtools"))
           remotes::install_github("fawda123/WtRegDO")
         shell: Rscript {0}
       - name: Render index
