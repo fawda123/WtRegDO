@@ -3,11 +3,8 @@
 
 #### *Marcus W. Beck, <mbeck@tbep.org>*
 
-Linux: [![Travis-CI Build
-Status](https://travis-ci.org/fawda123/WtRegDO.svg?branch=master)](https://travis-ci.org/fawda123/WtRegDO)
-
-Windows: [![AppVeyor Build
-Status](https://ci.appveyor.com/api/projects/status/github/fawda123/WtRegDO?branch=master&svg=true)](https://ci.appveyor.com/project/fawda123/WtRegDO)
+[![R-CMD-check](https://github.com/fawda123/WtRegDO/workflows/R-CMD-check/badge.svg)](https://github.com/fawda123/WtRegDO/actions)
+![build](https://github.com/fawda123/WtRegDO/workflows/build/badge.svg)
 
 This is the public repository of supplementary material to accompany the
 manuscript “Improving estimates of ecosystem metabolism by reducing
@@ -89,8 +86,6 @@ evalcor(SAPDC, tz, lat, long, progress = TRUE)
 
 ![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
 
-<!-- ![](README_files/figure-html/evalcor_ex.png)  -->
-
 The `wtreg` function can be used to detide the dissolved oxygen time
 series. The example below demonstrates detiding, following by a
 comparison of ecosystem metabolism using the observed and detided data.
@@ -167,8 +162,8 @@ meteval(metab_obs)
     ##  [1] "01" "02" "03" "04" "05" "06" "07" "08" "09" "10" "11" "12"
     ## 
     ## $DOcor.cor
-    ##  [1] 0.6629739 0.6201615 0.5994644 0.4982277 0.5294769 0.5897916 0.7460453
-    ##  [8] 0.7258924 0.6740068 0.5297918 0.6395857 0.6273607
+    ##  [1] 0.6581818 0.6187169 0.5992321 0.5014744 0.5299598 0.5891833 0.7478984
+    ##  [8] 0.7237825 0.6745390 0.5297497 0.6410947 0.6302150
     ## 
     ## $month
     ##  [1] "01" "02" "03" "04" "05" "06" "07" "08" "09" "10" "11" "12"
@@ -208,8 +203,8 @@ meteval(metab_dtd)
     ##  [1] "01" "02" "03" "04" "05" "06" "07" "08" "09" "10" "11" "12"
     ## 
     ## $DOcor.cor
-    ##  [1]  0.07685187  0.01188972 -0.07073666 -0.18382785 -0.10951014 -0.05819164
-    ##  [7]  0.01660273  0.06819722  0.10693056  0.11608243  0.07389502 -0.10185960
+    ##  [1]  0.07125163  0.01678593 -0.08434645 -0.18163665 -0.11128709 -0.05776115
+    ##  [7]  0.01948197  0.06428088  0.10886772  0.11011042  0.07148018 -0.10147794
     ## 
     ## $month
     ##  [1] "01" "02" "03" "04" "05" "06" "07" "08" "09" "10" "11" "12"
