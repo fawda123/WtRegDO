@@ -174,7 +174,7 @@ ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', 
   # DOsat is a ratio between DO (mg/L) and DO at saturation (mg/L), gets around a unit conversion issue
   # oxysol returns the actual DO saturation in mg/L
   # used to get loss of O2 from diffusion
-  DOsat<-with(dat_in, get(DO_var) / oxySol(Temp, Sal, BP * 1/1013.25))
+  DOsat<-with(dat_in, get(DO_var) / oxySol(Temp, Sal, BP_mix * 1/1013.25))
 
   # station depth, defaults to mean depth value plus 0.5 in case not on bottom
   # uses 'depth_val' if provided, otherwise needs 'depth_vec'
