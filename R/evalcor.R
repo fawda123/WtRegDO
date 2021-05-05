@@ -136,23 +136,23 @@ evalcor <- function(dat_in, tz, lat, long, depth_val = 'Tide', daywin = 6, metho
     ref_in <- tocor[row, ]
 
     # return NA if no tide value at obs
-    if(is.na(ref_in$Tide)){
+    if(is.na(ref_in$Tide))
+      return(NA)
 
-      corout <- NA
+    wts <- try({WtRegDO::wtfun(ref_in, tocor, wins = list(daywin, 1e6, 1e6))}, silent = TRUE)
 
-    } else {
+    # return NA if error on wts, usually from insufficient data
+    if(inherits(wts, 'try-error'))
+      return(NA)
 
-      wts <- WtRegDO::wtfun(ref_in, tocor, wins = list(daywin, 1e6, 1e6))
-      gr_zero <- which(wts > 0)
+    gr_zero <- which(wts > 0)
 
-      sun_in <- (sun_angle)[gr_zero]
-      tide_in <- (tide_angle)[gr_zero]
+    sun_in <- (sun_angle)[gr_zero]
+    tide_in <- (tide_angle)[gr_zero]
 
-      corout <- cor(sun_in, tide_in, method = method, use = 'complete.obs')
+    corout <- cor(sun_in, tide_in, method = method, use = 'complete.obs')
 
-    }
-
-    corout
+    return(corout)
 
   }
 
