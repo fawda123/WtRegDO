@@ -109,8 +109,8 @@ wtreg <- function(dat_in, DO_obs = 'DO_obs', depth_val = 'Tide', wins = list(4, 
       ref_wts <- wtfun(ref_in, dat_in, wins = wins, slice = TRUE,
         subs_only = TRUE, wt_vars = c('dec_time', 'hour', 'Tide'))
 
-      #OLS wtd model
-      out <- lapply(1:length(ref_wts),
+      # OLS wtd model, predicted and detided
+      prds <- lapply(1:length(ref_wts),
         function(x){
 
           # subset data for weights > 0
@@ -118,50 +118,49 @@ wtreg <- function(dat_in, DO_obs = 'DO_obs', depth_val = 'Tide', wins = list(4, 
 
           # if no DO values after subset, return NA
           # or if observed DO for the row is NA, return NA
-          if(sum(is.na(dat_proc$DO_obs)) == nrow(dat_proc)|
-              any(is.na((ref_in$DO_obs)))){
+          chk <- sum(is.na(dat_proc$DO_obs)) == nrow(dat_proc) | any(is.na((ref_in$DO_obs)))
 
-            DO_pred <- NA
-            beta2 <- NA
+          prd <- rep(NA_real_, 2)
+
+          # wtreg if sufficient data
+          if(!chk){
+
+            # subset weigths > 0, rescale weights average
+            ref_wts <- ref_wts[[x]]/mean(ref_wts[[x]])
+
+            # get model
+            mod_md <- lm(
+              DO_obs ~ dec_time + Tide,# + sin(2*pi*dec_time) + cos(2*pi*dec_time),
+              weights = ref_wts,
+              data = dat_proc
+            )
+
+            # get prediction from model
             Tide <- ref_in$Tide[x]
+            DO_pred <- predict(
+              mod_md,
+              newdata = data.frame(dec_time = ref_in$dec_time[x], totpar = ref_in$totpar[x], Tide = Tide)
+            )
 
-            } else {
+            # get beta from model
+            beta2 <- try(mod_md$coefficients['Tide'])
 
-              # subset weigths > 0, rescale weights average
-              ref_wts <- ref_wts[[x]]/mean(ref_wts[[x]])
-
-              # get model
-              mod_md <- lm(
-                DO_obs ~ dec_time + Tide, # + sin(2*pi*dec_time) + cos(2*pi*dec_time),
-                weights = ref_wts,
-                data = dat_proc
-                )
-
-              # get prediction from model
-              Tide <- ref_in$Tide[x]
-              DO_pred <- predict(
-                mod_md,
-                newdata = data.frame(dec_time = ref_in$dec_time[x], Tide = Tide)
-                )
-
-              # get beta from model
-              beta2 <- try(mod_md$coefficients['Tide'])
-
-            }
-
-          # output
-          c(beta2, DO_pred)
+            # output
+            prd <- c(beta2, DO_pred)
 
           }
 
-        )
+          return(prd)
 
-      out <- unlist(out)
-      out <- out[c(1, 2, 4)]
-      names(out) <- c('Beta2', 'DO_prd', 'DO_nrm')
-      out
+        })
 
-      })
+      prds <- unlist(prds)
+      prds <- prds[c(1, 2, 4)]
+      names(prds) <- c('Beta2', 'DO_prd', 'DO_nrm')
+
+      return(prds)
+
+    })
 
   out$DateTimeStamp <- NULL
   out <- cbind(dat_in, out)
