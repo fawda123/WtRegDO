@@ -11,6 +11,8 @@
 #' @param long numeric for longitude of location (negative west of prime meridian)
 #' @param progress logical if progress saved to a txt file names 'log.txt' in the working directory
 #' @param parallel logical if regression is run in parallel to reduce processing time, requires a parallel backend outside of the function
+#' @param sin logical if a sinusoidal curve is used in the regression
+#' @param par logical if PAR is used in the regression
 #' @param ... additional arguments passed to \code{\link{met_day_fun}}, particularly timezone, lat, and long information.
 #'
 #' @export
@@ -35,7 +37,7 @@
 #'
 #' }
 wtreg <- function(dat_in, DO_obs = 'DO_obs', depth_val = 'Tide', wins = list(4, 12, NULL), tz, lat,
-  long, progress = FALSE, parallel = FALSE, ...){
+  long, progress = FALSE, parallel = FALSE, sin = F, par = F, ...){
 
   # sanity check
   chk <- sum(is.na(dat_in[, depth_val]))
@@ -129,18 +131,47 @@ wtreg <- function(dat_in, DO_obs = 'DO_obs', depth_val = 'Tide', wins = list(4, 
             ref_wts <- ref_wts[[x]]/mean(ref_wts[[x]])
 
             # get model
-            mod_md <- lm(
-              DO_obs ~ dec_time + Tide,# + sin(2*pi*dec_time) + cos(2*pi*dec_time),
-              weights = ref_wts,
-              data = dat_proc
-            )
+            if(!sin & !par)
+              mod_md <- lm(
+                DO_obs ~ dec_time + Tide,
+                weights = ref_wts,
+                data = dat_proc
+              )
+
+            # get model
+            if(sin & !par)
+              mod_md <- lm(
+                DO_obs ~ dec_time + Tide + sin(2*pi*dec_time) + cos(2*pi*dec_time),
+                weights = ref_wts,
+                data = dat_proc
+              )
+
+            if(par & !sin)
+              mod_md <- lm(
+                DO_obs ~ dec_time + Tide + totpar,#sin(2*pi*dec_time) + cos(2*pi*dec_time),
+                weights = ref_wts,
+                data = dat_proc
+              )
+
+            if(par & sin)
+              mod_md <- lm(
+                DO_obs ~ dec_time + Tide + totpar + sin(2*pi*dec_time) + cos(2*pi*dec_time),
+                weights = ref_wts,
+                data = dat_proc
+              )
 
             # get prediction from model
             Tide <- ref_in$Tide[x]
-            DO_pred <- predict(
-              mod_md,
-              newdata = data.frame(dec_time = ref_in$dec_time[x], totpar = ref_in$totpar[x], Tide = Tide)
-            )
+            if(par)
+              DO_pred <- predict(
+                mod_md,
+                newdata = data.frame(dec_time = ref_in$dec_time[x], totpar = ref_in$totpar[x], Tide = Tide)
+              )
+            if(!par)
+              DO_pred <- predict(
+                mod_md,
+                newdata = data.frame(dec_time = ref_in$dec_time[x], Tide = Tide)
+              )
 
             # get beta from model
             beta2 <- try(mod_md$coefficients['Tide'])
