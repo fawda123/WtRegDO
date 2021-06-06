@@ -14,8 +14,7 @@ wtreg(
   long,
   progress = FALSE,
   parallel = FALSE,
-  sin = F,
-  par = F,
+  sine = F,
   ...
 )
 }
@@ -38,9 +37,7 @@ wtreg(
 
 \item{parallel}{logical if regression is run in parallel to reduce processing time, requires a parallel backend outside of the function}
 
-\item{sin}{logical if a sinusoidal curve is used in the regression}
-
-\item{par}{logical if PAR is used in the regression}
+\item{sine}{logical if a sinusoidal curve is used in the regression}
 
 \item{...}{additional arguments passed to \code{\link{met_day_fun}}, particularly timezone, lat, and long information.}
 }

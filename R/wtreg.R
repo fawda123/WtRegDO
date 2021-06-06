@@ -11,7 +11,7 @@
 #' @param long numeric for longitude of location (negative west of prime meridian)
 #' @param progress logical if progress saved to a txt file names 'log.txt' in the working directory
 #' @param parallel logical if regression is run in parallel to reduce processing time, requires a parallel backend outside of the function
-#' @param sin logical if a sinusoidal curve is used in the regression
+#' @param sine logical if a sinusoidal curve is used in the regression
 #' @param ... additional arguments passed to \code{\link{met_day_fun}}, particularly timezone, lat, and long information.
 #'
 #' @export
