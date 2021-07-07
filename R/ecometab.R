@@ -33,11 +33,11 @@
 #'
 #' The plotting method plots daily metabolism estimates using different aggregation periods.  Accepted aggregation periods are \code{'years'}, \code{'quarters'}, \code{'months'}, \code{'weeks'}, and \code{'days'} (if no aggregation is preferred). The default function for aggregating is the \code{\link[base]{mean}} for the periods specified by the \code{by} argument.  Setting \code{pretty = FALSE} will return the plot with minimal modifications to the \code{\link[ggplot2]{ggplot}} object.
 #'
-#' @return A \code{metab} object with daily integrated metabolism estimates including gross produciton (Pg), total respiration (Rt), and net ecosystem metabolism (NEM).  Attributes of the object include the raw data (\code{rawdat}), a character string indicating name of the tidal column if supplied in the raw data (\code{depth_val}), and a character string indicating name of the dissolved oxygen column in the raw data that was used to estimate metabolism (\code{DO_var}).
+#' @return A \code{metab} object with daily integrated metabolism estimates including gross production (Pg, mmol O2 m-2 d-1), total respiration (Rt), and net ecosystem metabolism (NEM).  Attributes of the object include the raw data (\code{rawdat}), a character string indicating name of the tidal column if supplied in the raw data (\code{depth_val}), and a character string indicating name of the dissolved oxygen column in the raw data that was used to estimate metabolism (\code{DO_var}).
 #'
 #' The plot method returns a \code{\link[ggplot2]{ggplot}} object which can be further modified.
 #'
-#' If \code{instant = TRUE} the instantaneous data (e.g., 30 minutes observations) used to estimate the daily metabolic rates are returned at the midpoint time steps from the raw time series.  The instantaneous data will also include the volumetric air-sea exchange rate (D, mmol m-3), the volumetric reaeration coefficient (Ka, hr-1), and the gas transfer coefficient (KL, m d-1).
+#' If \code{instant = TRUE} the instantaneous data (e.g., 30 minutes observations) used to estimate the daily metabolic rates are returned at the midpoint time steps from the raw time series.  The instantaneous data will also return metabolism estimates as flux per day, including the DO flux (dDO, mmol d-1), volumetric air-sea exchange rate (D, mmol m-3 d-1), the volumetric reaeration coefficient (Ka, hr-1), the gas transfer coefficient (KL, m d-1), gross production (Pg, mmol O2 m-2 d-1), respiration (Rt, mmol O2 m-2 d-1), net ecosystem metabolism (mmol O2 m-2 d-1), volumetric gross production (Pg_vol, mmol O2 m-3 d-1), and volumetric respiration (Rt_vol, mmol O2 m-3 d-1).  If \code{metab_units = "grams"}, the same variables are returned as grams of O2. To convert the daily instantaneous values to hourly estimates, just divide by 24 (except gross production, divide by \code{day_hrs}).
 #'
 #' @references
 #' Caffrey JM, Murrell MC, Amacker KS, Harper J, Phipps S, Woodrey M. 2013. Seasonal and inter-annual patterns in primary production, respiration and net ecosystem metabolism in 3 estuaries in the northeast Gulf of Mexico. Estuaries and Coasts. 37(1):222-241.
@@ -247,10 +247,79 @@ ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', 
     'CumPrcp','TotSoRad','Tide')]
   proc.dat<-data.frame(proc.dat,DOsat,dDO,H,D)
 
-  # exit if true
+  # return instantaneous rates if true
   if(instant){
 
     out <- data.frame(DateTimeStamp, proc.dat, KL, Ka)
+    out<-lapply(
+      split(out, out$metab_date),
+      function(x){
+
+        #filter for minimum no. of records
+        if(length(with(x[x$solar_period=='sunrise',],na.omit(dDO))) < 3 |
+           length(with(x[x$solar_period=='sunset',],na.omit(dDO))) < 3 ){
+          x$DOF_d<-NA; x$D_d<-NA; x$DOF_n<-NA; x$D_n<-NA
+        }
+
+        else{
+          #day
+          x$DOF_d<-ifelse(x$solar_period == 'sunrise', x$dDO*x$H, NA) # mmol o2 / m2 / hr
+          x$D_d<-ifelse(x$solar_period == 'sunrise', x$D* x$H, NA) # mmol o2 / m2 / hr
+
+          #night, still assumed constant and only calculated with night time period
+          x$DOF_n<-mean(with(x[x$solar_period=='sunset',],dDO*H), na.rm = T)  # mmol o2 / m2 / hr
+          x$D_n<-mean(with(x[x$solar_period=='sunset',],D*H), na.rm = T)  # mmol o2 / m2 / hr
+        }
+
+        #metabolism
+        #account for air-sea exchange if surface station
+        #else do not
+        if(!bott_stat){
+          x$Pg<-with(x, ((DOF_d-D_d) - (DOF_n-D_n))*unique(day_hrs))  # mmol o2 / m2 / d
+          x$Rt<-with(x, (DOF_n-D_n)*24)  # mmol o2 / m2 / d
+        } else {
+          x$Pg<-with(x, (DOF_d - DOF_n)*unique(day_hrs))
+          x$Rt<-x$DOF_n*24
+        }
+
+        # make zero Pg for nighttime
+        if(!sum(is.na(x$DOF_d)) == nrow(x))
+          x$Pg <- ifelse(x$solar_period == 'sunset', 0, x$Pg)
+
+        x$NEM<-x$Pg+x$Rt  # mmol o2 / m2 / d
+        x$Pg_vol<-x$Pg/mean(x$H,na.rm=TRUE)
+        x$Rt_vol<-x$Rt/mean(x$H,na.rm=TRUE)
+        x$D <- x$D * 24  # mmol o2 / m2 / d
+        x$dDO <- x$dDO * 24 # do flux per day
+
+        # remove flux
+        x <- x[, !names(x) %in% c('DOF_d', 'D_d', 'DOF_n', 'D_n')]
+
+        # output
+        return(x)
+
+      }
+    )
+
+    out <- do.call('rbind',out)
+    row.names(out) <- 1:nrow(out)
+
+    # change units to grams
+    if('grams' %in% metab_units){
+
+      # convert metab data to g m^-2 d^-1 (or g m^-3 d^-1 for vol)
+      # 1mmolO2 = 32 mg O2, 1000mg = 1g, multiply by 32/1000
+      out$DO <- out$DO * 0.032
+      out$dDO <- out$dDO * 0.032
+      out$D <- out$D * 0.032
+      out$Pg<- out$Pg * 0.032
+      out$Rt <- out$Rt * 0.032
+      out$NEM <- out$NEM * 0.032
+      out$Pg_vol <- out$Pg_vol * 0.032
+      out$Rt_vol <- out$Rt_vol * 0.032
+
+    }
+
     return(out)
 
   }
@@ -291,7 +360,7 @@ ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', 
       Rt_vol<-Rt/mean(x$H,na.rm=TRUE)
 
       # output
-      data.frame(Date=unique(x$metab_date),Pg,Rt,NEM)
+      data.frame(Date=unique(x$metab_date),Pg,Rt,NEM, Pg_vol, Rt_vol)
 
       }
     )

@@ -66,11 +66,11 @@ ecometab(dat_in, ...)
 \item{pretty}{logical indicating use of predefined plot aesthetics}
 }
 \value{
-A \code{metab} object with daily integrated metabolism estimates including gross produciton (Pg), total respiration (Rt), and net ecosystem metabolism (NEM).  Attributes of the object include the raw data (\code{rawdat}), a character string indicating name of the tidal column if supplied in the raw data (\code{depth_val}), and a character string indicating name of the dissolved oxygen column in the raw data that was used to estimate metabolism (\code{DO_var}).
+A \code{metab} object with daily integrated metabolism estimates including gross production (Pg, mmol O2 m-2 d-1), total respiration (Rt), and net ecosystem metabolism (NEM).  Attributes of the object include the raw data (\code{rawdat}), a character string indicating name of the tidal column if supplied in the raw data (\code{depth_val}), and a character string indicating name of the dissolved oxygen column in the raw data that was used to estimate metabolism (\code{DO_var}).
 
 The plot method returns a \code{\link[ggplot2]{ggplot}} object which can be further modified.
 
-If \code{instant = TRUE} the instantaneous data (e.g., 30 minutes observations) used to estimate the daily metabolic rates are returned at the midpoint time steps from the raw time series.  The instantaneous data will also include the volumetric air-sea exchange rate (D, mmol m-3), the volumetric reaeration coefficient (Ka, hr-1), and the gas transfer coefficient (KL, m d-1).
+If \code{instant = TRUE} the instantaneous data (e.g., 30 minutes observations) used to estimate the daily metabolic rates are returned at the midpoint time steps from the raw time series.  The instantaneous data will also return metabolism estimates as flux per day, including the DO flux (dDO, mmol d-1), volumetric air-sea exchange rate (D, mmol m-3 d-1), the volumetric reaeration coefficient (Ka, hr-1), the gas transfer coefficient (KL, m d-1), gross production (Pg, mmol O2 m-2 d-1), respiration (Rt, mmol O2 m-2 d-1), net ecosystem metabolism (mmol O2 m-2 d-1), volumetric gross production (Pg_vol, mmol O2 m-3 d-1), and volumetric respiration (Rt_vol, mmol O2 m-3 d-1).  If \code{metab_units = "grams"}, the same variables are returned as grams of O2. To convert the daily instantaneous values to hourly estimates, just divide by 24 (except gross production, divide by \code{day_hrs}).
 }
 \description{
 Estimate ecosystem metabolism using the Odum open-water method.  Estimates of daily integrated gross production, total respiration, and net ecosystem metabolism are returned.  A plotting method is also provided.
