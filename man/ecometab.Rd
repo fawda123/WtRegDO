@@ -70,7 +70,7 @@ A \code{metab} object with daily integrated metabolism estimates including gross
 
 The plot method returns a \code{\link[ggplot2]{ggplot}} object which can be further modified.
 
-If \code{instant = TRUE} the instantaneous data (e.g., 30 minutes observations) used to estimate the daily metabolic rates are returned at the midpoint time steps from the raw time series.  The instantaneous data will also include the volumetric air-sea exchange rate (D, mmol m-3), the volumetric reaeration coefficient (Ka, hr-1), and the gas transfer coefficient (KL, m d-1).
+If \code{instant = TRUE} the instantaneous data (e.g., 30 minutes observations) used to estimate the daily metabolic rates are returned at the midpoint time steps from the raw time series.  The instantaneous data will also include the volumetric air-sea exchange rate (D, mmol m-3 hr-1), the volumetric reaeration coefficient (Ka, hr-1), and the gas transfer coefficient (KL, m d-1).
 }
 \description{
 Estimate ecosystem metabolism using the Odum open-water method.  Estimates of daily integrated gross production, total respiration, and net ecosystem metabolism are returned.  A plotting method is also provided.

@@ -37,7 +37,7 @@
 #'
 #' The plot method returns a \code{\link[ggplot2]{ggplot}} object which can be further modified.
 #'
-#' If \code{instant = TRUE} the instantaneous data (e.g., 30 minutes observations) used to estimate the daily metabolic rates are returned at the midpoint time steps from the raw time series.  The instantaneous data will also include the volumetric air-sea exchange rate (D, mmol m-3), the volumetric reaeration coefficient (Ka, hr-1), and the gas transfer coefficient (KL, m d-1).
+#' If \code{instant = TRUE} the instantaneous data (e.g., 30 minutes observations) used to estimate the daily metabolic rates are returned at the midpoint time steps from the raw time series.  The instantaneous data will also include the volumetric air-sea exchange rate (D, mmol m-3 hr-1), the volumetric reaeration coefficient (Ka, hr-1), and the gas transfer coefficient (KL, m d-1).
 #'
 #' @references
 #' Caffrey JM, Murrell MC, Amacker KS, Harper J, Phipps S, Woodrey M. 2013. Seasonal and inter-annual patterns in primary production, respiration and net ecosystem metabolism in 3 estuaries in the northeast Gulf of Mexico. Estuaries and Coasts. 37(1):222-241.
@@ -239,6 +239,7 @@ ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', 
 
   #get exchange at air water interface
   # DO/DOsat - DO reduces to Cs - C in mmol/m3 (DOsat is actually a ratio between DO and DO at saturation
+  # D in units of mmol/m3/hr
   D=Ka*(DO/DOsat-DO)
 
   #combine all data for processing
