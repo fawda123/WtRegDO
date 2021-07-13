@@ -275,7 +275,7 @@ ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', 
         #account for air-sea exchange if surface station
         #else do not
         if(!bott_stat){
-          x$Pg<-with(x, ((DOF_d-D_d) - (DOF_n-D_n))*unique(day_hrs))  # mmol o2 / m2 / d
+          x$Pg<-with(x, ((DOF_d-D_d) - (DOF_n-D_n))*24)  # mmol o2 / m2 / d
           x$Rt<-with(x, (DOF_n-D_n)*24)  # mmol o2 / m2 / d
         } else {
           x$Pg<-with(x, (DOF_d - DOF_n)*unique(day_hrs))
