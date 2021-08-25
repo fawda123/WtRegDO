@@ -133,8 +133,8 @@ meteval.metab <- function(metab_in, all = TRUE, ...){
       .fun = function(x){
 
         with(x, c(
-          anomPgmon = 100 * sum(x$Pg <= 0)/nrow(x),
-          anomRtmon = 100 * sum(x$Rt >= 0)/nrow(x)
+          anomPg = 100 * sum(x$Pg <= 0)/nrow(x),
+          anomRt = 100 * sum(x$Rt >= 0)/nrow(x)
         ))
 
       }
