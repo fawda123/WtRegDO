@@ -17,7 +17,7 @@ meteval(metab_in, ...)
 \item{all}{logical indicating if all evaluation summaries are returned or just mean, sd, and percent anomalies}
 }
 \value{
-A vector of summary statistics named \code{meanPg}, \code{sdPg}, \code{anomPg}, \code{meanRt}, \code{sdRt}, \code{anomRt}, \code{DOcor}, \code{Pgcor}, and \code{Rtcor}.  See the details above for a meaning of each.
+A two-element list of summary statistics for the complete period of record (\code{cmp}) and by month (\code{mos}).  The complete record summary has columns named \code{meanPg}, \code{sdPg}, \code{anomPg}, \code{meanRt}, \code{sdRt}, \code{anomRt}.  The monthly summary has \code{DOcor}, \code{Pgcor}, \code{Rtcor} for the correlations of each with the tidal cycle for the given month and \code{anomPg} and \code{anomRt} for the anomalous tallies of the metabolism estimates in each month.  See the details above for a meaning of each.
 }
 \description{
 Evaluate metabolism results before and after weighted regression

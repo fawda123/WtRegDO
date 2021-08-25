@@ -16,6 +16,7 @@ ecometab(dat_in, ...)
   metab_units = "mmol",
   bott_stat = FALSE,
   depth_vec = NULL,
+  replacemet = TRUE,
   instant = FALSE,
   gasex = c("Thiebault", "Wanninkhof"),
   gasave = c("instant", "daily", "all"),
@@ -48,6 +49,8 @@ ecometab(dat_in, ...)
 \item{bott_stat}{logical if air-sea gas exchange is removed from the estimate}
 
 \item{depth_vec}{numeric value for manual entry of station depth (m).  Use a single value if the integration depth is constant or a vector of depth values equal in length to the time series.  Leave \code{NULL} if estimated from \code{depth_val} column.}
+
+\item{replacemet}{logical indicating if missing values for appropriate weather variables are replaced by monthly/hourly means with \code{\link{climmeans}}}
 
 \item{instant}{logical indicating if the instantaneous data (e.g., 30 minutes observations) used to estimate the daily metabolic rates are returned, see details}
 

@@ -10,6 +10,7 @@
 #' @param metab_units chr indicating desired units of output for oxygen, either as mmol or grams
 #' @param bott_stat logical if air-sea gas exchange is removed from the estimate
 #' @param depth_vec numeric value for manual entry of station depth (m).  Use a single value if the integration depth is constant or a vector of depth values equal in length to the time series.  Leave \code{NULL} if estimated from \code{depth_val} column.
+#' @param replacemet logical indicating if missing values for appropriate weather variables are replaced by monthly/hourly means with \code{\link{climmeans}}
 #' @param instant logical indicating if the instantaneous data (e.g., 30 minutes observations) used to estimate the daily metabolic rates are returned, see details
 #' @param gasex chr indicating if gas exchange is estimated using equations in Thiebault et al. 2008 or Wanninkhof 2014 (see \code{\link{f_calcKL}} or \code{\link{f_calcWanninkhof}})
 #' @param gasave chr indicating one of \code{"instant"} (default), \code{"daily"}, or \code{"all"} indicating if gas exchange estimates are based on instantaneous estimates, averaged within a day prior to estimating metabolism, or averaged across the entire period record.  All options require an instantaneous record as a starting point.
@@ -81,7 +82,7 @@ ecometab <- function(dat_in, ...) UseMethod('ecometab')
 #'
 #' @method ecometab default
 ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', metab_units = 'mmol', bott_stat = FALSE,
-  depth_vec = NULL, instant = FALSE, gasex = c('Thiebault', 'Wanninkhof'), gasave = c('instant', 'daily', 'all'), ...){
+  depth_vec = NULL, replacemet = TRUE, instant = FALSE, gasex = c('Thiebault', 'Wanninkhof'), gasave = c('instant', 'daily', 'all'), ...){
 
   # get gas exchange arg
   gasex <- match.arg(gasex)
@@ -93,14 +94,31 @@ ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', 
   if(any(!(grepl('mmol|grams', metab_units))))
     stop('Units must be mmol or grams')
 
-  tokp <- c('DateTimeStamp', 'Temp', 'Sal', 'ATemp', 'BP', 'Tide', 'WSpd', DO_var)
+  # check required input for Thiebault gas exchange
+  if(gasex == 'Thiebault'){
 
-  # sanity check
-  chk <- tokp %in% names(dat_in)
-  if(any(!chk))
-    stop('The following columns are missing from dat_in: ', paste(tokp[!chk], collapse = ', '))
+    tokp <- c('DateTimeStamp', 'Temp', 'Sal', 'ATemp', 'BP', 'Tide', 'WSpd', DO_var)
 
-  # sanity check
+    # sanity check
+    chk <- tokp %in% names(dat_in)
+    if(any(!chk))
+      stop('The following columns are missing from dat_in: ', paste(tokp[!chk], collapse = ', '))
+
+  }
+
+  # check required input for Wanninkhof gas exchange
+  if(gasex == 'Wanninkhof'){
+
+    tokp <- c('DateTimeStamp', 'Temp', 'Sal', 'Tide', 'WSpd', DO_var)
+
+    # sanity check
+    chk <- tokp %in% names(dat_in)
+    if(any(!chk))
+      stop('The following columns are missing from dat_in: ', paste(tokp[!chk], collapse = ', '))
+
+  }
+
+  # verify timezone argument is same as input data
   chktz <- attr(dat_in$DateTimeStamp, 'tzone')
   if(tz != chktz)
     stop('dat_in timezone differs from tz argument')
@@ -109,6 +127,10 @@ ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', 
   chk <- duplicated(dat_in)
   if(any(chk))
     stop('Duplicated observations found, check rows: ', paste(which(chk), collapse = ', '))
+
+  # DateTimeStamp order in dat must be ascending to match
+  if(is.unsorted(dat_in$DateTimeStamp))
+    stop('DateTimeStamp is unsorted')
 
   ##begin calculations
 
@@ -136,45 +158,17 @@ ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', 
 
   ##
   # replace missing wx values with climatological means
-  # only ATemp, WSpd, and BP
+  # only ATemp, WSpd, and BP if Thiebault
+  # only WSpd if Wanninkhof
 
-  # monthly and hourly averages
-  months <- format(dat_in$DateTimeStamp, '%m')
-  hours <- format(dat_in$DateTimeStamp, '%H')
-  clim_means <- ddply(data.frame(dat_in, months, hours),
-    .variables=c('months', 'hours'),
-    .fun = function(x){
-      data.frame(
-        ATemp = mean(x$ATemp, na.rm = TRUE),
-        WSpd = mean(x$WSpd, na.rm = TRUE),
-        BP = mean(x$BP, na.rm = TRUE)
-      )
-    }
-  )
-  clim_means <- merge(
-    data.frame(DateTimeStamp = dat_in$DateTimeStamp, months,hours),
-    clim_means, by = c('months','hours'),
-    all.x = TRUE
-  )
-  clim_means <- clim_means[order(clim_means$DateTimeStamp),]
-
-  # DateTimeStamp order in dat_in must be ascending to match
-  if(is.unsorted(dat_in$DateTimeStamp))
-    stop('DateTimeStamp is unsorted')
-
-  # reassign empty values to means, objects are removed later
-  ATemp_mix <- dat_in$ATemp
-  WSpd_mix <- dat_in$WSpd
-  BP_mix <- dat_in$BP
-  ATemp_mix[is.na(ATemp_mix)] <- clim_means$ATemp[is.na(ATemp_mix)]
-  WSpd_mix[is.na(WSpd_mix)] <- clim_means$WSpd[is.na(WSpd_mix)]
-  BP_mix[is.na(BP_mix)] <- clim_means$BP[is.na(BP_mix)]
+  if(replacemet)
+    dat_in <- climmeans(dat_in, gasex = gasex)
 
   ##
   # DOsat is a ratio between DO (mg/L) and DO at saturation (mg/L), gets around a unit conversion issue
   # oxysol returns the actual DO saturation in mg/L
   # used to get loss of O2 from diffusion
-  DOsat<-with(dat_in, get(DO_var) / oxySol(Temp, Sal, BP_mix * 1/1013.25))
+  DOsat<-with(dat_in, get(DO_var) / oxySol(Temp, Sal, BP * 1/1013.25))
 
   # station depth, defaults to mean depth value plus 0.5 in case not on bottom
   # uses 'depth_val' if provided, otherwise needs 'depth_vec'
@@ -206,10 +200,9 @@ ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', 
 
   # get air sea gas-exchange using wx data with climate means, thiebault of wanninkhof
   if(gasex == 'Thiebault')
-    KL <- with(dat_in, f_calcKL(Temp, Sal, ATemp_mix, WSpd_mix, BP_mix))
+    KL <- with(dat_in, f_calcKL(Temp, Sal, ATemp, WSpd, BP))
   if(gasex == 'Wanninkhof')
     KL <- with(dat_in, f_calcWanninkhof(Temp, Sal, WSpd))
-  rm(list = c('ATemp_mix', 'WSpd_mix', 'BP_mix'))
 
   # average all KL values within a day
   if(gasave == 'daily'){
