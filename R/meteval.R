@@ -13,7 +13,7 @@
 #'
 #' Tables 2 and 3 in Beck et al. 2015 were created using these methods.
 #'
-#' @return A vector of summary statistics named \code{meanPg}, \code{sdPg}, \code{anomPg}, \code{meanRt}, \code{sdRt}, \code{anomRt}, \code{DOcor}, \code{Pgcor}, and \code{Rtcor}.  See the details above for a meaning of each.
+#' @return A two-element list of summary statistics for the complete period of record (\code{cmp}) and by month (\code{mos}).  The complete record summary has columns named \code{meanPg}, \code{sdPg}, \code{anomPg}, \code{meanRt}, \code{sdRt}, \code{anomRt}.  The monthly summary has \code{DOcor}, \code{Pgcor}, \code{Rtcor} for the correlations of each with the tidal cycle for the given month and \code{anomPg} and \code{anomRt} for the anomalous tallies of the metabolism estimates in each month.  See the details above for a meaning of each.
 #'
 #' @export
 #'
@@ -50,7 +50,7 @@ meteval.metab <- function(metab_in, all = TRUE, ...){
   DO_var <- attr(metab_in, 'DO_var')
 
   # summarize metab data - means, sd, perc anoms
-  out <- list(
+  out <- data.frame(
     meanPg = mean(toeval$Pg),
     sdPg = sd(toeval$Pg),
     anomPg = 100 * sum(toeval$Pg <= 0)/nrow(toeval),
@@ -76,6 +76,7 @@ meteval.metab <- function(metab_in, all = TRUE, ...){
       .variable = c('month'),
       .fun = function(x) cor.test(x[, DO_var], x[, depth_val])$estimate
     )
+    names(DOcor)[2] <- 'DOcor'
     # DOcor <- mean(DOcor[, 'cor'], na.rm = TRUE)
 
     # get tidal range for metabolic day/night periods
@@ -125,8 +126,29 @@ meteval.metab <- function(metab_in, all = TRUE, ...){
     names(metcor) <- gsub('\\.cor$', '', names(metcor))
     # metcor <- colMeans(metcor[, !names(metcor) %in% 'month'], na.rm = TRUE)
 
-    # add to out
-    out <- c(out, DOcor = DOcor, metcor)
+    # Pg, Rt anomalies by month
+    anomPgRtmon <- plyr::ddply(
+      toeval,
+      .variable = c('month'),
+      .fun = function(x){
+
+        with(x, c(
+          anomPgmon = 100 * sum(x$Pg <= 0)/nrow(x),
+          anomRtmon = 100 * sum(x$Rt >= 0)/nrow(x)
+        ))
+
+      }
+    )
+
+    # combine monthly evals
+    mos <- plyr::join(DOcor, metcor, by = 'month')
+    mos <- plyr::join(mos, anomPgRtmon, by = 'month')
+
+    # combine complete and monthly data
+    out <- list(
+      cmp = out,
+      mos = mos
+    )
 
   }
 
