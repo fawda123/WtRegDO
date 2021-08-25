@@ -109,7 +109,7 @@ ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', 
   # check required input for Wanninkhof gas exchange
   if(gasex == 'Wanninkhof'){
 
-    tokp <- c('DateTimeStamp', 'Temp', 'Sal', 'Tide', 'WSpd', DO_var)
+    tokp <- c('DateTimeStamp', 'Temp', 'Sal', 'BP', 'Tide', 'WSpd', DO_var)
 
     # sanity check
     chk <- tokp %in% names(dat_in)
