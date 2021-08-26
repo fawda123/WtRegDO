@@ -27,11 +27,12 @@
 objfun <- function(metab_obs, metab_dtd, vls = c('meanPg', 'sdPg', 'anomPg', 'meanRt', 'sdRt', 'anomRt')){
 
   eval <- list(
-      obseval = tibble::enframe(meteval(metab_obs, all = F)),
-      dtdeval = tibble::enframe(meteval(metab_dtd, all = F))
+      obseval = meteval(metab_obs, all = F),
+      dtdeval = meteval(metab_dtd, all = F)
     ) %>%
     tibble::enframe('metdat', 'fitdat') %>%
     tidyr::unnest('fitdat') %>%
+    tidyr::gather('name', 'value', -metdat) %>%
     dplyr::filter(name %in% vls) %>%
     tidyr::unnest('value') %>%
     tidyr::spread(metdat, value) %>%
