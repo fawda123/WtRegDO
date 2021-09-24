@@ -126,14 +126,18 @@ meteval.metab <- function(metab_in, all = TRUE, ...){
     names(metcor) <- gsub('\\.cor$', '', names(metcor))
     # metcor <- colMeans(metcor[, !names(metcor) %in% 'month'], na.rm = TRUE)
 
-    # Pg, Rt anomalies by month
-    anomPgRtmon <- plyr::ddply(
+    # Pg, Rt mean, sd, anomalies by month
+    PgRtmon <- plyr::ddply(
       toeval,
       .variable = c('month'),
       .fun = function(x){
 
         with(x, c(
+          meanPg = mean(x$Pg, na.rm = T),
+          sdPg = sd(x$Pg, na.rm = T),
           anomPg = 100 * sum(x$Pg <= 0)/nrow(x),
+          meanRt = mean(x$Rt, na.rm = T),
+          sdRt = sd(x$Rt, na.rm = T),
           anomRt = 100 * sum(x$Rt >= 0)/nrow(x)
         ))
 
@@ -142,7 +146,7 @@ meteval.metab <- function(metab_in, all = TRUE, ...){
 
     # combine monthly evals
     mos <- plyr::join(DOcor, metcor, by = 'month')
-    mos <- plyr::join(mos, anomPgRtmon, by = 'month')
+    mos <- plyr::join(mos, PgRtmon, by = 'month')
 
     # combine complete and monthly data
     out <- list(
