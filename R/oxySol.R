@@ -1,6 +1,6 @@
 #' Dissolved oxygen at saturation
 #'
-#' Finds dissolved oxygen concentration in equilibrium with water-saturated air. Function and documentation herein are from archived wq package: \url{https://cran.r-project.org/web/packages/wq/index.html}
+#' Finds dissolved oxygen concentration in equilibrium with water-saturated air. Function and documentation herein are from archived wq package: \url{https://cran.r-project.org/package=wq}
 #'
 #' @param t tem temperature, degrees C
 #' @param S salinity, on the Practical Salinity Scale

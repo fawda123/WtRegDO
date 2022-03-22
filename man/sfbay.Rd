@@ -29,7 +29,7 @@ Downloaded from \url{http://sfbay.wr.usgs.gov/access/wqdata} on 2009-11-17.
 sfbay
 }
 \description{
-Selected observations and variables from U.S. Geological Survey water quality stations in south San Francisco Bay. Data include \acronym{CTD} and nutrient measurements. Data and documentation herein are from archived wq package: \url{https://cran.r-project.org/web/packages/wq/index.html}
+Selected observations and variables from U.S. Geological Survey water quality stations in south San Francisco Bay. Data include \acronym{CTD} and nutrient measurements. Data and documentation herein are from archived wq package: \url{https://cran.r-project.org/package=wq}
 }
 \details{
 The original downloaded dataset was modified by taking a subset of six well-sampled stations and the period 1985--2004. Variable names were also simplified.

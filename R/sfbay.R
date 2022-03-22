@@ -1,7 +1,7 @@
 ######
 #' San Francisco Bay water quality data
 #'
-#' Selected observations and variables from U.S. Geological Survey water quality stations in south San Francisco Bay. Data include \acronym{CTD} and nutrient measurements. Data and documentation herein are from archived wq package: \url{https://cran.r-project.org/web/packages/wq/index.html}
+#' Selected observations and variables from U.S. Geological Survey water quality stations in south San Francisco Bay. Data include \acronym{CTD} and nutrient measurements. Data and documentation herein are from archived wq package: \url{https://cran.r-project.org/package=wq}
 #'
 #' @format
 #'

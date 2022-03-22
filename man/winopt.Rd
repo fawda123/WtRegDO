@@ -42,7 +42,7 @@ winopt(
 \item{upper}{vector of maximum half-window widths to evaluate}
 }
 \value{
-Printed text to the console showing progress.  Output from \cod{\link[stats]{optim}} will also be returned if convergence is achieved.
+Printed text to the console showing progress.  Output from \code{\link[stats]{optim}} will also be returned if convergence is achieved.
 }
 \description{
 Find the optimal half-window width combination to use for weighted regression.

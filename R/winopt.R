@@ -19,7 +19,7 @@
 #'
 #' @seealso \code{\link{objfun}}, \code{\link{wtobjfun}}
 #'
-#' @return Printed text to the console showing progress.  Output from \cod{\link[stats]{optim}} will also be returned if convergence is achieved.
+#' @return Printed text to the console showing progress.  Output from \code{\link[stats]{optim}} will also be returned if convergence is achieved.
 #' @export
 #'
 #' @examples
