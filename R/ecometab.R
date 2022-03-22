@@ -232,6 +232,7 @@ ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', 
 
   #get exchange at air water interface
   # DO/DOsat - DO reduces to Cs - C in mmol/m3 (DOsat is actually a ratio between DO and DO at saturation
+  # D in units of mmol/m3/hr
   D=Ka*(DO/DOsat-DO)
 
   #combine all data for processing
