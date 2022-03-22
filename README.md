@@ -15,12 +15,17 @@ oxygen time series to reduce the effects of tidal advection. Functions
 are also available to estimate net ecosystem metabolism using the
 open-water method.
 
-The development version of this package can be installed from Github:
+The package can be installed from
+[R-Universe](https://fawda123.r-universe.dev/) as follows:
 
 ``` r
-install.packages('devtools')
-library(devtools)
-install_github('fawda123/WtRegDO')
+# Enable universe(s) by fawda123
+options(repos = c(
+  fawda123 = 'https://fawda123.r-universe.dev',
+  CRAN = 'https://cloud.r-project.org'))
+
+# Install the package
+install.packages('WtRegDO')
 ```
 
 ### Citation

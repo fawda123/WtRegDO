@@ -11,12 +11,16 @@ output: github_document
 
 This is the public repository of supplementary material to accompany the manuscript "Improving estimates of ecosystem metabolism by reducing effects of tidal advection on dissolved oxygen time series", published in Limnology and Oceanography Methods.  The package includes a sample dataset and functions to implement weighted regression on dissolved oxygen time series to reduce the effects of tidal advection.  Functions are also available to estimate net ecosystem metabolism using the open-water method.  
 
-The development version of this package can be installed from Github:
+The package can be installed from [R-Universe](https://fawda123.r-universe.dev/) as follows:
 
 ```{r, eval = FALSE}
-install.packages('devtools')
-library(devtools)
-install_github('fawda123/WtRegDO')
+# Enable universe(s) by fawda123
+options(repos = c(
+  fawda123 = 'https://fawda123.r-universe.dev',
+  CRAN = 'https://cloud.r-project.org'))
+
+# Install the package
+install.packages('WtRegDO')
 ```
 
 ### Citation
