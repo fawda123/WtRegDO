@@ -25,6 +25,7 @@ jobs:
           extra-packages: any::rmarkdown
           packages:
             WtRegDO
+            any::devtools
       - name: Render index
         run: Rscript -e 'rmarkdown::render("README.Rmd")'
       - name: Commit results
