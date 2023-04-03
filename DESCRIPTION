@@ -19,9 +19,9 @@ Imports:
     ggplot2,
     lubridate,
     plyr,
-    maptools,
     oce,
     reshape2,
+    suncalc,
     tibble, 
     tidyr
 Suggests:
@@ -31,4 +31,4 @@ Depends:
 Authors@R: person(given = "Marcus W.", family = "Beck",
     role = c("aut","cre"),
     email = "mbafs2012@gmail.com")
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3

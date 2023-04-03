@@ -9,8 +9,6 @@
 #' @param lat numeric for latitude
 #' @param long numeric for longitude (negative west of prime meridian)
 #'
-#' @import maptools
-#'
 #' @export
 #'
 #' @details This function is only used within \code{\link{ecometab}} and should not be called explicitly.
@@ -35,13 +33,8 @@ met_day_fun<-function(dat_in, tz, lat, long){
     to = as.POSIXct(end_day, tz = tz),
     by = "days"
     )
-  sunrise <- sunriset(lat.long, sequence, direction = "sunrise",
-      POSIXct = TRUE)
-  sunset <- sunriset(lat.long, sequence, direction = "sunset",
-      POSIXct = TRUE)
-  ss_dat <- data.frame(sunrise, sunset)
-  ss_dat <- ss_dat[, -c(1, 3)]
-  colnames(ss_dat) <- c("sunrise", "sunset")
+  ss_dat <- suncalc::getSunlightTimes(date = as.Date(sequence, tz = tz), lat = lat, lon = long, tz = tz, keep = c('sunrise', 'sunset'))
+  ss_dat <- ss_dat[, c('sunrise', 'sunset')]
 
   # remove duplicates, if any
   ss_dat <- ss_dat[!duplicated(strftime(ss_dat[, 1], format = '%Y-%m_%d')), ]
