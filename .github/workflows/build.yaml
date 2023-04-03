@@ -17,11 +17,14 @@ jobs:
         with:
           fetch-depth: 2 # This is important to set for `git diff-tree` to work below
       - uses: r-lib/actions/setup-r@v2
+        with:
+          extra-repositories: 'https://fawda123.r-universe.dev'
       - uses: r-lib/actions/setup-pandoc@v2
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rmarkdown
-          needs: check
+          packages:
+            WtRegDO
       - name: Render index
         run: Rscript -e 'rmarkdown::render("README.Rmd")'
       - name: Commit results
