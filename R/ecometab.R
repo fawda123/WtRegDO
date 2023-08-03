@@ -38,7 +38,7 @@
 #'
 #' The plot method returns a \code{\link[ggplot2]{ggplot}} object which can be further modified.
 #'
-#' If \code{instant = TRUE} the instantaneous data (e.g., 30 minutes observations) used to estimate the daily metabolic rates are returned at the midpoint time steps from the raw time series.  The instantaneous data will also return metabolism estimates as flux per day, including the DO flux (dDO, mmol d-1), volumetric air-sea exchange rate (D, mmol m-3 d-1), the volumetric reaeration coefficient (Ka, hr-1), the gas transfer coefficient (KL, m d-1), gross production (Pg, mmol O2 m-2 d-1), respiration (Rt, mmol O2 m-2 d-1), net ecosystem metabolism (mmol O2 m-2 d-1), volumetric gross production (Pg_vol, mmol O2 m-3 d-1), and volumetric respiration (Rt_vol, mmol O2 m-3 d-1).  If \code{metab_units = "grams"}, the same variables are returned as grams of O2. To convert the daily instantaneous values to hourly estimates, just divide by 24 (except gross production, divide by \code{day_hrs}).
+#' If \code{instant = TRUE} the instantaneous data (e.g., 30 minutes observations) used to estimate the daily metabolic rates are returned at the midpoint time steps from the raw time series.  The instantaneous data will also return metabolism estimates as flux per day, including the DO flux (dDO, mmol d-1), air-sea exchange rate (D, mmol m-2 d-1), the volumetric reaeration coefficient (Ka, hr-1), the gas transfer coefficient (KL, m d-1), gross production (Pg, mmol O2 m-2 d-1), respiration (Rt, mmol O2 m-2 d-1), net ecosystem metabolism (mmol O2 m-2 d-1), volumetric gross production (Pg_vol, mmol O2 m-3 d-1), and volumetric respiration (Rt_vol, mmol O2 m-3 d-1).  If \code{metab_units = "grams"}, the same variables are returned as grams of O2. To convert the daily instantaneous values to hourly estimates, just divide by 24 (except gross production, divide by \code{day_hrs}).
 #'
 #' @references
 #' Caffrey JM, Murrell MC, Amacker KS, Harper J, Phipps S, Woodrey M. 2013. Seasonal and inter-annual patterns in primary production, respiration and net ecosystem metabolism in 3 estuaries in the northeast Gulf of Mexico. Estuaries and Coasts. 37(1):222-241.
@@ -232,7 +232,7 @@ ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', 
 
   #get exchange at air water interface
   # DO/DOsat - DO reduces to Cs - C in mmol/m3 (DOsat is actually a ratio between DO and DO at saturation
-  # D in units of mmol/m3/hr
+  # D in units of mmol/m3/hr, output below as mmol/m2/d
   D=Ka*(DO/DOsat-DO)
 
   #combine all data for processing
@@ -258,7 +258,7 @@ ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', 
         else{
           #day
           x$DOF_d<-ifelse(x$solar_period == 'sunrise', x$dDO*x$H, NA) # mmol o2 / m2 / hr
-          x$D_d<-ifelse(x$solar_period == 'sunrise', x$D* x$H, NA) # mmol o2 / m2 / hr
+          x$D_d<-ifelse(x$solar_period == 'sunrise', x$D*x$H, NA) # mmol o2 / m2 / hr
 
           #night, still assumed constant and only calculated with night time period
           x$DOF_n<-mean(with(x[x$solar_period=='sunset',],dDO*H), na.rm = T)  # mmol o2 / m2 / hr
@@ -283,7 +283,7 @@ ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', 
         x$NEM<-x$Pg+x$Rt  # mmol o2 / m2 / d
         x$Pg_vol<-x$Pg/mean(x$H,na.rm=TRUE)
         x$Rt_vol<-x$Rt/mean(x$H,na.rm=TRUE)
-        x$D <- x$D * 24  # mmol o2 / m2 / d
+        x$D <- x$D * 24 * mean(x$H, na.rm = T) # mmol o2 / m3/ hr to mmol o2 / m2 / d
         x$dDO <- x$dDO * 24 # do flux per day
 
         # remove flux
