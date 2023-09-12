@@ -53,6 +53,16 @@ wtreg <- function(dat_in, DO_obs = 'DO_obs', depth_val = 'Tide', wins = list(4, 
   if(any(chk))
     stop('Duplicated observations found, check rows: ', paste(which(chk), collapse = ', '))
 
+  # check for duplicated timestamps
+  chk <- duplicated(dat_in$DateTimeStamp)
+  if(any(chk))
+    stop('Duplicated time entries for DateTimeStamp found, check rows: ', paste(which(chk), collapse = ', '))
+
+  # check time stamps in ascending order
+  chk <- sign(diff(dat_in$DateTimeStamp)) == -1
+  if(any(chk))
+    stop('Time entries in DateTimeStamp not in ascending order')
+
   # rename DO_obs if other value provided
   names(dat_in)[names(dat_in) %in% DO_obs] <- 'DO_obs'
 
