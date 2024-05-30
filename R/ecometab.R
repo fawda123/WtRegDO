@@ -137,38 +137,6 @@ ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', 
   # keep these columns
   dat_in <- dat_in[, names(dat_in) %in% tokp]
 
-  #convert DO from mg/L to mmol/m3
-  dat_in$DO<-dat_in[, DO_var]/32*1000
-
-  # get change in DO per hour, as mmol m^-3 hr^-1
-  # scaled to time interval to equal hourly rates
-  # otherwise, mmol m^-3 0.5hr^-1
-  dDO_scl <- as.double(diff(dat_in$DateTimeStamp), units = 'hours')
-  dDO<-diff(dat_in$DO)/dDO_scl
-
-  #take diff of each column, divide by 2, add original value
-  DateTimeStamp<-diff(dat_in$DateTimeStamp)/2 + dat_in$DateTimeStamp[-c(nrow(dat_in))]
-  dat_in<-apply(
-    dat_in[,2:ncol(dat_in)],
-    2,
-    function(x) diff(as.numeric(x))/2 + as.numeric(x)[1:(length(x) -1)]
-    )
-  dat_in<-data.frame(DateTimeStamp,dat_in)
-  DO <- dat_in$DO
-
-  ##
-  # replace missing wx values with climatological means
-  # only ATemp, WSpd, and BP if Thiebault
-  # only WSpd if Wanninkhof
-
-  if(replacemet)
-    dat_in <- climmeans(dat_in, gasex = gasex)
-
-  ##
-  # DOsat is a ratio between DO (mg/L) and DO at saturation (mg/L), gets around a unit conversion issue
-  # oxysol returns the actual DO saturation in mg/L
-  # used to get loss of O2 from diffusion
-  DOsat<-with(dat_in, get(DO_var) / oxySol(Temp, Sal, BP * 1/1013.25))
 
   # station depth, defaults to mean depth value plus 0.5 in case not on bottom
   # uses 'depth_val' if provided, otherwise needs 'depth_vec'
@@ -183,7 +151,6 @@ ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', 
 
     if(length(depth_vec) > 1){
 
-      depth_vec <- depth_vec[-1]
       stopifnot(length(depth_vec) == nrow(dat_in))
       H <- depth_vec
 
@@ -194,6 +161,42 @@ ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', 
     }
 
   }
+
+  #convert DO from mg/L to mmol/m2
+  dat_in$DO<- H * dat_in[, DO_var]/32*1000
+  dat_in$H <- H
+
+  ##
+  # DOsat is a ratio between DO (mmol/m2) and DO at saturation (mmol/m2), gets around a unit conversion issue
+  # oxysol returns the actual DO saturation in mg/L
+  # used to get loss of O2 from diffusion
+  dat_in$DOsat<-dat_in$DO / with(dat_in, H * oxySol(Temp, Sal, BP * 1/1013.25) / 32 * 1000)
+
+  # get change in DO per hour, as mmol m^-2 hr^-1
+  # scaled to time interval to equal hourly rates
+  # otherwise, mmol m^-2 0.5hr^-1
+  dDO_scl <- as.double(diff(dat_in$DateTimeStamp), units = 'hours')
+  dDO<-diff(dat_in$DO)/dDO_scl
+
+  #take diff of each column, divide by 2, add original value
+  DateTimeStamp<-diff(dat_in$DateTimeStamp)/2 + dat_in$DateTimeStamp[-c(nrow(dat_in))]
+  dat_in<-apply(
+    dat_in[,2:ncol(dat_in)],
+    2,
+    function(x) diff(as.numeric(x))/2 + as.numeric(x)[1:(length(x) -1)]
+    )
+  dat_in<-data.frame(DateTimeStamp,dat_in)
+  DO <- dat_in$DO
+  DOsat <- dat_in$DOsat
+  H <- dat_in$H
+
+  ##
+  # replace missing wx values with climatological means
+  # only ATemp, WSpd, and BP if Thiebault
+  # only WSpd if Wanninkhof
+
+  if(replacemet)
+    dat_in <- climmeans(dat_in, gasex = gasex)
 
   #use met_day_fun to add columns indicating light/day, date, and hours of sunlight
   dat_in <- met_day_fun(dat_in, tz = tz, ...)
@@ -233,7 +236,7 @@ ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', 
   #get exchange at air water interface
   # DO/DOsat - DO reduces to Cs - C in mmol/m3 (DOsat is actually a ratio between DO and DO at saturation
   # D in units of mmol/m3/hr, output below as mmol/m2/d
-  D=Ka*(DO/DOsat-DO)
+  D=H*Ka*(DO/DOsat-DO)
 
   #combine all data for processing
   proc.dat<-dat_in[,!names(dat_in) %in% c('DateTimeStamp','cTide','Wdir',
@@ -257,12 +260,12 @@ ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', 
 
         else{
           #day
-          x$DOF_d<-ifelse(x$solar_period == 'sunrise', x$dDO*x$H, NA) # mmol o2 / m2 / hr
-          x$D_d<-ifelse(x$solar_period == 'sunrise', x$D*x$H, NA) # mmol o2 / m2 / hr
+          x$DOF_d<-ifelse(x$solar_period == 'sunrise', x$dDO, NA) # mmol o2 / m2 / hr
+          x$D_d<-ifelse(x$solar_period == 'sunrise', x$D, NA) # mmol o2 / m2 / hr
 
           #night, still assumed constant and only calculated with night time period
-          x$DOF_n<-mean(with(x[x$solar_period=='sunset',],dDO*H), na.rm = T)  # mmol o2 / m2 / hr
-          x$D_n<-mean(with(x[x$solar_period=='sunset',],D*H), na.rm = T)  # mmol o2 / m2 / hr
+          x$DOF_n<-mean(with(x[x$solar_period=='sunset',],dDO), na.rm = T)  # mmol o2 / m2 / hr
+          x$D_n<-mean(with(x[x$solar_period=='sunset',],D), na.rm = T)  # mmol o2 / m2 / hr
         }
 
         #metabolism
@@ -284,7 +287,7 @@ ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', 
         x$Pg_vol<-x$Pg/mean(x$H,na.rm=TRUE)
         x$Rt_vol<-x$Rt/mean(x$H,na.rm=TRUE)
         x$NEM_vol<-x$NEM/mean(x$H,na.rm=TRUE)
-        x$D <- x$D * 24 * mean(x$H, na.rm = T) # mmol o2 / m3/ hr to mmol o2 / m2 / d
+        x$D <- x$D * 24 # mmol o2 / m3/ hr to mmol o2 / m2 / d
         x$dDO <- x$dDO * 24 # do flux per day
 
         # remove flux
@@ -333,12 +336,12 @@ ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', 
 
       else{
         #day
-        DOF_d<-mean(with(x[x$solar_period=='sunrise',],dDO*H),na.rm=TRUE)
-        D_d<-mean(with(x[x$solar_period=='sunrise',],D*H),na.rm=TRUE)
+        DOF_d<-mean(with(x[x$solar_period=='sunrise',],dDO),na.rm=TRUE)
+        D_d<-mean(with(x[x$solar_period=='sunrise',],D),na.rm=TRUE)
 
         #night
-        DOF_n<-mean(with(x[x$solar_period=='sunset',],dDO*H),na.rm=TRUE)
-        D_n<-mean(with(x[x$solar_period=='sunset',],D*H),na.rm=TRUE)
+        DOF_n<-mean(with(x[x$solar_period=='sunset',],dDO),na.rm=TRUE)
+        D_n<-mean(with(x[x$solar_period=='sunset',],D),na.rm=TRUE)
         }
 
       #metabolism
