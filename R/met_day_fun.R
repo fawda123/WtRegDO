@@ -2,7 +2,7 @@
 ######
 #' Identify metabolic days in a swmpr time series
 #'
-#' Identify metabolic days in a time series based on sunrise and sunset times for a location and date.  The metabolic day is considered the 24 hour period between sunsets for two adjacent calendar days.
+#' Identify metabolic days in a time series based on sunrise and sunset times for a location and date.  The metabolic day is considered the 24 hour period between sunrises for two adjacent calendar days.
 #'
 #' @param dat_in data.frame
 #' @param tz chr string for timezone, e.g., 'America/Chicago', must match the time zone in \code{dat_in$DateTimeStamp}
