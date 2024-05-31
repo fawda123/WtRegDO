@@ -5,7 +5,7 @@
 #' @param dat_in Input data frame as a similar format required for \code{\link{ecometab}}
 #' @param gasex chr indicating if gas exchange is estimated using equations in Thiebault et al. 2008 or Wanninkhof 2014 (see \code{\link{f_calcKL}} or \code{\link{f_calcWanninkhof}})
 #'
-#' @details Function is used internally within \code{\link{ecometab}}.  Missing values for weather variables are replaced by the monthly/hourly average calculated from the available data in \code{dat_in}.  If \code{gasex = 'Thiebault'}, this applies to air temperature, wind speed, and barometric pressure.  If \code{gasex = 'Wanninkhof'}, this applies to wind speed and barometric pressure.
+#' @details Function is used internally within \code{\link{ecometab}}.  Missing values for weather variables are replaced by the monthly/hourly average calculated from the available data in \code{dat_in}.  If \code{gasex = 'Thiebault'}, this applies to air temperature, wind speed, and barometric pressure.  If \code{gasex = 'Wanninkhof'}, this applies to wind speed and barometric pressure, where the latter is not needed for the Wanninkhof method, but is required for dissolved oxygen at saturation (\code{\link{oxySol}}) with gas exchange.
 #'
 #' @return The same data frame as in \code{dat_in}, except missing values for the relevant weather variables are replaced with estimated means.
 #'
