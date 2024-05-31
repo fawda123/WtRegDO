@@ -18,7 +18,7 @@ The same data frame as in \code{dat_in}, except missing values for the relevant 
 Calculate climate means for relevant weather variables
 }
 \details{
-Function is used internally within \code{\link{ecometab}}.  Missing values for weather variables are replaced by the monthly/hourly average calculated from the available data in \code{dat_in}.  If \code{gasex = 'Thiebault'}, this applies to air temperature, wind speed, and barometric pressure.  If \code{gasex = 'Wanninkhof'}, this applies only to wind speed.
+Function is used internally within \code{\link{ecometab}}.  Missing values for weather variables are replaced by the monthly/hourly average calculated from the available data in \code{dat_in}.  If \code{gasex = 'Thiebault'}, this applies to air temperature, wind speed, and barometric pressure.  If \code{gasex = 'Wanninkhof'}, this applies to wind speed and barometric pressure.
 }
 \examples{
 climmeans(SAPDC)
