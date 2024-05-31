@@ -38,7 +38,7 @@
 #'
 #' The plot method returns a \code{\link[ggplot2]{ggplot}} object which can be further modified.
 #'
-#' If \code{instant = TRUE} the instantaneous data (e.g., 30 minutes observations) used to estimate the daily metabolic rates are returned at the midpoint time steps from the raw time series.  The instantaneous data will also return metabolism estimates as flux per day, including the DO flux (dDO, mmol d-1), air-sea exchange rate (D, mmol m-2 d-1), the volumetric reaeration coefficient (Ka, hr-1), the gas transfer coefficient (KL, m d-1), gross production (Pg, mmol O2 m-2 d-1), respiration (Rt, mmol O2 m-2 d-1), net ecosystem metabolism (mmol O2 m-2 d-1), volumetric gross production (Pg_vol, mmol O2 m-3 d-1), volumetric respiration (Rt_vol, mmol O2 m-3 d-1), and volumetric net ecosystem metabolism (mmol O2 m-3 d-1).  If \code{metab_units = "grams"}, the same variables are returned as grams of O2. To convert the daily instantaneous values to hourly estimates, just divide by 24 (except gross production, divide by \code{day_hrs}).
+#' If \code{instant = TRUE} the instantaneous data (e.g., 30 minutes observations) used to estimate the daily metabolic rates are returned at the midpoint time steps from the raw time series.  The instantaneous data will also return metabolism estimates as flux per day, including the DO flux (dDO, mmol d-1), air-sea exchange rate (D, mmol m-2 d-1), the volumetric reaeration coefficient (Ka, hr-1), the gas transfer coefficient (KL, m d-1), gross production (Pg, mmol O2 m-2 d-1), respiration (Rt, mmol O2 m-2 d-1), net ecosystem metabolism (mmol O2 m-2 d-1), volumetric gross production (Pg_vol, mmol O2 m-3 d-1), volumetric respiration (Rt_vol, mmol O2 m-3 d-1), and volumetric net ecosystem metabolism (mmol O2 m-3 d-1).  If \code{metab_units = "grams"}, the same variables are returned as grams of O2. Note that \code{NA} values are returned for gross production and NEM during "sunset" hours as production is assumed to not occur during the night.
 #'
 #' @references
 #' Caffrey JM, Murrell MC, Amacker KS, Harper J, Phipps S, Woodrey M. 2013. Seasonal and inter-annual patterns in primary production, respiration and net ecosystem metabolism in 3 estuaries in the northeast Gulf of Mexico. Estuaries and Coasts. 37(1):222-241.
@@ -269,16 +269,12 @@ ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', 
         #account for air-sea exchange if surface station
         #else do not
         if(!bott_stat){
-          x$Pg<-with(x, ((DOF_d-D_d) - (DOF_n-D_n))*24)  # mmol o2 / m2 / d
+          x$Pg<-with(x, ((DOF_d-D_d) - (DOF_n-D_n))*unique(day_hrs))  # mmol o2 / m2 / d
           x$Rt<-with(x, (DOF_n-D_n)*24)  # mmol o2 / m2 / d
         } else {
           x$Pg<-with(x, (DOF_d - DOF_n)*unique(day_hrs))
           x$Rt<-x$DOF_n*24
         }
-
-        # make zero Pg for nighttime
-        if(!sum(is.na(x$DOF_d)) == nrow(x))
-          x$Pg <- ifelse(x$solar_period == 'sunset', 0, x$Pg)
 
         x$NEM<-x$Pg+x$Rt  # mmol o2 / m2 / d
         x$Pg_vol<-x$Pg/mean(x$H,na.rm=TRUE)
