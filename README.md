@@ -86,7 +86,7 @@ ncores <- detectCores()
 registerDoParallel(cores = ncores - 1)
 
 # run the function
-evalcor(SAPDC, tz, lat, long, progress = TRUE)
+evalcor(SAPDC, tz, lat, long)
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
@@ -108,7 +108,7 @@ lat <- 31.39
 long <- -81.28
 
 # weighted regression, optimal window widths for SAPDC from the paper
-wtreg_res <- wtreg(SAPDC, parallel = TRUE, wins = list(3, 1, 0.6), progress = TRUE, 
+wtreg_res <- wtreg(SAPDC, parallel = TRUE, wins = list(3, 1, 0.6), 
   tz = tz, lat = lat, long = long)
 
 # estimate ecosystem metabolism using observed DO time series
