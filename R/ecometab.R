@@ -356,8 +356,6 @@ ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', 
       Rt_vol<-Rt/mean(x$H,na.rm=TRUE)
       NEM_vol<-NEM/mean(x$H,na.rm=TRUE)
 
-      browser()
-
       # output
       data.frame(Date=unique(x$metab_date),Pg,Rt,NEM, Pg_vol, Rt_vol, NEM_vol)
 

@@ -63,7 +63,8 @@ climmeans <- function(dat_in, gasex = c('Thiebault', 'Wanninkhof')){
                         .variables=c('months', 'hours'),
                         .fun = function(x){
                           data.frame(
-                            WSpd = mean(x$WSpd, na.rm = TRUE)
+                            WSpd = mean(x$WSpd, na.rm = TRUE),
+                            BP = mean(x$BP, na.rm = TRUE) # not used by wanninkhof but required for oxysol
                           )
                         }
     )
@@ -76,9 +77,13 @@ climmeans <- function(dat_in, gasex = c('Thiebault', 'Wanninkhof')){
 
     # reassign empty values to means, objects are removed later
     WSpd_mix <- dat_in$WSpd
+    BP_mix <- dat_in$BP
     WSpd_mix[is.na(WSpd_mix)] <- clim_means$WSpd[is.na(WSpd_mix)]
+    BP_mix[is.na(BP_mix)] <- clim_means$BP[is.na(BP_mix)]
+
 
     # assign climate mean values to input data
+    dat_in$BP <- BP_mix
     dat_in$WSpd <- WSpd_mix
 
   }
