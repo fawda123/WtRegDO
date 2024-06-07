@@ -38,7 +38,7 @@
 #'
 #' The plot method returns a \code{\link[ggplot2]{ggplot}} object which can be further modified.
 #'
-#' If \code{instant = TRUE} the instantaneous data (e.g., 30 minutes observations) used to estimate the daily metabolic rates are returned at the midpoint time steps from the raw time series.  The instantaneous data will also return metabolism estimates as flux per day, including the DO flux (dDO, mmol d-1), air-sea exchange rate (D, mmol m-2 d-1), the volumetric reaeration coefficient (Ka, hr-1), the gas transfer coefficient (KL, m d-1), gross production (Pg, mmol O2 m-2 d-1), respiration (Rt, mmol O2 m-2 d-1), net ecosystem metabolism (mmol O2 m-2 d-1), volumetric gross production (Pg_vol, mmol O2 m-3 d-1), volumetric respiration (Rt_vol, mmol O2 m-3 d-1), and volumetric net ecosystem metabolism (mmol O2 m-3 d-1).  If \code{metab_units = "grams"}, the same variables are returned as grams of O2. Note that \code{NA} values are returned for gross production and NEM during "sunset" hours as production is assumed to not occur during the night.
+#' If \code{instant = TRUE} the instantaneous data (e.g., 30 minutes observations) used to estimate the daily metabolic rates are returned at the midpoint time steps from the raw time series.  The instantaneous data will also return metabolism estimates as flux per day, including the DO flux (dDO, mmol d-1), air-sea exchange rate (D, mmol m-2 d-1), the volumetric reaeration coefficient (Ka, hr-1), the gas transfer coefficient (KL, m d-1), gross production (Pg, mmol O2 m-2 d-1), respiration (Rt, mmol O2 m-2 d-1), net ecosystem metabolism (mmol O2 m-2 d-1), volumetric gross production (Pg_vol, mmol O2 m-3 d-1), volumetric respiration (Rt_vol, mmol O2 m-3 d-1), and volumetric net ecosystem metabolism (mmol O2 m-3 d-1).  If \code{metab_units = "grams"}, the same variables are returned as grams of O2. The daily and nightly DO and gas exchange fluxes are also returned in units per hour (\code{DOF_d}, \code{D_d}, \code{DOF_n}, \code{D_n}). Note that \code{NA} values are returned for gross production and NEM during "sunset" hours as production is assumed to not occur during the night.
 #'
 #' @references
 #' Caffrey JM, Murrell MC, Amacker KS, Harper J, Phipps S, Woodrey M. 2013. Seasonal and inter-annual patterns in primary production, respiration and net ecosystem metabolism in 3 estuaries in the northeast Gulf of Mexico. Estuaries and Coasts. 37(1):222-241.
@@ -283,8 +283,8 @@ ecometab.default <- function(dat_in, tz, DO_var = 'DO_mgl', depth_val = 'Tide', 
         x$D <- x$D * 24 * mean(x$H, na.rm = T) # mmol o2 / m3/ hr to mmol o2 / m2 / d
         x$dDO <- x$dDO * 24 # do flux per day
 
-        # remove flux
-        x <- x[, !names(x) %in% c('DOF_d', 'D_d', 'DOF_n', 'D_n')]
+        # # remove flux
+        # x <- x[, !names(x) %in% c('DOF_d', 'D_d', 'DOF_n', 'D_n')]
 
         # output
         return(x)
