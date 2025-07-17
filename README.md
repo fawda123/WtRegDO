@@ -278,7 +278,7 @@ Using the `winopt` function requires similar inputs as the `wtreg`
 function.
 
 ``` r
-# run optimiztaion in parallel
+# run optimization in parallel
 # requires parallel backend
 library(foreach)
 library(doParallel)
@@ -296,7 +296,7 @@ long <- -81.28
 # find optimal window widths for reducing anomalous metabolism estimates
 winopt(SAPDC, tz = tz, lat = lat, long = long, wins = list(6, 6, 0.5), parallel = T, vls = c('anomPg', 'anomRt'))
 
-stopCluser(cl)
+stopCluster(cl)
 ```
 
 The optimization function can take several hours to run and, if it
