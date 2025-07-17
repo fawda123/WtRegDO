@@ -831,7 +831,7 @@ likely to lead to an obtainable result for minimizing the objective
 function.</p>
 <p>Using the <code>winopt</code> function requires similar inputs as the
 <code>wtreg</code> function.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="co"># run optimiztaion in parallel</span></span>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="co"># run optimization in parallel</span></span>
 <span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="co"># requires parallel backend</span></span>
 <span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a><span class="fu">library</span>(foreach)</span>
 <span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="fu">library</span>(doParallel)</span>
@@ -849,7 +849,7 @@ function.</p>
 <span id="cb12-16"><a href="#cb12-16" tabindex="-1"></a><span class="co"># find optimal window widths for reducing anomalous metabolism estimates</span></span>
 <span id="cb12-17"><a href="#cb12-17" tabindex="-1"></a><span class="fu">winopt</span>(SAPDC, <span class="at">tz =</span> tz, <span class="at">lat =</span> lat, <span class="at">long =</span> long, <span class="at">wins =</span> <span class="fu">list</span>(<span class="dv">6</span>, <span class="dv">6</span>, <span class="fl">0.5</span>), <span class="at">parallel =</span> T, <span class="at">vls =</span> <span class="fu">c</span>(<span class="st">&#39;anomPg&#39;</span>, <span class="st">&#39;anomRt&#39;</span>))</span>
 <span id="cb12-18"><a href="#cb12-18" tabindex="-1"></a></span>
-<span id="cb12-19"><a href="#cb12-19" tabindex="-1"></a><span class="fu">stopCluser</span>(cl)</span></code></pre></div>
+<span id="cb12-19"><a href="#cb12-19" tabindex="-1"></a><span class="fu">stopCluster</span>(cl)</span></code></pre></div>
 <p>The optimization function can take several hours to run and, if it
 works, should return three window widths for day, hour, and tide that
 achieve the rules of thumb. The above example should return window
