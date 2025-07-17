@@ -11,9 +11,9 @@ winopt(
   long,
   wins,
   vls = c("meanPg", "sdPg", "anomPg", "meanRt", "sdRt", "anomRt"),
-  parallel = F,
-  progress = T,
-  control = list(factr = 1e+07, parscale = c(50, 100, 50)),
+  parallel = FALSE,
+  progress = TRUE,
+  control = list(factr = 1e+07, parscale = c(1, 1, 1)),
   lower = c(0.1, 0.1, 0.1),
   upper = c(12, 12, 1)
 )

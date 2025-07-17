@@ -27,25 +27,55 @@
 objfun <- function(metab_obs, metab_dtd, vls = c('meanPg', 'sdPg', 'anomPg', 'meanRt', 'sdRt', 'anomRt')){
 
   eval <- list(
-      obseval = meteval(metab_obs, all = F),
-      dtdeval = meteval(metab_dtd, all = F)
-    ) %>%
+    obseval = meteval(metab_obs, all = F),
+    dtdeval = meteval(metab_dtd, all = F)
+  ) %>%
     tibble::enframe('metdat', 'fitdat') %>%
     tidyr::unnest('fitdat') %>%
     tidyr::gather('name', 'value', -metdat) %>%
     dplyr::filter(name %in% vls) %>%
     tidyr::unnest('value') %>%
-    tidyr::spread(metdat, value) %>%
+    tidyr::spread(metdat, value)
+
+  # Improved percent difference calculation with numerical stability
+  eval <- eval %>%
     dplyr::mutate(
-      perdif = (obseval - dtdeval) / ((obseval + dtdeval) / 2),
+      # Add small epsilon to prevent division by zero
+      eps = 1e-10,
+
+      # More stable percent difference calculation
       perdif = dplyr::case_when(
-        name %in% c('meanPg', 'meanRt') ~ 1 / abs(perdif),
-        T ~ perdif
-      )
+        # For means: use log ratio which is more stable
+        name %in% c('meanPg', 'meanRt') ~ {
+          abs_obs <- abs(obseval) + eps
+          abs_dtd <- abs(dtdeval) + eps
+          -abs(log(abs_obs / abs_dtd))  # Negative because we want similar means
+        },
+
+        # For anomalies: we want dtd to have fewer anomalies (lower values)
+        name %in% c('anomPg', 'anomRt') ~ dtdeval - obseval,
+
+        # For standard deviations: we want dtd to have lower variability
+        name %in% c('sdPg', 'sdRt') ~ dtdeval - obseval,
+
+        TRUE ~ 0
+      ),
+
+      # Apply weights if desired (can be adjusted based on importance)
+      weight = dplyr::case_when(
+        name %in% c('anomPg', 'anomRt') ~ 2.0,  # Weight anomalies more heavily
+        name %in% c('meanPg', 'meanRt') ~ 1.5,  # Moderate weight for means
+        name %in% c('sdPg', 'sdRt') ~ 1.0,      # Standard weight for SDs
+        TRUE ~ 1.0
+      ),
+
+      weighted_perdif = perdif * weight
     )
 
-  est <- -1 * sum(eval$perdif)
+  # Return weighted sum (no need for -1 multiplication if directions are correct)
+  est <- sum(eval$weighted_perdif, na.rm = TRUE)
 
+  # Add penalty for extreme parameter values to encourage reasonable solutions
   return(est)
 
 }

@@ -42,34 +42,85 @@
 #'
 #' stopCluster(cl)
 #' }
-winopt <- function(dat_in, tz, lat, long, wins, vls = c('meanPg', 'sdPg', 'anomPg', 'meanRt', 'sdRt', 'anomRt'), parallel = F, progress = T,
-                    control = list(factr = 1e7, parscale = c(50, 100, 50)), lower = c(0.1, 0.1, 0.1), upper = c(12, 12, 1)){
+# Improved optimization wrapper with better error handling
+winopt <- function(dat_in, tz, lat, long, wins,
+                            vls = c('meanPg', 'sdPg', 'anomPg', 'meanRt', 'sdRt', 'anomRt'),
+                            parallel = FALSE, progress = TRUE,
+                            control = list(factr = 1e7, parscale = c(1, 1, 1)),
+                            lower = c(0.1, 0.1, 0.1),
+                            upper = c(12, 12, 1)) {
 
-  # estimate ecosystem metabolism using observed DO time series
-  metobs <- ecometab(dat_in, DO_var = 'DO_obs', tz = tz,
-                        lat = lat, long = long)
+  # Estimate ecosystem metabolism using observed DO time series
+  metobs <- ecometab(dat_in, DO_var = 'DO_obs', tz = tz, lat = lat, long = long)
 
   strt <- Sys.time()
 
-  out <- optim(
-    wins,
-    wtobjfun,
-    gr = NULL,
-    dat_in = dat_in,
-    tz = tz,
-    lat = lat,
-    long = long,
-    metab_obs = metobs,
-    strt = strt,
-    vls = vls,
-    parallel = parallel,
-    progress = progress,
-    method = 'L-BFGS-B',
-    lower = lower,
-    upper = upper,
-    control = control
-  )
+  # Wrapper function with error handling and bounds checking
+  safe_objfun <- function(pars) {
+    tryCatch({
+      # Ensure parameters are within bounds
+      pars <- pmax(pars, lower)
+      pars <- pmin(pars, upper)
 
-  return(out)
+      result <- wtobjfun(pars, dat_in = dat_in, tz = tz, lat = lat, long = long,
+                         metab_obs = metobs, strt = strt, vls = vls,
+                         parallel = parallel, progress = progress)
 
+      # Check for invalid results
+      if (is.na(result) || is.infinite(result)) {
+        return(1e6)  # Large penalty for invalid results
+      }
+
+      return(result)
+
+    }, error = function(e) {
+      if (progress) {
+        cat("Error in objective function:", e$message, "\n")
+      }
+      return(1e6)  # Large penalty for errors
+    })
+  }
+
+  # Try multiple optimization methods in sequence
+  methods_to_try <- c('L-BFGS-B', 'Nelder-Mead', 'BFGS')
+
+  best_result <- NULL
+  best_value <- Inf
+
+  for (opt_method in methods_to_try) {
+    cat("Trying optimization method:", opt_method, "\n")
+
+    # Adjust control parameters based on method
+    current_control <- control
+    if (opt_method == 'Nelder-Mead') {
+      # Nelder-Mead doesn't use gradients, may be more robust
+      current_control <- list(maxit = 500, reltol = 1e-8)
+    }
+
+    try_result <- tryCatch({
+      if (opt_method %in% c('L-BFGS-B')) {
+        optim(wins, safe_objfun, method = opt_method,
+              lower = lower, upper = upper, control = current_control)
+      } else {
+        optim(wins, safe_objfun, method = opt_method, control = current_control)
+      }
+    }, error = function(e) {
+      cat("Method", opt_method, "failed:", e$message, "\n")
+      return(NULL)
+    })
+
+    if (!is.null(try_result) && try_result$value < best_value) {
+      best_result <- try_result
+      best_value <- try_result$value
+      cat("New best result with", opt_method, "- value:", best_value, "\n")
+    }
+
+    # If we found a good solution, we can stop
+    if (!is.null(best_result) && best_result$convergence == 0) {
+      cat("Convergence achieved with", opt_method, "\n")
+      break
+    }
+  }
+
+  return(best_result)
 }
