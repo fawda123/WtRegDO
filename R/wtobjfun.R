@@ -9,7 +9,6 @@
 #' @param strt a \code{\link{POSIXct}} object returned by \code{\link{Sys.time}}
 #' @param vls chr vector of summary evaluation object to optimize, see details for \code{\link{objfun}}
 #' @param parallel logical if regression is run in parallel to reduce processing time, requires a parallel backend outside of the function
-#' @param progress logical if progress saved to a txt file names 'log.txt' in the working directory
 #'
 #' @seealso \code{\link{objfun}}, \code{\link{winopt}}
 #'
@@ -40,7 +39,7 @@
 #' stopCluster(cl)
 #' }
 wtobjfun <- function(wins, dat_in, tz, lat, long, metab_obs, strt = NULL, vls = c('meanPg', 'sdPg', 'anomPg', 'meanRt', 'sdRt', 'anomRt'),
-                      parallel = F, progress = T){
+                      parallel = F){
 
   if(is.null(strt))
     strt <- Sys.time()
@@ -49,7 +48,7 @@ wtobjfun <- function(wins, dat_in, tz, lat, long, metab_obs, strt = NULL, vls = 
   print(Sys.time() - strt)
   cat(txt, '\n')
 
-  wtreg_res <- wtreg(dat_in, parallel = parallel, wins = wins, progress = progress,
+  wtreg_res <- wtreg(dat_in, parallel = parallel, wins = wins, progress = F,
                      tz = tz, lat = lat, long = long)
 
   metab_dtd <- ecometab(wtreg_res, DO_var = 'DO_nrm', tz = tz,

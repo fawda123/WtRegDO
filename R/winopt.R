@@ -64,7 +64,7 @@ winopt <- function(dat_in, tz, lat, long, wins,
 
       result <- wtobjfun(pars, dat_in = dat_in, tz = tz, lat = lat, long = long,
                          metab_obs = metobs, strt = strt, vls = vls,
-                         parallel = parallel, progress = progress)
+                         parallel = parallel, progress = FALSE)
 
       # Check for invalid results
       if (is.na(result) || is.infinite(result)) {
@@ -87,6 +87,8 @@ winopt <- function(dat_in, tz, lat, long, wins,
   best_result <- NULL
   best_value <- Inf
 
+  if(progress)
+    sink('log.txt', append = T)
   for (opt_method in methods_to_try) {
     cat("Trying optimization method:", opt_method, "\n")
 
@@ -96,12 +98,13 @@ winopt <- function(dat_in, tz, lat, long, wins,
       # Nelder-Mead doesn't use gradients, may be more robust
       current_control <- list(maxit = 500, reltol = 1e-8)
     }
-
     try_result <- tryCatch({
       if (opt_method %in% c('L-BFGS-B')) {
+        print(Sys.time() - strt)
         optim(wins, safe_objfun, method = opt_method,
               lower = lower, upper = upper, control = current_control)
       } else {
+        print(Sys.time() - strt)
         optim(wins, safe_objfun, method = opt_method, control = current_control)
       }
     }, error = function(e) {
@@ -121,6 +124,8 @@ winopt <- function(dat_in, tz, lat, long, wins,
       break
     }
   }
+  if(progress)
+    sink()
 
   return(best_result)
 }

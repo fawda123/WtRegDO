@@ -63,8 +63,8 @@ objfun <- function(metab_obs, metab_dtd, vls = c('meanPg', 'sdPg', 'anomPg', 'me
 
       # Apply weights if desired (can be adjusted based on importance)
       weight = dplyr::case_when(
-        name %in% c('anomPg', 'anomRt') ~ 2.0,  # Weight anomalies more heavily
-        name %in% c('meanPg', 'meanRt') ~ 1.5,  # Moderate weight for means
+        name %in% c('anomPg', 'anomRt') ~ 1.0,  # Weight anomalies more heavily
+        name %in% c('meanPg', 'meanRt') ~ 1.0,  # Moderate weight for means
         name %in% c('sdPg', 'sdRt') ~ 1.0,      # Standard weight for SDs
         TRUE ~ 1.0
       ),
