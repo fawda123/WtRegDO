@@ -64,7 +64,7 @@ winopt <- function(dat_in, tz, lat, long, wins,
 
       result <- wtobjfun(pars, dat_in = dat_in, tz = tz, lat = lat, long = long,
                          metab_obs = metobs, strt = strt, vls = vls,
-                         parallel = parallel, progress = FALSE)
+                         parallel = parallel)
 
       # Check for invalid results
       if (is.na(result) || is.infinite(result)) {
