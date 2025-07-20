@@ -13,8 +13,7 @@ wtobjfun(
   metab_obs,
   strt = NULL,
   vls = c("meanPg", "sdPg", "anomPg", "meanRt", "sdRt", "anomRt"),
-  parallel = F,
-  progress = T
+  parallel = F
 )
 }
 \arguments{
@@ -35,8 +34,6 @@ wtobjfun(
 \item{vls}{chr vector of summary evaluation object to optimize, see details for \code{\link{objfun}}}
 
 \item{parallel}{logical if regression is run in parallel to reduce processing time, requires a parallel backend outside of the function}
-
-\item{progress}{logical if progress saved to a txt file names 'log.txt' in the working directory}
 }
 \value{
 A single numeric value to minimize, as output from \code{\link{objfun}}
