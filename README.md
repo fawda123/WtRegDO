@@ -294,7 +294,7 @@ lat <- 31.39
 long <- -81.28
 
 # find optimal window widths for reducing anomalous metabolism estimates
-winopt(SAPDC, tz = tz, lat = lat, long = long, wins = list(6, 6, 0.5), parallel = T, vls = c('anomPg', 'anomRt'))
+winopt(SAPDC, tz = tz, lat = lat, long = long, wins = list(6, 6, 0.5), upper = c(24, 24, 2), parallel = T)
 
 stopCluster(cl)
 ```

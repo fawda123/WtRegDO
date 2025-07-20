@@ -847,7 +847,7 @@ function.</p>
 <span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a>long <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fl">81.28</span></span>
 <span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a></span>
 <span id="cb12-16"><a href="#cb12-16" tabindex="-1"></a><span class="co"># find optimal window widths for reducing anomalous metabolism estimates</span></span>
-<span id="cb12-17"><a href="#cb12-17" tabindex="-1"></a><span class="fu">winopt</span>(SAPDC, <span class="at">tz =</span> tz, <span class="at">lat =</span> lat, <span class="at">long =</span> long, <span class="at">wins =</span> <span class="fu">list</span>(<span class="dv">6</span>, <span class="dv">6</span>, <span class="fl">0.5</span>), <span class="at">parallel =</span> T, <span class="at">vls =</span> <span class="fu">c</span>(<span class="st">&#39;anomPg&#39;</span>, <span class="st">&#39;anomRt&#39;</span>))</span>
+<span id="cb12-17"><a href="#cb12-17" tabindex="-1"></a><span class="fu">winopt</span>(SAPDC, <span class="at">tz =</span> tz, <span class="at">lat =</span> lat, <span class="at">long =</span> long, <span class="at">wins =</span> <span class="fu">list</span>(<span class="dv">6</span>, <span class="dv">6</span>, <span class="fl">0.5</span>), <span class="at">upper =</span> <span class="fu">c</span>(<span class="dv">24</span>, <span class="dv">24</span>, <span class="dv">2</span>), <span class="at">parallel =</span> T)</span>
 <span id="cb12-18"><a href="#cb12-18" tabindex="-1"></a></span>
 <span id="cb12-19"><a href="#cb12-19" tabindex="-1"></a><span class="fu">stopCluster</span>(cl)</span></code></pre></div>
 <p>The optimization function can take several hours to run and, if it
