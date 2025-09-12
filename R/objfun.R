@@ -49,7 +49,7 @@ objfun <- function(metab_obs, metab_dtd, vls = c('meanPg', 'sdPg', 'anomPg', 'me
         name %in% c('meanPg', 'meanRt') ~ {
           abs_obs <- abs(obseval) + eps
           abs_dtd <- abs(dtdeval) + eps
-          -abs(log(abs_obs / abs_dtd))  # Negative because we want similar means
+          abs(log(abs_obs / abs_dtd))
         },
 
         # For anomalies: we want dtd to have fewer anomalies (lower values)
