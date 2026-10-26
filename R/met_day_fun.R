@@ -14,7 +14,7 @@
 #' @details This function is only used within \code{\link{ecometab}} and should not be called explicitly.
 #'
 #' @seealso
-#' \code{\link{ecometab}}
+#' \code{\link{ecometab}}, \code{\link{sun_times}}
 #'
 #'
 met_day_fun<-function(dat_in, tz, lat, long){
@@ -33,7 +33,7 @@ met_day_fun<-function(dat_in, tz, lat, long){
     to = as.POSIXct(end_day, tz = tz),
     by = "days"
     )
-  ss_dat <- suncalc::getSunlightTimes(date = as.Date(sequence, tz = tz), lat = lat, lon = long, tz = tz, keep = c('sunrise', 'sunset'))
+  ss_dat <- sun_times(date = as.Date(sequence, tz = tz), lat = lat, long = long, tz = tz)
   ss_dat <- ss_dat[, c('sunrise', 'sunset')]
 
   # remove duplicates, if any

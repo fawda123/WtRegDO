@@ -22,5 +22,5 @@ Identify metabolic days in a time series based on sunrise and sunset times for a
 This function is only used within \code{\link{ecometab}} and should not be called explicitly.
 }
 \seealso{
-\code{\link{ecometab}}
+\code{\link{ecometab}}, \code{\link{sun_times}}
 }
